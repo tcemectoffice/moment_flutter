@@ -92,7 +92,6 @@ class _MomentHomeState extends State<MomentHome> {
               ),
             ),
           ),
-          // Replace your ListView.builder with this:
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {

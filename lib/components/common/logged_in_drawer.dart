@@ -1,5 +1,7 @@
-import 'package:moment/constants.dart' as constants;
+import 'package:moment/components/common/custom_popup.dart';
+import 'package:moment/models/constants.dart' as constants;
 import 'package:flutter/material.dart';
+import 'package:moment/services.dart' as services;
 import 'package:provider/provider.dart';
 import 'package:moment/providers/home_page_provider.dart';
 
@@ -61,9 +63,18 @@ class LoggedInDrawerState extends State<LoggedInDrawer> {
                           title: const Text('Profile'),
                         ),
                       ListTile(
-                        onTap: () {
-                          // Navigator.of(context).pushNamed('/login');
-                          print(Theme.of(context).primaryColor);
+                        onTap: () async {
+                          showDialog(
+                            context: context,
+                            builder: (context) => const CustomPopup(
+                              child: Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            ),
+                          );
+                          if (await services.logout()) {
+                            Navigator.of(context).pushNamed('/login');
+                          }
                         },
                         title: const Text('Logout'),
                       ),

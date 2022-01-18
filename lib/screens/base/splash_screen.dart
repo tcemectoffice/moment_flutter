@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:moment/constants.dart' as constants;
+import 'package:moment/models/constants.dart' as constants;
+import 'package:moment/services.dart' as services;
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -12,16 +13,21 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   bool? userLoggedIn;
+  String? fcmToken;
 
-  setLoginInfo() async {
-    return 1;
+  Future<bool> initialize() async {
+    return await services.initApp();
   }
 
   @override
   void initState() {
     Timer(const Duration(seconds: 1), () {
-      setLoginInfo().then((value) {
-        Navigator.pushNamed(context, '/login');
+      initialize().then((value) {
+        if (value) {
+          Navigator.pushNamed(context, '/home');
+        } else {
+          Navigator.pushNamed(context, '/login');
+        }
       });
     });
     super.initState();

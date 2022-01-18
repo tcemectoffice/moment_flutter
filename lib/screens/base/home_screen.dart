@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:moment/components/common/bottom_navbar.dart';
 import 'package:moment/components/common/logged_in_drawer.dart';
-import 'package:moment/constants.dart' as constants;
+import 'package:moment/models/constants.dart' as constants;
 import 'package:moment/providers/home_page_provider.dart';
 import 'package:moment/screens/mctea/mctea_home_screen.dart';
 import 'package:moment/screens/moment/moment_home_screen.dart';
@@ -61,7 +61,9 @@ class _HomeScreenState extends State<HomeScreen> {
             title: const Text('Moment'),
             actions: [
               IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/notifications');
+                  },
                   icon: const Icon(
                     Icons.notifications_outlined,
                   ))

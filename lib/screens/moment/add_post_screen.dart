@@ -2,7 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:moment/components/common/circle_image.dart';
 import 'package:moment/components/common/custom_scroll_settings.dart';
-import 'package:moment/constants.dart' as constants;
+import 'package:moment/models/constants.dart' as constants;
 import 'package:moment/providers/moment_new_post_provider.dart';
 import 'package:provider/provider.dart';
 

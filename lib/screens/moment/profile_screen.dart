@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moment/components/common/circle_image.dart';
 import 'package:moment/components/common/custom_scroll_settings.dart';
 import 'package:moment/components/common/logged_in_drawer.dart';
-import 'package:moment/constants.dart';
+import 'package:moment/models/constants.dart';
 
 class Profile extends StatelessWidget {
   final String name = 'Gomathi Sankar S M';

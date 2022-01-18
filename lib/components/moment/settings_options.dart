@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:moment/constants.dart' as constants;
+import 'package:moment/models/constants.dart' as constants;
 import 'package:moment/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 

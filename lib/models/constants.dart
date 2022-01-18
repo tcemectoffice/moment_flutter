@@ -68,6 +68,23 @@ const TextStyle settingsOptionStyle =
 ThemeData lightTheme = ThemeData.light().copyWith(
   appBarTheme: const AppBarTheme(backgroundColor: Colors.blueGrey),
   scaffoldBackgroundColor: const Color(0xFFDAEDFA),
+  inputDecorationTheme: InputDecorationTheme(
+    contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 3.0),
+    filled: true,
+    fillColor: const Color(0xfff4f4f4),
+    enabledBorder: OutlineInputBorder(
+      borderSide: const BorderSide(color: Colors.transparent),
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: const BorderSide(color: Colors.transparent),
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(6.0),
+      borderSide: const BorderSide(color: Colors.red),
+    ),
+  ),
   navigationBarTheme:
       const NavigationBarThemeData(indicatorColor: Colors.greenAccent),
 );
@@ -76,4 +93,20 @@ ThemeData darkTheme = ThemeData.dark().copyWith(
   appBarTheme: const AppBarTheme(backgroundColor: Colors.blueGrey),
   navigationBarTheme:
       NavigationBarThemeData(indicatorColor: Colors.greenAccent[700]),
+  inputDecorationTheme: InputDecorationTheme(
+    contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 3.0),
+    filled: true,
+    enabledBorder: OutlineInputBorder(
+      borderSide: const BorderSide(color: Colors.transparent),
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: const BorderSide(color: Colors.transparent),
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(6.0),
+      borderSide: const BorderSide(color: Colors.red),
+    ),
+  ),
 );
