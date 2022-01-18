@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moment/components/common/custom_scroll_settings.dart';
 import 'package:moment/components/moment/settings_options.dart';
 import 'package:moment/components/moment/settings_profile.dart';
-import 'package:moment/constants.dart';
+import 'package:moment/models/constants.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);

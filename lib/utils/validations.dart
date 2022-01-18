@@ -10,6 +10,7 @@ String? validatePassword(value) {
   if (value.length < 8) {
     return 'Password must be atleast 8 characters';
   }
+  return null;
 }
 
 String? validateTceEmail(value) {
@@ -18,6 +19,7 @@ String? validateTceEmail(value) {
   if (!regex.hasMatch(value)) {
     return 'Invalid TCE Mail ID';
   }
+  return null;
 }
 
 String? validateEmail(value) {
@@ -26,6 +28,7 @@ String? validateEmail(value) {
   if (!regex.hasMatch(value)) {
     return 'Invalid Mail ID';
   }
+  return null;
 }
 
 String? validateName(value) {
@@ -34,4 +37,5 @@ String? validateName(value) {
   if (!regex.hasMatch(value)) {
     return 'Name should contain only Alphabets';
   }
+  return null;
 }

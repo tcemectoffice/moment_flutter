@@ -2,8 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:moment/components/common/bottom_navbar.dart';
+import 'package:moment/components/common/custom_popup.dart';
 import 'package:moment/components/common/logged_in_drawer.dart';
-import 'package:moment/constants.dart' as constants;
+import 'package:moment/models/constants.dart' as constants;
+import 'package:moment/services.dart' as services;
+import 'package:moment/utils/util_functions.dart' as utils;
 import 'package:moment/providers/home_page_provider.dart';
 import 'package:moment/screens/mctea/mctea_home_screen.dart';
 import 'package:moment/screens/moment/moment_home_screen.dart';
@@ -42,7 +45,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: const Text('Yes'),
               ),
               MaterialButton(
-                onPressed: () => Navigator.of(context).pop(false),
+                onPressed: () async {
+                  showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (context) => const CustomPopup(
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  );
+                  if (await services.logout()) {
+                    Provider.of<HomePageNotifier>(context, listen: false)
+                        .setIndex(0);
+                    Navigator.of(context).pop(false);
+                    Navigator.of(context).pushNamed('/login');
+                  } else {
+                    utils.showSnackMessage(context, 'Please try again later!');
+                  }
+                },
                 child: const Text('Logout'),
               ),
             ],
@@ -61,7 +82,9 @@ class _HomeScreenState extends State<HomeScreen> {
             title: const Text('Moment'),
             actions: [
               IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/notifications');
+                  },
                   icon: const Icon(
                     Icons.notifications_outlined,
                   ))
@@ -74,7 +97,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           floatingActionButton: homePageState.index < 1
               ? FloatingActionButton(
-                  child: const Icon(Icons.add),
+                  child: Icon(
+                    Icons.add,
+                    color: Theme.of(context).iconTheme.color,
+                  ),
                   onPressed: () {
                     switch (homePageState.index) {
                       case 0:

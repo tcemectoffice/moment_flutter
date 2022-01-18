@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moment/components/common/circle_image.dart';
-import 'package:moment/constants.dart' as constants;
+import 'package:moment/models/constants.dart' as constants;
 
 class ProfileCard extends StatelessWidget {
   const ProfileCard({Key? key}) : super(key: key);

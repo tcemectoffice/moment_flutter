@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1082071589954",
+    "project_id": "moment-ca064",
+    "storage_bucket": "moment-ca064.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1082071589954:android:0f7ecf108314aa495039db",
+        "android_client_info": {
+          "package_name": "edu.tce.moment"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1082071589954-fpk8cbuq1qi2upnv20jpf4mt43bj57ba.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBeMdTgppOgEyn5UAN00MAA2lEgL4E4vvY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1082071589954-fpk8cbuq1qi2upnv20jpf4mt43bj57ba.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,4 +1,5 @@
-import 'package:moment/constants.dart' as constants;
+import 'package:moment/utils/util_functions.dart' as utils;
+import 'package:moment/models/constants.dart' as constants;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:moment/providers/home_page_provider.dart';
@@ -61,9 +62,8 @@ class LoggedInDrawerState extends State<LoggedInDrawer> {
                           title: const Text('Profile'),
                         ),
                       ListTile(
-                        onTap: () {
-                          // Navigator.of(context).pushNamed('/login');
-                          print(Theme.of(context).primaryColor);
+                        onTap: () async {
+                          await utils.logout(context);
                         },
                         title: const Text('Logout'),
                       ),

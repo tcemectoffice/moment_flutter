@@ -66,14 +66,74 @@ const TextStyle settingsOptionStyle =
     TextStyle(fontSize: 16, fontWeight: FontWeight.w500);
 
 ThemeData lightTheme = ThemeData.light().copyWith(
+  primaryColor: Colors.blueGrey,
+  indicatorColor: Colors.blueGrey,
   appBarTheme: const AppBarTheme(backgroundColor: Colors.blueGrey),
   scaffoldBackgroundColor: const Color(0xFFDAEDFA),
+  inputDecorationTheme: InputDecorationTheme(
+    contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 3.0),
+    filled: true,
+    fillColor: const Color(0xfff4f4f4),
+    enabledBorder: OutlineInputBorder(
+      borderSide: const BorderSide(color: Colors.transparent),
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: const BorderSide(color: Colors.transparent),
+      borderRadius: BorderRadius.circular(10.0),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(6.0),
+      borderSide: const BorderSide(color: Colors.red),
+    ),
+  ),
   navigationBarTheme:
       const NavigationBarThemeData(indicatorColor: Colors.greenAccent),
+  buttonTheme: const ButtonThemeData(
+    splashColor: Colors.transparent,
+    hoverColor: Colors.transparent,
+    highlightColor: Colors.transparent,
+    buttonColor: Colors.greenAccent,
+  ),
+  iconTheme: const IconThemeData(color: Colors.black),
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
+    splashColor: Colors.transparent,
+    hoverColor: Colors.transparent,
+    backgroundColor: Colors.greenAccent,
+  ),
 );
 
 ThemeData darkTheme = ThemeData.dark().copyWith(
-  appBarTheme: const AppBarTheme(backgroundColor: Colors.blueGrey),
-  navigationBarTheme:
-      NavigationBarThemeData(indicatorColor: Colors.greenAccent[700]),
-);
+    primaryColor: Colors.blueGrey,
+    appBarTheme: const AppBarTheme(backgroundColor: Colors.blueGrey),
+    navigationBarTheme:
+        NavigationBarThemeData(indicatorColor: Colors.greenAccent[700]),
+    inputDecorationTheme: InputDecorationTheme(
+      contentPadding:
+          const EdgeInsets.symmetric(horizontal: 12.0, vertical: 3.0),
+      filled: true,
+      enabledBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.transparent),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.transparent),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(6.0),
+        borderSide: const BorderSide(color: Colors.red),
+      ),
+    ),
+    buttonTheme: ButtonThemeData(
+      splashColor: Colors.transparent,
+      hoverColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      buttonColor: Colors.greenAccent[700],
+    ),
+    iconTheme: const IconThemeData(color: Colors.white),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      splashColor: Colors.transparent,
+      hoverColor: Colors.transparent,
+      backgroundColor: Colors.greenAccent[700],
+    ));
