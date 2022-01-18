@@ -65,14 +65,17 @@ Future<int> login(String email, String password, String fcmToken) async {
 }
 
 Future<bool> initApp() async {
-  List<String> headerInfo = await prefs.getStringList('headers');
+  List<String> headerInfo = await prefs.getStringList('headers') ?? ['', ''];
+  if (headerInfo[0].isEmpty || headerInfo[1].isEmpty) {
+    return false;
+  }
   setHeaders(headerInfo[0], headerInfo[1]);
   var request = http.MultipartRequest(
       'POST', Uri.parse('https://mectmoment.pythonanywhere.com/initapp'));
   request.fields.addAll({'request': '1'});
   request.headers.addAll(headers!);
-  http.StreamedResponse response = await request.send();
   try {
+    http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       String resStr = await response.stream.bytesToString();
       print(resStr);
