@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:moment/components/common/custom_popup.dart';
 import 'package:moment/models/constants.dart' as constants;
+import 'package:moment/utils/util_functions.dart' as utils;
 import 'package:moment/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -65,7 +67,14 @@ class _OptionsCardState extends State<OptionsCard> {
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               onPressed: () {
-                print('sdfn');
+                showDialog(
+                  context: context,
+                  builder: (context) => CustomPopup(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                );
               },
               child: Container(
                 padding: const EdgeInsets.all(14.0),
@@ -102,8 +111,8 @@ class _OptionsCardState extends State<OptionsCard> {
             MaterialButton(
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
-              onPressed: () {
-                print('sdfn');
+              onPressed: () async {
+                await utils.logout(context);
               },
               child: Container(
                 padding: const EdgeInsets.all(14.0),

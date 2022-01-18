@@ -35,7 +35,7 @@ Future<int> login(String email, String password, String fcmToken) async {
     http.StreamedResponse response = await request.send();
     if (response.statusCode.toString().startsWith('2')) {
       String resStr = await response.stream.bytesToString();
-      print(resStr);
+      print('login: ' + resStr);
       LoginModel loginData = LoginModel.fromJson(jsonDecode(resStr));
       switch (loginData.status) {
         case 1:
@@ -78,7 +78,7 @@ Future<bool> initApp() async {
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       String resStr = await response.stream.bytesToString();
-      print(resStr);
+      print('initialize: ' + resStr);
       if (resStr == '1') {
         return true;
       } else {
@@ -112,7 +112,7 @@ Future<bool> logout() async {
   try {
     if (response.statusCode == 200) {
       String resStr = await response.stream.bytesToString();
-      print(resStr);
+      print('logout: ' + resStr);
       if (resStr == '1') {
         utils.showSnackMessage(
             navKey.currentState!.context, 'Logged out Successfully!');

@@ -51,6 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
   loginSubmit() async {
     if (_loginFormKey.currentState!.validate()) {
       showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (context) => const CustomPopup(
           child: Center(
