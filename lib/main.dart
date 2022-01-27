@@ -113,8 +113,8 @@ class MomentState extends State<Moment> {
         theme: constants.lightTheme,
         darkTheme: constants.darkTheme,
         themeMode: appState.currentTheme,
-        // initialRoute: '/home',
-        initialRoute: '/splash',
+        initialRoute: '/home',
+        // initialRoute: '/splash',
         // initialRoute: '/login',
       );
     });
