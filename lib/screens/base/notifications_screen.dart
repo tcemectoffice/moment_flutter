@@ -29,11 +29,16 @@ class _NotificationsState extends State<Notifications> {
                         children: const [
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 4),
-                            child: Icon(
-                              IconData(0xf572,
-                                  fontFamily: 'MaterialIcons',
-                                  matchTextDirection: true),
+                            child: IconButton(
+                            onPressed: null,
+                            icon: Icon(
+                              IconData(
+                                0xf572,
+                                fontFamily: 'MaterialIcons',
+                                matchTextDirection: true,
+                              ),
                             ),
+                          ),
                           ),
                           Text(
                             "Notifications",

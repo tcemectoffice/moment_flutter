@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:moment/components/common/custom_popup.dart';
 import 'package:moment/models/constants.dart' as constants;
 import 'package:moment/utils/util_functions.dart' as utils;
 import 'package:moment/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:moment/screens/base/add_tutor_screen.dart';
 
 class OptionsCard extends StatefulWidget {
   const OptionsCard({Key? key}) : super(key: key);
@@ -67,14 +69,18 @@ class _OptionsCardState extends State<OptionsCard> {
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => CustomPopup(
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SelectTutorScreen()),
                 );
+                // showDialog(
+                //   context: context,
+                //   builder: (context) => CustomPopup(
+                //     child: Center(
+                //       child: CircularProgressIndicator(),
+                //     ),
+                //   ),
+                // );
               },
               child: Container(
                 padding: const EdgeInsets.all(14.0),

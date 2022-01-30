@@ -95,7 +95,18 @@ class _MomentHomeState extends State<MomentHome> {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                return PostCard();
+                return const PostCard(
+                  grpdpUrl:
+                      "https://media.istockphoto.com/photos/colored-powder-explosion-on-black-background-picture-id1057506940?k=20&m=1057506940&s=612x612&w=0&h=3j5EA6YFVg3q-laNqTGtLxfCKVR3_o6gcVZZseNaWGk=",
+                  groupName: "Tutor Ward",
+                  tutorName: "Mr.S.Partha sarathi",
+                  batchNum: 1,
+                  postMsg:
+                      "All Students of batch 2 are asked to join the tutor ward meeting by 8pm today",
+                  imageUrl:
+                      "https://vinusimages.co/wp-content/uploads/2018/10/EG7A2390.jpgA_.jpg",
+                );
+                ;
               },
               childCount: 5,
             ),
