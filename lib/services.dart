@@ -53,10 +53,10 @@ Future<int> login(String email, String password, String fcmToken) async {
           return 2;
       }
     } else if (response.statusCode.toString().startsWith('4')) {
-      print(response.reasonPhrase);
+      print('login: ' + response.reasonPhrase.toString());
       return 2;
     } else {
-      print(response.reasonPhrase);
+      print('login: ' + response.reasonPhrase.toString());
       return 3;
     }
   } catch (error) {
@@ -87,13 +87,13 @@ Future<bool> initApp() async {
         return false;
       }
     } else {
-      print(response.reasonPhrase);
+      print('initialize: ' + response.reasonPhrase.toString());
       utils.showSnackMessage(
           navKey.currentState!.context, 'Something went wrong! Login again!');
       return false;
     }
   } catch (error) {
-    print(error);
+    print('initialize: ' + error.toString());
     utils.showSnackMessage(
         navKey.currentState!.context, 'No Internet! Login again!');
     return false;
@@ -123,13 +123,13 @@ Future<bool> logout() async {
         return false;
       }
     } else {
-      print(response.reasonPhrase);
+      print('logout: ' + response.reasonPhrase.toString());
       utils.showSnackMessage(navKey.currentState!.context,
           'Something went wrong! Try again later!');
       return false;
     }
   } catch (error) {
-    print(error);
+    print('logout: ' + error.toString());
     utils.showSnackMessage(
         navKey.currentState!.context, 'No Internet! Try again later!');
     return false;
