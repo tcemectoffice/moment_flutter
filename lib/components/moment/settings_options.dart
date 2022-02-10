@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:moment/components/common/custom_popup.dart';
 import 'package:moment/models/constants.dart' as constants;
+import 'package:moment/screens/moment/groups_screen.dart';
+import 'package:moment/screens/moment/show_all_groups.dart';
 import 'package:moment/utils/util_functions.dart' as utils;
 import 'package:moment/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -71,6 +73,47 @@ class _OptionsCardState extends State<OptionsCard> {
               onPressed: () {
                 Navigator.push(
                   context,
+                  MaterialPageRoute(builder: (context) => ShowAllGroups()),
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.all(14.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: const [
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15.0),
+                        child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Icon(Icons.group)),
+                      ),
+                      flex: 4,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15.0),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'My Groups',
+                            style: constants.settingsOptionStyle,
+                          ),
+                        ),
+                      ),
+                      flex: 7,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const Divider(),
+            MaterialButton(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              onPressed: () {
+                Navigator.push(
+                  context,
                   MaterialPageRoute(builder: (context) => SelectTutorScreen()),
                 );
                 // showDialog(
@@ -92,7 +135,7 @@ class _OptionsCardState extends State<OptionsCard> {
                         padding: EdgeInsets.symmetric(horizontal: 15.0),
                         child: Align(
                             alignment: Alignment.centerRight,
-                            child: Icon(Icons.person_add_alt)),
+                            child: Icon(Icons.person_add)),
                       ),
                       flex: 4,
                     ),
