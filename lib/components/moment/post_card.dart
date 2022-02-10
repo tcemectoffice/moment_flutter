@@ -45,7 +45,7 @@ class _PostCardState extends State<PostCard> {
               children: [
                 CircleAvatar(
                   radius: 27,
-                  backgroundImage: NetworkImage(widget.grpdpUrl),
+                  backgroundImage: AssetImage(widget.grpdpUrl),
                 ),
                 Expanded(
                   child: Padding(
@@ -63,7 +63,7 @@ class _PostCardState extends State<PostCard> {
                         Text(
                           widget.tutorName,
                         ),
-                        Divider(
+                        const Divider(
                           thickness: 1,
                           color: Colors.grey,
                         ),
@@ -78,7 +78,7 @@ class _PostCardState extends State<PostCard> {
                               child: Image(
                                 height: 150,
                                 width: 200,
-                                image: NetworkImage(widget.imageUrl!),
+                                image: AssetImage(widget.imageUrl!),
                               ),
                             ),
                           ),

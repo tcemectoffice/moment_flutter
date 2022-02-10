@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:moment/screens/moment/post_screen.dart';
+import 'package:moment/screens/moment/comments_screen.dart';
 
 showComments(
     BuildContext context,
