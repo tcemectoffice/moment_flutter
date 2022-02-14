@@ -15,69 +15,66 @@ class _ShowAllGroupsState extends State<ShowAllGroups> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          backgroundColor: Color(0xFFC9E6FB),
-          appBar: AppBar(
-            title: Text(
-              "My Groups",
-              style: TextStyle(fontSize: 24),
+          appBar: AppBar(),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 30),
+            child: GridView.count(
+              crossAxisCount: 2,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: GroupCard(
+                    grpDp: "assets/images/tutor_ward.jpeg",
+                    grpName: "Tutor Ward",
+                    onpressed: () {
+                      setState(
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MyGroupScreen(),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: GroupCard(
+                    grpDp: "assets/images/tutor_ward.jpeg",
+                    grpName: "Mect General",
+                    onpressed: () {
+                      setState(
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MyGroupScreen(),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: GroupCard(
+                    grpDp: "assets/images/tutor_ward.jpeg",
+                    grpName: "Tutor Ward",
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: GroupCard(
+                    grpDp: "assets/images/tutor_ward.jpeg",
+                    grpName: "Mect General",
+                  ),
+                ),
+              ],
             ),
-          ),
-          body: GridView.count(
-            crossAxisCount: 2,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: GroupCard(
-                  grpDp: "assets/images/tutor_ward.jpeg",
-                  grpName: "Tutor Ward",
-                  onpressed: () {
-                    setState(
-                      () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MyGroupScreen(),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: GroupCard(
-                  grpDp: "assets/images/tutor_ward.jpeg",
-                  grpName: "Mect General",
-                  onpressed: () {
-                    setState(
-                      () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MyGroupScreen(),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: GroupCard(
-                  grpDp: "assets/images/tutor_ward.jpeg",
-                  grpName: "Tutor Ward",
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: GroupCard(
-                  grpDp: "assets/images/tutor_ward.jpeg",
-                  grpName: "Mect General",
-                ),
-              ),
-            ],
           )),
     );
   }
@@ -99,7 +96,6 @@ class GroupCard extends StatelessWidget {
     return GestureDetector(
       onTap: onpressed,
       child: Card(
-        color: Colors.white,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadiusDirectional.circular(10)),
         elevation: 8,
@@ -109,6 +105,9 @@ class GroupCard extends StatelessWidget {
             CircleAvatar(
               radius: 40,
               backgroundImage: AssetImage(grpDp),
+            ),
+            SizedBox(
+              height: 10,
             ),
             FittedBox(
               child: Text(

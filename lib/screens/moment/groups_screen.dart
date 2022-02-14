@@ -7,7 +7,9 @@ import 'package:moment/components/moment/groupinfo_card.dart';
 import 'package:moment/components/moment/addpost_in_groupspage.dart';
 
 class MyGroupScreen extends StatelessWidget {
-  const MyGroupScreen({Key? key}) : super(key: key);
+  const MyGroupScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +35,7 @@ class MyGroupScreen extends StatelessWidget {
               child: Column(
                 children: [
                   const GrpInfoCard(
-                    grpName: "Tutor Name",
+                    grpName: "Tutor Ward",
                     batchNumber: 1,
                     creatorName: "Mr.S.Partha Sarathi",
                     grpDp: "assets/images/tutor_ward.jpeg",

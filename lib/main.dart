@@ -5,6 +5,7 @@ import 'package:moment/models/constants.dart' as constants;
 import 'package:moment/providers/home_page_provider.dart';
 import 'package:moment/providers/moment_new_post_provider.dart';
 import 'package:moment/providers/theme_provider.dart';
+import 'package:moment/screens/base/general_details_screen.dart';
 import 'package:moment/screens/base/home_screen.dart';
 import 'package:moment/screens/base/login_screen.dart';
 import 'package:moment/screens/base/notifications_screen.dart';
@@ -108,6 +109,10 @@ class MomentState extends State<Moment> {
           },
           '/notifications': (context) {
             return const Notifications();
+          },
+          //edit bio page -routes
+          '/general-details': (context) {
+            return GeneralDetails();
           },
         },
         theme: constants.lightTheme,

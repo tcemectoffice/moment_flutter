@@ -32,7 +32,6 @@ class _CommentsScreenState extends State<CommentsScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color(0xFFDAEDFB),
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(
@@ -49,13 +48,11 @@ class _CommentsScreenState extends State<CommentsScreen> {
               });
             },
           ),
-          backgroundColor: Colors.white,
         ),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
             child: Card(
-              color: Colors.white,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadiusDirectional.circular(10)),
               elevation: 8,
@@ -89,7 +86,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                   Text(
                                     widget.tutorName,
                                   ),
-                                  Divider(
+                                  const Divider(
                                     color: Colors.black,
                                   ),
                                   Text(
@@ -98,10 +95,14 @@ class _CommentsScreenState extends State<CommentsScreen> {
                                   ),
                                   if (widget.imageUrl != null)
                                     Center(
-                                      child: Image(
-                                        height: 200,
-                                        width: 200,
-                                        image: NetworkImage(widget.imageUrl!),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 10),
+                                        child: Image(
+                                          height: 200,
+                                          width: 200,
+                                          image: AssetImage(widget.imageUrl!),
+                                        ),
                                       ),
                                     ),
                                   Row(
@@ -132,30 +133,30 @@ class _CommentsScreenState extends State<CommentsScreen> {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
                       child: Divider(
                         color: Colors.black,
                       ),
                     ),
-                    Text(
+                    const Text(
                       "Comments",
                       style:
                           TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                     ),
-                    Comments(
+                    const Comments(
                       dpUrl:
                           'https://media.istockphoto.com/photos/colored-powder-explosion-on-black-background-picture-id1057506940?k=20&m=1057506940&s=612x612&w=0&h=3j5EA6YFVg3q-laNqTGtLxfCKVR3_o6gcVZZseNaWGk=',
                       commentMsg: 'ok sir ',
                       userName: '19F022 - Kishore L',
                     ),
-                    Comments(
+                    const Comments(
                       dpUrl:
                           'https://media.istockphoto.com/photos/colored-powder-explosion-on-black-background-picture-id1057506940?k=20&m=1057506940&s=612x612&w=0&h=3j5EA6YFVg3q-laNqTGtLxfCKVR3_o6gcVZZseNaWGk=',
                       commentMsg: 'will attendance be taken sir!',
                       userName: '19F022 - Kishore L',
                     ),
-                    Comments(
+                    const Comments(
                       dpUrl:
                           'https://media.istockphoto.com/photos/colored-powder-explosion-on-black-background-picture-id1057506940?k=20&m=1057506940&s=612x612&w=0&h=3j5EA6YFVg3q-laNqTGtLxfCKVR3_o6gcVZZseNaWGk=',
                       commentMsg: 'is it compulsory for everyone to attend sir',

@@ -20,7 +20,7 @@ class NotificationCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 5),
       child: Card(
-        color: isNew ? Colors.white : const Color(0xFFEDF6FD),
+        // color: isNew ? Colors.white : const Color(0xFFEDF6FD),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadiusDirectional.circular(10),
         ),
@@ -44,7 +44,7 @@ class NotificationCard extends StatelessWidget {
                           text: TextSpan(
                             text: userName + "  ",
                             style: const TextStyle(
-                              fontSize: 20,
+                              fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),

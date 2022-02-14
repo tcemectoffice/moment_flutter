@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:moment/components/moment/private_staff_selection_popup.dart';
 
-class SelectTutorScreen extends StatelessWidget {
+class SelectTutorScreen extends StatefulWidget {
   const SelectTutorScreen({Key? key}) : super(key: key);
 
+  @override
+  State<SelectTutorScreen> createState() => _SelectTutorScreenState();
+}
+
+class _SelectTutorScreenState extends State<SelectTutorScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color(0xFFDAEDFB),
         body: CustomScrollView(
           slivers: <Widget>[
             SliverToBoxAdapter(
@@ -18,13 +22,23 @@ class SelectTutorScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
-                      children: const [
+                      children: [
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Icon(
-                            IconData(0xf572,
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                Navigator.pop(context);
+                              });
+                            },
+                            child: const Icon(
+                              IconData(
+                                0xf572,
                                 fontFamily: 'MaterialIcons',
-                                matchTextDirection: true),
+                                matchTextDirection: true,
+                              ),
+                              size: 30,
+                            ),
                           ),
                         ),
                         Text(
@@ -54,7 +68,7 @@ class SelectTutorScreen extends StatelessWidget {
                     child: Card(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadiusDirectional.circular(10)),
-                      elevation: 8,
+                      elevation: 4,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 10),

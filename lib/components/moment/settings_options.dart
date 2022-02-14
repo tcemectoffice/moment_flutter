@@ -19,44 +19,92 @@ class OptionsCard extends StatefulWidget {
 class _OptionsCardState extends State<OptionsCard> {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(21),
-      ),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-        child: Column(
-          children: [
-            Consumer<ThemeNotifier>(
-                builder: (BuildContext context, appState, child) {
-              return MaterialButton(
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(21),
+        ),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+          child: Column(
+            children: [
+              Consumer<ThemeNotifier>(
+                  builder: (BuildContext context, appState, child) {
+                return MaterialButton(
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  onPressed: () {
+                    appState.toggleTheme();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(14.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Expanded(
+                          flex: 4,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 15.0),
+                            child: Align(
+                                alignment: Alignment.centerRight,
+                                child: Icon(Icons.wb_sunny)),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 15.0),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                  appState.isDark! ? 'Light Mode' : 'Dark Mode',
+                                  style: constants.settingsOptionStyle),
+                            ),
+                          ),
+                          flex: 7,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+              const Divider(
+                thickness: 1,
+                color: Colors.grey,
+              ),
+              MaterialButton(
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
                 onPressed: () {
-                  appState.toggleTheme();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ShowAllGroups()),
+                  );
                 },
                 child: Container(
                   padding: const EdgeInsets.all(14.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const Expanded(
-                        flex: 4,
+                    children: const [
+                      Expanded(
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 15.0),
                           child: Align(
                               alignment: Alignment.centerRight,
-                              child: Icon(Icons.wb_sunny)),
+                              child: Icon(Icons.group)),
                         ),
+                        flex: 4,
                       ),
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                          padding: EdgeInsets.symmetric(horizontal: 15.0),
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                                appState.isDark! ? 'Light Mode' : 'Dark Mode',
-                                style: constants.settingsOptionStyle),
+                              'My Groups',
+                              style: constants.settingsOptionStyle,
+                            ),
                           ),
                         ),
                         flex: 7,
@@ -64,138 +112,104 @@ class _OptionsCardState extends State<OptionsCard> {
                     ],
                   ),
                 ),
-              );
-            }),
-            const Divider(),
-            MaterialButton(
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ShowAllGroups()),
-                );
-              },
-              child: Container(
-                padding: const EdgeInsets.all(14.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Icon(Icons.group)),
+              ),
+              const Divider(
+                thickness: 1,
+                color: Colors.grey,
+              ),
+              MaterialButton(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SelectTutorScreen()),
+                  );
+                  // showDialog(
+                  //   context: context,
+                  //   builder: (context) => CustomPopup(
+                  //     child: Center(
+                  //       child: CircularProgressIndicator(),
+                  //     ),
+                  //   ),
+                  // );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(14.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: const [
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15.0),
+                          child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Icon(Icons.person_add)),
+                        ),
+                        flex: 4,
                       ),
-                      flex: 4,
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'My Groups',
-                            style: constants.settingsOptionStyle,
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15.0),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Add Tutor',
+                              style: constants.settingsOptionStyle,
+                            ),
                           ),
                         ),
+                        flex: 7,
                       ),
-                      flex: 7,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const Divider(),
-            MaterialButton(
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SelectTutorScreen()),
-                );
-                // showDialog(
-                //   context: context,
-                //   builder: (context) => CustomPopup(
-                //     child: Center(
-                //       child: CircularProgressIndicator(),
-                //     ),
-                //   ),
-                // );
-              },
-              child: Container(
-                padding: const EdgeInsets.all(14.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Icon(Icons.person_add)),
+              const Divider(
+                thickness: 1,
+                color: Colors.grey,
+              ),
+              MaterialButton(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onPressed: () async {
+                  await utils.logout(context);
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(14.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: const [
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15.0),
+                          child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Icon(Icons.exit_to_app)),
+                        ),
+                        flex: 4,
                       ),
-                      flex: 4,
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Add Tutor',
-                            style: constants.settingsOptionStyle,
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15.0),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Log out',
+                              style: constants.settingsOptionStyle,
+                            ),
                           ),
                         ),
+                        flex: 7,
                       ),
-                      flex: 7,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const Divider(),
-            MaterialButton(
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              onPressed: () async {
-                await utils.logout(context);
-              },
-              child: Container(
-                padding: const EdgeInsets.all(14.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Icon(Icons.exit_to_app)),
-                      ),
-                      flex: 4,
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Log out',
-                            style: constants.settingsOptionStyle,
-                          ),
-                        ),
-                      ),
-                      flex: 7,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            // Divider(),
-          ],
+              // Divider(),
+            ],
+          ),
         ),
       ),
     );

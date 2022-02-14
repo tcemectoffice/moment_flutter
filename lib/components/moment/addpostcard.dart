@@ -23,7 +23,7 @@ class _AddPostCardState extends State<AddPostCard> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
       child: Card(
         color: Colors.white,
         shape: RoundedRectangleBorder(
@@ -47,10 +47,10 @@ class _AddPostCardState extends State<AddPostCard> {
                         children: [
                           Text(
                             widget.userName,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.w500, fontSize: 17),
                           ),
-                          Text("Select a Group"),
+                          const Text("Select a Group"),
                         ],
                       ),
                     ),
@@ -58,7 +58,7 @@ class _AddPostCardState extends State<AddPostCard> {
                       child: Container(),
                       flex: 2,
                     ),
-                    Text(
+                    const Text(
                       "Post",
                       style: TextStyle(color: Colors.blue, fontSize: 17),
                     ),
@@ -69,7 +69,7 @@ class _AddPostCardState extends State<AddPostCard> {
                       const EdgeInsets.symmetric(horizontal: 28, vertical: 17),
                   child: Column(
                     children: [
-                      Divider(
+                      const Divider(
                         color: Colors.black,
                       ),
                       Padding(
@@ -81,7 +81,7 @@ class _AddPostCardState extends State<AddPostCard> {
                           keyboardType: TextInputType.multiline,
                           decoration: InputDecoration(
                             hintText: "Write Something here...",
-                            contentPadding: EdgeInsets.symmetric(
+                            contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 20, vertical: 20),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12)),

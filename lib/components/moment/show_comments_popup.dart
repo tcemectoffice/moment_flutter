@@ -37,7 +37,7 @@ showComments(
         ),
         content: SingleChildScrollView(
           child: Column(
-            children: [
+            children: const [
               Comments(
                 dpUrl:
                     'https://media.istockphoto.com/photos/colored-powder-explosion-on-black-background-picture-id1057506940?k=20&m=1057506940&s=612x612&w=0&h=3j5EA6YFVg3q-laNqTGtLxfCKVR3_o6gcVZZseNaWGk=',
@@ -53,7 +53,7 @@ showComments(
               Comments(
                 dpUrl:
                     'https://media.istockphoto.com/photos/colored-powder-explosion-on-black-background-picture-id1057506940?k=20&m=1057506940&s=612x612&w=0&h=3j5EA6YFVg3q-laNqTGtLxfCKVR3_o6gcVZZseNaWGk=',
-                commentMsg: 'is it compulsory for everyone to attend sir',
+                commentMsg: 'ok sir',
                 userName: '19F022 - Kishore L',
               ),
             ],
@@ -61,7 +61,7 @@ showComments(
         ),
         actions: [
           MaterialButton(
-            child: Text(
+            child: const Text(
               "Show more",
               style: TextStyle(
                 color: Colors.blue,
@@ -116,7 +116,7 @@ class _CommentsState extends State<Comments> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Column(
         children: [
           Row(
@@ -130,31 +130,18 @@ class _CommentsState extends State<Comments> {
                 ),
               ),
               Expanded(
-                child: RichText(
-                  text: TextSpan(
-                    text: widget.userName + " : ",
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: widget.commentMsg,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
+                child: Text(
+                  widget.userName + " : " + widget.commentMsg,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.normal,
                   ),
                 ),
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
             child: Divider(
               color: Colors.black,
             ),
@@ -164,3 +151,25 @@ class _CommentsState extends State<Comments> {
     );
   }
 }
+
+// TODO
+// RichText(
+//                   text: TextSpan(
+//                     text: widget.userName + " : ",
+//                     style: const TextStyle(
+//                       fontSize: 18,
+//                       fontWeight: FontWeight.w500,
+//                       color: Colors.black,
+//                     ),
+//                     children: [
+//                       TextSpan(
+//                         text: widget.commentMsg,
+//                         style: const TextStyle(
+//                           fontSize: 18,
+//                           fontWeight: FontWeight.normal,
+//                           color: Colors.black,
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ),

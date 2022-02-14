@@ -33,7 +33,6 @@ class _PostCardState extends State<PostCard> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
       child: Card(
-        color: Colors.white,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadiusDirectional.circular(10)),
         elevation: 8,

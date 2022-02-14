@@ -10,12 +10,10 @@ class Notifications extends StatefulWidget {
 }
 
 class _NotificationsState extends State<Notifications> {
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color(0xFFDAEDFB),
         body: CustomScrollConfig(
           child: CustomScrollView(
             slivers: <Widget>[
@@ -28,17 +26,18 @@ class _NotificationsState extends State<Notifications> {
                       Row(
                         children: const [
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 4),
+                            padding: EdgeInsets.symmetric(horizontal: 6),
                             child: IconButton(
-                            onPressed: null,
-                            icon: Icon(
-                              IconData(
-                                0xf572,
-                                fontFamily: 'MaterialIcons',
-                                matchTextDirection: true,
+                              onPressed: null,
+                              icon: Icon(
+                                IconData(
+                                  0xf572,
+                                  fontFamily: 'MaterialIcons',
+                                  matchTextDirection: true,
+                                ),
+                                size: 30,
                               ),
                             ),
-                          ),
                           ),
                           Text(
                             "Notifications",
