@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:moment/components/common/circle_image.dart';
 import 'package:moment/components/common/custom_scroll_settings.dart';
 import 'package:moment/components/moment/post_card.dart';
+import 'package:moment/services.dart' as services;
+import 'package:moment/utils/util_functions.dart' as utils;
 
 class MomentHome extends StatefulWidget {
   const MomentHome({Key? key}) : super(key: key);
@@ -11,6 +13,38 @@ class MomentHome extends StatefulWidget {
 }
 
 class _MomentHomeState extends State<MomentHome> {
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    services.getHomeInitContent().then((value) {
+      switch (value) {
+        case 1:
+          break;
+        case 0:
+          utils.showSnackMessage(context, 'Invalid Login Credentials');
+          break;
+        case 2:
+          utils.showSnackMessage(context, 'Invalid Access');
+          break;
+        case 3:
+          utils.showSnackMessage(
+              context, 'Unknown error occured! Try again later!');
+          break;
+        case 4:
+          utils.showSnackMessage(context, 'No Internet! Try again later!');
+          break;
+        default:
+          utils.showSnackMessage(
+              context, 'Unknown error occured! Try again later!');
+      }
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomScrollConfig(

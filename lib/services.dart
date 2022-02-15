@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:moment/main.dart';
+import 'package:moment/models/network_response_model.dart';
 import 'utils/util_functions.dart' as utils;
 import 'utils/prefs.dart' as prefs;
 
@@ -70,8 +71,7 @@ Future<bool> initApp() async {
     return false;
   }
   setHeaders(headerInfo[0], headerInfo[1]);
-  var request = http.MultipartRequest(
-      'POST', Uri.parse('https://mectmoment.pythonanywhere.com/initapp'));
+  var request = http.MultipartRequest('POST', Uri.parse(baseURL + '/initapp'));
   request.fields.addAll({'request': '1'});
   request.headers.addAll(headers!);
   try {
@@ -101,8 +101,7 @@ Future<bool> initApp() async {
 }
 
 Future<bool> logout() async {
-  var request = http.MultipartRequest(
-      'POST', Uri.parse('https://mectmoment.pythonanywhere.com/logout'));
+  var request = http.MultipartRequest('POST', Uri.parse(baseURL + '/logout'));
   request.fields.addAll({
     'logout': '1',
     'isweb': kIsWeb ? '1' : '0',
@@ -133,5 +132,33 @@ Future<bool> logout() async {
     utils.showSnackMessage(
         navKey.currentState!.context, 'No Internet! Try again later!');
     return false;
+  }
+}
+
+Future<int> getHomeInitContent() async {
+  var request = http.Request('GET', Uri.parse(baseURL + '/home_content'));
+  request.headers.addAll(headers!);
+  try {
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode.toString().startsWith('2')) {
+      String resStr = await response.stream.bytesToString();
+      print('homeInit: ' + resStr);
+      NetworkResponseModel homeInitData =
+          NetworkResponseModel.fromJson(jsonDecode(resStr));
+      switch (homeInitData.status) {
+        case 1:
+          return 1;
+        default:
+          return 2;
+      }
+    } else if (response.statusCode.toString().startsWith('4')) {
+      print('homeInit: ' + response.reasonPhrase.toString());
+      return 2;
+    } else {
+      print('homeInit: ' + response.reasonPhrase.toString());
+      return 3;
+    }
+  } catch (error) {
+    return utils.validateNetworkError(error);
   }
 }
