@@ -10,7 +10,7 @@ class MomentHome extends StatefulWidget {
   _MomentHomeState createState() => _MomentHomeState();
 }
 
-class _MomentHomeState extends State<MomentHome> { 
+class _MomentHomeState extends State<MomentHome> {
   @override
   Widget build(BuildContext context) {
     return CustomScrollConfig(
@@ -18,28 +18,29 @@ class _MomentHomeState extends State<MomentHome> {
         slivers: <Widget>[
           SliverToBoxAdapter(
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 18.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 18.0, vertical: 18.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Groups',
                     style:
                         TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
                   ),
                   Container(
-                    padding: EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         GestureDetector(
                           onTap: () {},
-                          child: Container(
+                          child: SizedBox(
                             height: 90,
                             width: 90,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
+                              children: const [
                                 CircleImage(
                                   isAsset: true,
                                   imgUrl: 'assets/images/tce_logo.png',
@@ -56,12 +57,12 @@ class _MomentHomeState extends State<MomentHome> {
                         ),
                         GestureDetector(
                           onTap: () {},
-                          child: Container(
+                          child: SizedBox(
                             height: 90,
                             width: 90,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
+                              children: const [
                                 CircleImage(
                                   isAsset: true,
                                   imgUrl: 'assets/images/tutor_ward.jpeg',
@@ -79,9 +80,9 @@ class _MomentHomeState extends State<MomentHome> {
                       ],
                     ),
                   ),
-                  Divider(),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
+                  const Divider(),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 10.0),
                     child: Text(
                       'Posts',
                       style: TextStyle(
@@ -95,16 +96,18 @@ class _MomentHomeState extends State<MomentHome> {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                return const PostCard(
-                  grpdpUrl: "assets/images/tce_logo.png",
-                  groupName: "Tutor Ward",
-                  tutorName: "Mr.S.Partha sarathi",
-                  batchNum: 1,
-                  postMsg:
-                      "All Students of batch 2 are asked to join the tutor ward meeting by 8pm today",
-                  imageUrl: "assets/images/tutor_ward.jpeg",
+                return const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: PostCard(
+                    grpdpUrl: "assets/images/tce_logo.png",
+                    groupName: "Tutor Ward",
+                    tutorName: "Mr.S.Partha sarathi",
+                    batchNum: 1,
+                    postMsg:
+                        "All Students of batch 2 are asked to join the tutor ward meeting by 8pm today",
+                    imageUrl: "assets/images/tutor_ward.jpeg",
+                  ),
                 );
-                ;
               },
               childCount: 5,
             ),
