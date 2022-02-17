@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:moment/components/common/custom_scroll_settings.dart';
-import 'package:moment/components/common/drop_down_menu-fields.dart';
 import 'package:moment/components/common/text_field-field.dart';
-import 'package:moment/components/common/radio-field.dart';
-import 'package:moment/components/common/date_picker.dart';
 
-class GeneralDetails extends StatefulWidget {
-  const GeneralDetails({Key? key}) : super(key: key);
+class ParentDetails extends StatefulWidget {
+  const ParentDetails({Key? key}) : super(key: key);
 
   @override
-  State<GeneralDetails> createState() => _GeneralDetailsState();
+  _ParentDetailsState createState() => _ParentDetailsState();
 }
 
-class _GeneralDetailsState extends State<GeneralDetails> {
+class _ParentDetailsState extends State<ParentDetails> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -38,7 +35,7 @@ class _GeneralDetailsState extends State<GeneralDetails> {
             },
           ),
           title: const Text(
-            "Edit General Details",
+            "Edit Parent's Details",
             style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
           ),
           actions: [
@@ -68,6 +65,13 @@ class _GeneralDetailsState extends State<GeneralDetails> {
                             horizontal: 20, vertical: 10),
                         child: Column(
                           children: const [
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 6),
+                              child: Text(
+                                "Father's Details",
+                                style: TextStyle(fontSize: 22),
+                              ),
+                            ),
                             FieldsWithTextField(
                               fieldName: "Name : ",
                               keyType: TextInputType.name,
@@ -80,66 +84,69 @@ class _GeneralDetailsState extends State<GeneralDetails> {
                               actionType: TextInputAction.next,
                               minLines: 1,
                             ),
-                            FieldsWithRadio(
-                                fieldName: "Gender : ",
-                                option1: "Male",
-                                option2: "Female"),
-                            Datepicker(fieldName: "D.O.B. : "),
                             FieldsWithTextField(
-                              fieldName: "Reg No : ",
-                              keyType: TextInputType.text,
+                              fieldName: "E-mail : ",
+                              keyType: TextInputType.emailAddress,
                               actionType: TextInputAction.next,
                               minLines: 1,
                             ),
                             FieldsWithTextField(
-                              fieldName: "Roll No : ",
-                              keyType: TextInputType.text,
+                              fieldName: "Occupation : ",
+                              keyType: TextInputType.name,
                               actionType: TextInputAction.next,
                               minLines: 1,
                             ),
-                            FieldsWithRadio(
-                              fieldName: "Degree : ",
-                              option1: "B.E.",
-                              option2: "B.Tech",
+                            FieldsWithTextField(
+                              fieldName: "Occupation type : ",
+                              keyType: TextInputType.name,
+                              actionType: TextInputAction.next,
+                              minLines: 1,
+                            ),
+                            FieldsWithTextField(
+                              fieldName: "Annual Income : ",
+                              keyType: TextInputType.number,
+                              actionType: TextInputAction.next,
+                              minLines: 1,
+                            ),
+                            Divider(
+                              thickness: 2,
                             ),
                             Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8),
-                              child: DropdownMenu(
-                                fieldName: "Admission : ",
-                                items: [
-                                  "Aided",
-                                  "Self Support",
-                                  "Merit Management",
-                                  "Central Govt."
-                                ],
-                                defVal: "Self Support",
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8),
-                              child: DropdownMenu(
-                                fieldName: "Community : ",
-                                items: ["MBC", "BC", "SC", "ST", "OC"],
-                                defVal: "BC",
+                              padding: EdgeInsets.symmetric(vertical: 6),
+                              child: Text(
+                                "Mother's Details",
+                                style: TextStyle(fontSize: 22),
                               ),
                             ),
                             FieldsWithTextField(
-                              fieldName: "Religion : ",
-                              keyType: TextInputType.text,
+                              fieldName: "Name : ",
+                              keyType: TextInputType.name,
                               actionType: TextInputAction.next,
                               minLines: 1,
                             ),
                             FieldsWithTextField(
-                              fieldName: "Blood Group : ",
-                              keyType: TextInputType.text,
+                              fieldName: "Mobile : ",
+                              keyType: TextInputType.number,
                               actionType: TextInputAction.next,
                               minLines: 1,
                             ),
                             FieldsWithTextField(
-                              fieldName: "Address : ",
-                              keyType: TextInputType.streetAddress,
-                              actionType: TextInputAction.newline,
-                              minLines: 5,
+                              fieldName: "E-mail : ",
+                              keyType: TextInputType.emailAddress,
+                              actionType: TextInputAction.next,
+                              minLines: 1,
+                            ),
+                            FieldsWithTextField(
+                              fieldName: "Occupation : ",
+                              keyType: TextInputType.name,
+                              actionType: TextInputAction.next,
+                              minLines: 1,
+                            ),
+                            FieldsWithTextField(
+                              fieldName: "Occupation type : ",
+                              keyType: TextInputType.name,
+                              actionType: TextInputAction.done,
+                              minLines: 1,
                             ),
                           ],
                         ),

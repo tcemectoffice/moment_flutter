@@ -54,16 +54,20 @@ class _EditBioOptionsState extends State<EditBioOptions> {
               ),
               OptionsCard(
                 dp: "assets/images/tutor_ward.jpeg",
-                name: "Parent Details",
+                name: "Parent's Details",
                 onpressed: () {
-                  setState(() {});
+                  setState(() {
+                    Navigator.pushNamed(context, '/parent-details');
+                  });
                 },
               ),
               OptionsCard(
                 dp: "assets/images/tutor_ward.jpeg",
                 name: "High School Education Details",
                 onpressed: () {
-                  setState(() {});
+                  setState(() {
+                    Navigator.pushNamed(context, '/education-details');
+                  });
                 },
               ),
             ],
@@ -110,7 +114,7 @@ class OptionsCard extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 15),
                       child: Text(name,
                           style: const TextStyle(
-                              fontSize: 23, fontWeight: FontWeight.w500)),
+                              fontSize: 23, fontWeight: FontWeight.w400)),
                     ),
                   ),
                   const Icon(Icons.navigate_next),

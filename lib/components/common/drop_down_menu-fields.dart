@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 class DropdownMenu extends StatefulWidget {
   final List<String> items;
   final String defVal;
+  final String fieldName;
   const DropdownMenu({
     Key? key,
+    required this.fieldName,
     required this.items,
     required this.defVal,
   }) : super(key: key);
@@ -25,13 +27,15 @@ class _DropdownMenuState extends State<DropdownMenu> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Text(
-          "Community : ",
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+        Expanded(
+          child: Text(
+            widget.fieldName,
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+          ),
         ),
         Expanded(
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
               // color: const Color(0XFFF6F6F6),
               borderRadius: BorderRadius.circular(12),

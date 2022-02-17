@@ -22,7 +22,7 @@ class FieldsWithTextField extends StatelessWidget {
         children: [
           Text(
             fieldName,
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
           ),
           Expanded(
             child: TextFormField(

@@ -46,15 +46,22 @@ class _DatepickerState extends State<Datepicker> {
           style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: MaterialButton(
-            child: Text(
-              selectedDate(),
-              style: const TextStyle(fontSize: 18),
+          padding: const EdgeInsets.only(left: 10, top: 5, bottom: 5),
+          child: Material(
+            color: Colors.blue,
+            borderRadius: BorderRadius.circular(20.0),
+            child: MaterialButton(
+              child: Text(
+                selectedDate(),
+                style: const TextStyle(
+                  fontSize: 18,
+                  color: Colors.white,
+                ),
+              ),
+              onPressed: () {
+                pickDate(context);
+              },
             ),
-            onPressed: () {
-              pickDate(context);
-            },
           ),
         ),
       ],
