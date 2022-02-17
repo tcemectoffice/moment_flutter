@@ -47,6 +47,23 @@ EdgeInsets? getScreenMargin(BuildContext context) {
 const String appLogoAssetURL = 'assets/images/app_logo.png';
 const String tceLogoAssetURL = 'assets/images/tce_logo.png';
 
+InputDecoration textFieldDecoration() {
+  return const InputDecoration(
+    contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.lightBlueAccent, width: 1.0),
+      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.lightBlueAccent, width: 3.0),
+      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+    ),
+  );
+}
+
 final InputBorder textFormFieldEnabledBorder = OutlineInputBorder(
   borderRadius: BorderRadius.circular(6.0),
   borderSide: const BorderSide(color: Colors.black),
@@ -68,7 +85,9 @@ const TextStyle settingsOptionStyle =
 ThemeData lightTheme = ThemeData.light().copyWith(
   primaryColor: Colors.blueGrey,
   indicatorColor: Colors.blueGrey,
-  appBarTheme: const AppBarTheme(backgroundColor: Colors.blueGrey),
+  appBarTheme: const AppBarTheme(
+    backgroundColor: Colors.blueGrey,
+  ),
   scaffoldBackgroundColor: const Color(0xFFDAEDFA),
   inputDecorationTheme: InputDecorationTheme(
     contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 3.0),

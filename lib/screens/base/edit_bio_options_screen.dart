@@ -12,38 +12,37 @@ class _EditBioOptionsState extends State<EditBioOptions> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(
+              IconData(
+                0xf572,
+                fontFamily: 'MaterialIcons',
+                matchTextDirection: true,
+              ),
+              size: 30,
+            ),
+            onPressed: () {
+              setState(() {
+                Navigator.pop(context);
+              });
+            },
+          ),
+          title: const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15),
+            child: Text(
+              "Edit bio",
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.w600),
+            ),
+          ),
+        ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
           child: Column(
             children: [
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(
-                      IconData(
-                        0xf572,
-                        fontFamily: 'MaterialIcons',
-                        matchTextDirection: true,
-                      ),
-                      size: 30,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        Navigator.pop(context);
-                      });
-                    },
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: Text(
-                      "Edit bio",
-                      style:
-                          TextStyle(fontSize: 28, fontWeight: FontWeight.w600),
-                    ),
-                  )
-                ],
-              ),
-              const SizedBox(height: 10),
+              // const SizedBox(height: 10),
               OptionsCard(
                 dp: "assets/images/tutor_ward.jpeg",
                 name: "General Details",
