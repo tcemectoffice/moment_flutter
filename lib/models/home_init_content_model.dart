@@ -5,6 +5,7 @@ import 'package:moment/models/user_model.dart';
 class HomeContentModel {
   late List<Post> post;
   late List<User> user;
+  late List<User> staffdetails;
   late List<Group> group;
   late String userdp;
   late String username;
@@ -13,6 +14,7 @@ class HomeContentModel {
   HomeContentModel(
       {required this.post,
       required this.user,
+      required this.staffdetails,
       required this.group,
       required this.userdp,
       required this.username,
@@ -29,6 +31,12 @@ class HomeContentModel {
       user = [];
       json['user'].forEach((v) {
         user.add(User.fromJson(v));
+      });
+    }
+    if (json['staffdetails'] != null) {
+      staffdetails = [];
+      json['staffdetails'].forEach((v) {
+        staffdetails.add(User.fromJson(v));
       });
     }
     if (json['group'] != null) {

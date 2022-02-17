@@ -42,15 +42,14 @@ class MyGroupScreen extends StatelessWidget {
                     userName: "19F022-Kishore L",
                     dpUrl: "assets/images/tutor_ward.jpeg",
                   ),
-                  const PostCard(
-                    grpdpUrl: "assets/images/tce_logo.png",
-                    groupName: "Tutor Ward",
-                    tutorName: "Mr.S.Partha sarathi",
-                    batchNum: 1,
-                    postMsg:
-                        "All Students of batch 2 are asked to join the tutor ward meeting by 8pm today",
-                    imageUrl: "assets/images/tutor_ward.jpeg",
-                  ),
+                  // const PostCard(
+                  //   grpdpUrl: "assets/images/tce_logo.png",
+                  //   groupName: "Tutor Ward",
+                  //   postedBy: "Mr.S.Partha sarathi",
+                  //   postMsg:
+                  //       "All Students of batch 2 are asked to join the tutor ward meeting by 8pm today",
+                  //   imageUrl: "assets/images/tutor_ward.jpeg",
+                  // ),
                 ],
               ),
             ),

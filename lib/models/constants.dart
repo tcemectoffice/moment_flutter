@@ -66,10 +66,27 @@ const TextStyle settingsOptionStyle =
     TextStyle(fontSize: 16, fontWeight: FontWeight.w500);
 
 ThemeData lightTheme = ThemeData.light().copyWith(
-  primaryColor: Colors.blueGrey,
-  indicatorColor: Colors.blueGrey,
-  appBarTheme: const AppBarTheme(backgroundColor: Colors.blueGrey),
+  //PRIMARY COLOR
+  primaryColor: Colors.white,
+
+  //APPBAR THEME
+  appBarTheme: const AppBarTheme(
+    backgroundColor: Colors.white,
+    iconTheme: IconThemeData(
+      color: Colors.black,
+    ),
+    titleTextStyle: TextStyle(
+      fontSize: 19,
+      fontWeight: FontWeight.w700,
+      color: Colors.black,
+    ),
+    shadowColor: Colors.black,
+  ),
+
+  //SCAFFOLD BACKGROUND COLOR
   scaffoldBackgroundColor: const Color(0xFFDAEDFA),
+
+  //THEME FOR INPUT FIELD
   inputDecorationTheme: InputDecorationTheme(
     contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 3.0),
     filled: true,
@@ -87,15 +104,23 @@ ThemeData lightTheme = ThemeData.light().copyWith(
       borderSide: const BorderSide(color: Colors.red),
     ),
   ),
+
+  //NAVBAR THEME
   navigationBarTheme:
       const NavigationBarThemeData(indicatorColor: Colors.greenAccent),
+
+  //BUTTON THEME
   buttonTheme: const ButtonThemeData(
     splashColor: Colors.transparent,
     hoverColor: Colors.transparent,
     highlightColor: Colors.transparent,
     buttonColor: Colors.greenAccent,
   ),
+
+  //ICON THEME
   iconTheme: const IconThemeData(color: Colors.black),
+
+  //FLOATING ACTION BUTTON THEME
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
     splashColor: Colors.transparent,
     hoverColor: Colors.transparent,
@@ -104,7 +129,6 @@ ThemeData lightTheme = ThemeData.light().copyWith(
 );
 
 ThemeData darkTheme = ThemeData.dark().copyWith(
-    primaryColor: Colors.blueGrey,
     appBarTheme: const AppBarTheme(backgroundColor: Colors.blueGrey),
     navigationBarTheme:
         NavigationBarThemeData(indicatorColor: Colors.greenAccent[700]),

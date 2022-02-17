@@ -1,19 +1,25 @@
 class User {
+  int? userid;
   late String name;
-  late String regNo;
+  String? regNo;
+  String? designation;
   late String profilepic;
-  late String altemail;
+  String? altemail;
 
   User(
       {required this.name,
-      required this.regNo,
+      this.userid,
+      this.regNo,
+      this.designation,
       required this.profilepic,
-      required this.altemail});
+      this.altemail});
 
   User.fromJson(Map<String, dynamic> json) {
     name = json['name'];
+    userid = json['userid'];
     regNo = json['reg_no'];
     profilepic = json['profilepic'];
+    designation = json['designation'];
     altemail = json['altemail'];
   }
 }

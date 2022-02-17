@@ -2,17 +2,18 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:moment/components/common/custom_popup.dart';
+import 'package:moment/models/network_response_model.dart';
 import 'package:moment/providers/home_page_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:moment/services.dart' as services;
 
-validateNetworkError(Object e) {
-  print(e.toString() + e.runtimeType.toString());
+validateError(Object e) {
+  print('Thrown Error: ' + e.toString() + '  ' + e.runtimeType.toString());
   if (e.runtimeType == SocketException ||
       e.toString() == 'XMLHttpRequest error.') {
-    return 4;
+    return NetworkResponseModel(status: 1000);
   } else {
-    return 3;
+    return NetworkResponseModel(status: 999);
   }
 }
 

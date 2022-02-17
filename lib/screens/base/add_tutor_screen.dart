@@ -58,11 +58,11 @@ class SelectTutorScreen extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 10),
-                        child: StaffRowTile(
-                          staffName: "Mr.S.Partha Sarathi",
-                          staffTitle: "Assistant Professor",
-                          isPopUp: false,
-                        ),
+                        // child: StaffRowTile(
+                        //   staffName: "Mr.S.Partha Sarathi",
+                        //   staffTitle: "Assistant Professor",
+                        //   isPopUp: false,
+                        // ),
                       ),
                     ),
                   );

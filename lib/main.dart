@@ -3,7 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:moment/models/constants.dart' as constants;
 import 'package:moment/providers/home_page_provider.dart';
-import 'package:moment/providers/moment_new_post_provider.dart';
+import 'package:moment/providers/moment_home_provider.dart';
+import 'package:moment/providers/staff_provider.dart';
 import 'package:moment/providers/theme_provider.dart';
 import 'package:moment/screens/base/home_screen.dart';
 import 'package:moment/screens/base/login_screen.dart';
@@ -44,7 +45,8 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeNotifier()),
         ChangeNotifierProvider(create: (context) => HomePageNotifier()),
-        ChangeNotifierProvider(create: (context) => NewPostNotifier()),
+        ChangeNotifierProvider(create: (context) => StaffNotifier()),
+        ChangeNotifierProvider(create: (context) => MomentHomeNotifier()),
       ],
       child: const Moment(),
     ),
@@ -113,9 +115,9 @@ class MomentState extends State<Moment> {
         theme: constants.lightTheme,
         darkTheme: constants.darkTheme,
         themeMode: appState.currentTheme,
-        // initialRoute: '/home',
         initialRoute: '/splash',
         // initialRoute: '/login',
+        // initialRoute: '/home',
       );
     });
   }

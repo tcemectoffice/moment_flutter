@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:moment/components/common/custom_popup.dart';
 import 'package:moment/components/common/custom_scroll_settings.dart';
 import 'package:moment/models/constants.dart' as constants;
+import 'package:moment/models/network_response_model.dart';
 import 'package:moment/services.dart' as services;
 import 'package:moment/utils/util_functions.dart' as utils;
 import 'package:moment/utils/validations.dart';
@@ -59,10 +60,10 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       );
-      int response = await services.login(
+      NetworkResponseModel response = await services.login(
           emailController.text, passwordController.text, fcmToken!);
       Navigator.of(context).pop(0);
-      switch (response) {
+      switch (response.status) {
         case 1:
           Navigator.pushNamed(context, '/home');
           break;
@@ -74,14 +75,11 @@ class _LoginScreenState extends State<LoginScreen> {
           passwordController.clear();
           utils.showSnackMessage(context, 'Invalid Login Credentials');
           break;
-        case 2:
-          utils.showSnackMessage(context, 'Invalid Access');
-          break;
-        case 3:
+        case 999:
           utils.showSnackMessage(
               context, 'Unknown error occured! Try again later!');
           break;
-        case 4:
+        case 1000:
           utils.showSnackMessage(context, 'No Internet! Try again later!');
           break;
         default:

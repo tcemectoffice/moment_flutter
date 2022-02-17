@@ -17,66 +17,55 @@ class NotificationCard extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 5),
-      child: Card(
-        color: isNew ? Colors.white : const Color(0xFFEDF6FD),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusDirectional.circular(10),
-        ),
-        elevation: 4,
-        child: Expanded(
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Row(
+    return Card(
+      color: isNew ? Colors.white : const Color(0xFFEDF6FD),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadiusDirectional.circular(10),
+      ),
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 15.0),
+              child: CircleAvatar(
+                radius: 21,
+                backgroundImage: NetworkImage(dpUrl),
+              ),
+            ),
+            Expanded(
+              child: RichText(
+                text: TextSpan(
+                  text: userName + "  ",
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                   children: [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundImage: NetworkImage(dpUrl),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: RichText(
-                          text: TextSpan(
-                            text: userName + "  ",
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: notificationMsg,
-                                style: const TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                    TextSpan(
+                      text: notificationMsg,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.black,
                       ),
                     ),
-                    if (imageUrl != null)
-                      Image(
-                        height: 50,
-                        width: 50,
-                        image: NetworkImage(imageUrl!),
-                      ),
                   ],
                 ),
-                const Text(
-                  "show more",
-                  style: TextStyle(color: Colors.blue, fontSize: 18),
-                ),
-              ],
+              ),
             ),
-          ),
+            if (imageUrl != null)
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Image(
+                  height: 48,
+                  width: 48,
+                  image: NetworkImage(imageUrl!),
+                ),
+              ),
+          ],
         ),
       ),
     );

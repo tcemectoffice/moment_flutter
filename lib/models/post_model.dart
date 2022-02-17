@@ -5,16 +5,17 @@ class Post {
   late int userid;
   late int groupid;
   late String postdata;
-  late String fileurl;
   late String posttime;
   late int likecount;
   late int commentcount;
-  List<Filedetails>? filedetails;
-  late int likestatus;
-  List<String>? commentdata;
-  List<String>? commenttime;
+  late bool isimage;
+  late List<Filedetails>? filedetails;
+  late bool likestatus;
+  late List<String> commentdata;
+  late List<String> commenttime;
+  late List<String> commentedby;
   late int commentstatus;
-  late List<String>? dp;
+  late List<String> dp;
   late int delete;
 
   Post(
@@ -22,15 +23,16 @@ class Post {
       required this.userid,
       required this.groupid,
       required this.postdata,
-      required this.fileurl,
+      required this.isimage,
       required this.posttime,
       required this.likecount,
-      this.filedetails,
+      required this.filedetails,
       required this.likestatus,
-      this.commentdata,
-      this.commenttime,
+      required this.commentdata,
+      required this.commenttime,
+      required this.commentedby,
       required this.commentstatus,
-      this.dp,
+      required this.dp,
       required this.delete});
 
   Post.fromJson(Map<String, dynamic> json) {
@@ -38,7 +40,7 @@ class Post {
     userid = json['userid'];
     groupid = json['groupid'];
     postdata = json['postdata'];
-    fileurl = json['fileurl'];
+    isimage = json['isimage'] == 1;
     posttime = json['posttime'];
     likecount = json['likecount'];
     commentcount = json['commentcount'];
@@ -48,11 +50,32 @@ class Post {
         filedetails!.add(Filedetails.fromJson(v));
       });
     }
-    likestatus = json['likestatus'];
-    commentdata = json['commentdata'];
-    commenttime = json['commenttime'];
+    likestatus = json['likestatus'] == 1;
+    if (json['commentdata'] != null) {
+      commentdata = [];
+      json['commentdata'].forEach((v) {
+        commentdata.add(v.toString());
+      });
+    }
+    if (json['commenttime'] != null) {
+      commenttime = [];
+      json['commenttime'].forEach((v) {
+        commenttime.add(v.toString());
+      });
+    }
+    if (json['commentedby'] != null) {
+      commentedby = [];
+      json['commentedby'].forEach((v) {
+        commentedby.add(v.toString());
+      });
+    }
     commentstatus = json['commentstatus'];
-    dp = json['dp'];
+    if (json['dp'] != null) {
+      dp = [];
+      json['dp'].forEach((v) {
+        dp.add(v.toString());
+      });
+    }
     delete = json['delete'];
   }
 }

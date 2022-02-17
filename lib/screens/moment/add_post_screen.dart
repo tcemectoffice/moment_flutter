@@ -1,11 +1,7 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:moment/components/common/circle_image.dart';
-import 'package:moment/components/common/custom_scroll_settings.dart';
-import 'package:moment/models/constants.dart' as constants;
-import 'package:moment/providers/moment_new_post_provider.dart';
-import 'package:provider/provider.dart';
-import 'package:moment/components/moment/addpostcard.dart';
+// import 'package:moment/models/constants.dart' as constants;
+import 'package:moment/utils/prefs.dart' as prefs;
+import 'package:moment/components/moment/add_post_card.dart';
 
 class AddPost extends StatefulWidget {
   const AddPost({Key? key}) : super(key: key);
@@ -15,6 +11,9 @@ class AddPost extends StatefulWidget {
 }
 
 class _AddPostState extends State<AddPost> {
+  late String userName, userDp;
+  bool isLoading = true;
+
   Future<bool> onWillPop() async {
     return await showDialog(
           context: context,
@@ -41,32 +40,44 @@ class _AddPostState extends State<AddPost> {
         false;
   }
 
+  initialize() async {
+    setState(() {
+      isLoading = true;
+    });
+    userName = await prefs.getString('userName');
+    userDp = await prefs.getString('userDp');
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initialize();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Consumer<NewPostNotifier>(
-      builder: (BuildContext context, newPostState, child) {
-        return WillPopScope(
-          onWillPop: onWillPop,
-          child: Scaffold(
-            appBar: AppBar(
-              centerTitle: true,
-              title: const Text('Add Post'),
-            ),
-            body: Container(
-              // padding:
-              //     const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-              // margin: constants.getScreenMargin(context),
-              child: SingleChildScrollView(
-                child: const AddPostCard(
-                  userName: "19F022 - Kishore L",
-                  dpUrl:
-                      "https://media.istockphoto.com/photos/colored-powder-explosion-on-black-background-picture-id1057506940?k=20&m=1057506940&s=612x612&w=0&h=3j5EA6YFVg3q-laNqTGtLxfCKVR3_o6gcVZZseNaWGk=",
-                ),
-              ),
-            ),
+    return WillPopScope(
+      onWillPop: onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          leadingWidth: 27,
+          title: const Text(
+            'Add Post',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
           ),
-        );
-      },
+        ),
+        body: isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : AddPostCard(
+                userName: userName,
+                dpUrl: userDp,
+              ),
+      ),
     );
   }
 }

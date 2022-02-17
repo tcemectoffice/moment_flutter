@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:moment/components/common/circle_image.dart';
 import 'package:moment/components/common/custom_scroll_settings.dart';
 import 'package:moment/components/moment/post_card.dart';
+import 'package:moment/models/network_response_model.dart';
+import 'package:moment/providers/moment_home_provider.dart';
+import 'package:moment/providers/staff_provider.dart';
 import 'package:moment/services.dart' as services;
 import 'package:moment/utils/util_functions.dart' as utils;
+import 'package:provider/provider.dart';
 
 class MomentHome extends StatefulWidget {
   const MomentHome({Key? key}) : super(key: key);
@@ -13,141 +16,139 @@ class MomentHome extends StatefulWidget {
 }
 
 class _MomentHomeState extends State<MomentHome> {
-  bool isLoading = true;
+  bool isLoading = true, moreLoading = true;
+  int currentPostIndex = 0;
+  ScrollController scrollController = ScrollController();
+
+  Future<void> getContent() async {
+    setState(() {
+      isLoading = true;
+    });
+    NetworkResponseModel responseData = await services.getHomeInitContent();
+    switch (responseData.status) {
+      case 1:
+        Provider.of<MomentHomeNotifier>(context, listen: false)
+            .setHomeData(responseData.data);
+        Provider.of<StaffNotifier>(context, listen: false)
+            .setStaffDetails(responseData.data.staffdetails);
+        currentPostIndex = 10;
+        break;
+      case 999:
+        utils.showSnackMessage(
+            context, 'Unknown error occured! Try again later!');
+        break;
+      case 1000:
+        utils.showSnackMessage(context, 'No Internet! Try again later!');
+        break;
+      default:
+        utils.showSnackMessage(
+            context, 'Unknown error occured! Try again later!');
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  loadMore() async {
+    NetworkResponseModel responseData =
+        await services.getHomeLazyContent(currentPostIndex);
+    switch (responseData.status) {
+      case 2:
+        Provider.of<MomentHomeNotifier>(context, listen: false)
+            .extendHomeData(responseData.data);
+        currentPostIndex += responseData.data.post.length as int;
+        break;
+      case 999:
+        utils.showSnackMessage(
+            context, 'Unknown error occured! Try again later!');
+        break;
+      case 1000:
+        utils.showSnackMessage(context, 'No Internet! Try again later!');
+        break;
+      default:
+        utils.showSnackMessage(
+            context, 'Unknown error occured! Try again later!');
+    }
+    setState(() {
+      moreLoading = false;
+    });
+  }
+
+  void scrollListener() async {
+    if (scrollController.position.pixels ==
+        scrollController.position.maxScrollExtent) {
+      print('Load More Triggered');
+      setState(() {
+        moreLoading = true;
+      });
+      await loadMore();
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    services.getHomeInitContent().then((value) {
-      switch (value) {
-        case 1:
-          break;
-        case 0:
-          utils.showSnackMessage(context, 'Invalid Login Credentials');
-          break;
-        case 2:
-          utils.showSnackMessage(context, 'Invalid Access');
-          break;
-        case 3:
-          utils.showSnackMessage(
-              context, 'Unknown error occured! Try again later!');
-          break;
-        case 4:
-          utils.showSnackMessage(context, 'No Internet! Try again later!');
-          break;
-        default:
-          utils.showSnackMessage(
-              context, 'Unknown error occured! Try again later!');
-      }
-      setState(() {
-        isLoading = false;
-      });
-    });
+    scrollController.addListener(scrollListener);
+    currentPostIndex = 0;
+    getContent();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    scrollController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollConfig(
-      child: CustomScrollView(
-        slivers: <Widget>[
-          SliverToBoxAdapter(
-            child: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 18.0, vertical: 18.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Groups',
-                    style:
-                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        GestureDetector(
-                          onTap: () {},
-                          child: SizedBox(
-                            height: 90,
-                            width: 90,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: const [
-                                CircleImage(
-                                  isAsset: true,
-                                  imgUrl: 'assets/images/tce_logo.png',
-                                  radius: 60.0,
-                                  addPadding: false,
-                                ),
-                                Text(
-                                  'MECT - General',
-                                  style: TextStyle(fontSize: 12.0),
-                                )
-                              ],
+    return isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : RefreshIndicator(
+            onRefresh: getContent,
+            child: Consumer<MomentHomeNotifier>(builder: (BuildContext context,
+                MomentHomeNotifier momentHomeState, Widget? child) {
+              return CustomScrollConfig(
+                child: CustomScrollView(
+                  controller: scrollController,
+                  slivers: <Widget>[
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                          if (index == momentHomeState.momentHomeData!.length) {
+                            return moreLoading
+                                ? const Center(
+                                    child: Padding(
+                                    padding: EdgeInsets.all(15.0),
+                                    child: CircularProgressIndicator(),
+                                  ))
+                                : const SizedBox(
+                                    height: 30,
+                                  );
+                          }
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 15.0),
+                            child: PostCard(
+                              postInfo:
+                                  momentHomeState.momentHomeData!.post[index],
+                              postedByInfo:
+                                  momentHomeState.momentHomeData!.user[index],
+                              postedGroupInfo:
+                                  momentHomeState.momentHomeData!.group[index],
+                              postIndex: index,
+                              likeStatus: momentHomeState
+                                  .momentHomeData!.post[index].likestatus,
+                              elevation: 8,
                             ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {},
-                          child: SizedBox(
-                            height: 90,
-                            width: 90,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: const [
-                                CircleImage(
-                                  isAsset: true,
-                                  imgUrl: 'assets/images/tutor_ward.jpeg',
-                                  radius: 60.0,
-                                  addPadding: false,
-                                ),
-                                Text(
-                                  'Tutor Ward',
-                                  style: TextStyle(fontSize: 12.0),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+                          );
+                        },
+                        childCount: momentHomeState.momentHomeData!.length + 1,
+                      ),
                     ),
-                  ),
-                  const Divider(),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 10.0),
-                    child: Text(
-                      'Posts',
-                      style: TextStyle(
-                          fontSize: 16.0, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0),
-                  child: PostCard(
-                    grpdpUrl: "assets/images/tce_logo.png",
-                    groupName: "Tutor Ward",
-                    tutorName: "Mr.S.Partha sarathi",
-                    batchNum: 1,
-                    postMsg:
-                        "All Students of batch 2 are asked to join the tutor ward meeting by 8pm today",
-                    imageUrl: "assets/images/tutor_ward.jpeg",
-                  ),
-                );
-              },
-              childCount: 5,
-            ),
-          ),
-        ],
-      ),
-    );
+                  ],
+                ),
+              );
+            }),
+          );
   }
 }

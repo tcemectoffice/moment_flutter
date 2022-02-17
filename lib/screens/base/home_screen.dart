@@ -78,15 +78,16 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (BuildContext context, homePageState, child) {
         return Scaffold(
           appBar: AppBar(
+            elevation: 2,
             centerTitle: true,
-            title: const Text('Moment'),
+            title: const Text('MOMENT'),
             actions: [
               IconButton(
                   onPressed: () {
                     Navigator.pushNamed(context, '/notifications');
                   },
                   icon: const Icon(
-                    Icons.notifications_outlined,
+                    Icons.notifications,
                   ))
             ],
           ),

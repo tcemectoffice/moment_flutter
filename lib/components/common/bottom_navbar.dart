@@ -12,7 +12,7 @@ class BottomNavBar extends StatelessWidget {
     return CurvedNavigationBar(
       index: index,
       onTap: onTap,
-      color: Colors.blueGrey,
+      color: Theme.of(context).primaryColor,
       backgroundColor: Colors.transparent,
       buttonBackgroundColor:
           Theme.of(context).navigationBarTheme.indicatorColor,

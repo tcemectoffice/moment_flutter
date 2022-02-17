@@ -1,11 +1,16 @@
 class Filedetails {
-  late int isimage;
+  late String fileurl;
   late String filesize;
+  late String fileextension;
 
-  Filedetails({required this.isimage, required this.filesize});
+  Filedetails(
+      {required this.fileurl,
+      required this.filesize,
+      required this.fileextension});
 
   Filedetails.fromJson(Map<String, dynamic> json) {
-    isimage = json['isimage'];
+    fileurl = json['fileurl'];
     filesize = json['filesize'];
+    fileextension = json['fileextension'];
   }
 }
