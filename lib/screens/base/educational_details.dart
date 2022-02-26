@@ -36,7 +36,7 @@ class _EducationDetailsState extends State<EducationDetails> {
             },
           ),
           title: const Text(
-            "Edit General Details",
+            "Edit Details",
             style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
           ),
           actions: [
@@ -138,36 +138,6 @@ class _EducationDetailsState extends State<EducationDetails> {
                               actionType: TextInputAction.next,
                               minLines: 1,
                             ),
-                            Divider(
-                              thickness: 2,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 6),
-                              child: Text(
-                                "Other Details",
-                                style: TextStyle(fontSize: 22),
-                              ),
-                            ),
-                            DropdownMenu(
-                                fieldName: "First Graduate : ",
-                                items: ["Yes", "No"],
-                                defVal: "Yes"),
-                            DropdownMenu(
-                                fieldName: "Physically Challenged : ",
-                                items: ["Yes", "No"],
-                                defVal: "Yes"),
-                            DropdownMenu(
-                                fieldName: "Scholarship : ",
-                                items: ["Yes", "No"],
-                                defVal: "Yes"),
-                            DropdownMenu(
-                                fieldName: "Educational Loan : ",
-                                items: ["Yes", "No"],
-                                defVal: "Yes"),
-                            DropdownMenu(
-                                fieldName: "Hostel : ",
-                                items: ["Hostel", "Day scholar"],
-                                defVal: "Hostel"),
                           ],
                         ),
                       ),

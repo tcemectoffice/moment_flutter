@@ -148,6 +148,12 @@ class _ParentDetailsState extends State<ParentDetails> {
                               actionType: TextInputAction.done,
                               minLines: 1,
                             ),
+                            FieldsWithTextField(
+                              fieldName: "Annual Income : ",
+                              keyType: TextInputType.number,
+                              actionType: TextInputAction.next,
+                              minLines: 1,
+                            ),
                           ],
                         ),
                       ),

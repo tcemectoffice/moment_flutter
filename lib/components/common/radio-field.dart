@@ -18,13 +18,13 @@ class FieldsWithRadio extends StatelessWidget {
       children: [
         Text(
           fieldName,
-          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
         ),
         const Radio(value: 1, groupValue: 1, onChanged: null),
         Text(
           option1,
           style: const TextStyle(
-            fontSize: 21,
+            fontSize: 18,
             fontWeight: FontWeight.w400,
           ),
         ),
@@ -32,7 +32,7 @@ class FieldsWithRadio extends StatelessWidget {
         Text(
           option2,
           style: const TextStyle(
-            fontSize: 21,
+            fontSize: 18,
             fontWeight: FontWeight.w400,
           ),
         ),

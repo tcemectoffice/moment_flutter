@@ -30,7 +30,7 @@ class _DropdownMenuState extends State<DropdownMenu> {
         Expanded(
           child: Text(
             widget.fieldName,
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
           ),
         ),
         Expanded(

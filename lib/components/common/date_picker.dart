@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moment/models/constants.dart';
 
 class Datepicker extends StatefulWidget {
   final String fieldName;
@@ -16,9 +17,13 @@ class _DatepickerState extends State<Datepicker> {
 
   String selectedDate() {
     if (date == null) {
-      return "Select Date";
+      return "Select a Date";
     }
-    return "${date!.day}/${date!.month}/${date!.year}";
+    String dateSelected = date!.day >= 10 ? "${date!.day}" : "0${date!.day}";
+    String monthSelected =
+        date!.month >= 10 ? "${date!.month}" : "0${date!.month}";
+
+    return "$dateSelected/$monthSelected/${date!.year}";
   }
 
   Future pickDate(BuildContext context) async {
@@ -27,7 +32,7 @@ class _DatepickerState extends State<Datepicker> {
       context: context,
       initialDate: initialDate,
       firstDate: DateTime(1950),
-      lastDate: DateTime.now(),
+      lastDate: initialDate,
     );
     if (newDate == null) {
       return;
@@ -43,11 +48,30 @@ class _DatepickerState extends State<Datepicker> {
       children: [
         Text(
           widget.fieldName,
-          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 10, top: 5, bottom: 5),
-          child: Material(
+        Expanded(
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                pickDate(context);
+              });
+            },
+            child: TextFormField(
+              minLines: 1,
+              maxLines: 20,
+              decoration: textFieldDecoration().copyWith(
+                hintText: selectedDate(),
+              ),
+              enabled: false,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+/*Material(
             color: Colors.blue,
             borderRadius: BorderRadius.circular(20.0),
             child: MaterialButton(
@@ -62,9 +86,4 @@ class _DatepickerState extends State<Datepicker> {
                 pickDate(context);
               },
             ),
-          ),
-        ),
-      ],
-    );
-  }
-}
+          ),*/
