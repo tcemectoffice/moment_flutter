@@ -5,7 +5,11 @@ class Group {
   Group({required this.groupname, required this.groupdp});
 
   Group.fromJson(Map<String, dynamic> json) {
-    groupname = json['groupname'];
-    groupdp = json['groupdp'];
+    try {
+      groupname = json['groupname'];
+      groupdp = json['groupdp'];
+    } catch (e) {
+      print('GroupError: ' + e.toString());
+    }
   }
 }

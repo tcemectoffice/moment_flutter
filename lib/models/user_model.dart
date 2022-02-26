@@ -15,11 +15,15 @@ class User {
       this.altemail});
 
   User.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    userid = json['userid'];
-    regNo = json['reg_no'];
-    profilepic = json['profilepic'];
-    designation = json['designation'];
-    altemail = json['altemail'];
+    try {
+      name = json['name'];
+      userid = json['userid'];
+      regNo = json['reg_no'];
+      profilepic = json['profilepic'];
+      designation = json['designation'];
+      altemail = json['altemail'];
+    } catch (e) {
+      print('UserError: ' + e.toString());
+    }
   }
 }

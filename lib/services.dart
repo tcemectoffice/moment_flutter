@@ -147,8 +147,8 @@ Future<NetworkResponseModel> getHomeInitContent() async {
       print('homeInit: ' + resStr);
       NetworkResponseModel homeInitData =
           NetworkResponseModel.fromJson(jsonDecode(resStr));
-      prefs.setString('userName', homeInitData.data.username);
-      prefs.setString('userDp', homeInitData.data.userdp);
+      prefs.setString('user-name', homeInitData.data.username);
+      prefs.setString('user-dp', homeInitData.data.userdp);
       return homeInitData;
     } else {
       print('homeInit: ' + response.reasonPhrase.toString());
@@ -196,6 +196,30 @@ Future<bool> postLike(int postId, bool likeStatus) async {
       return resStr == '1';
     } else {
       print('likePost: ' + response.reasonPhrase.toString());
+      return false;
+    }
+  } catch (error) {
+    utils.validateError(error);
+    return false;
+  }
+}
+
+Future<bool> postComment(int postId, String comment) async {
+  var request =
+      http.MultipartRequest('POST', Uri.parse(baseURL + '/comment_save'));
+  request.fields.addAll({
+    'postid': postId.toString(),
+    'commentdata': comment,
+  });
+  request.headers.addAll(headers!);
+  try {
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode.toString().startsWith('2')) {
+      String resStr = await response.stream.bytesToString();
+      print('commentPost: ' + resStr);
+      return resStr == '1';
+    } else {
+      print('commentPost: ' + response.reasonPhrase.toString());
       return false;
     }
   } catch (error) {

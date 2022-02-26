@@ -36,46 +36,50 @@ class Post {
       required this.delete});
 
   Post.fromJson(Map<String, dynamic> json) {
-    postid = json['postid'];
-    userid = json['userid'];
-    groupid = json['groupid'];
-    postdata = json['postdata'];
-    isimage = json['isimage'] == 1;
-    posttime = json['posttime'];
-    likecount = json['likecount'];
-    commentcount = json['commentcount'];
-    if (json['filedetails'] != null) {
-      filedetails = [];
-      json['filedetails'].forEach((v) {
-        filedetails!.add(Filedetails.fromJson(v));
-      });
+    try {
+      postid = json['postid'];
+      userid = json['userid'];
+      groupid = json['groupid'];
+      postdata = json['postdata'];
+      isimage = json['isimage'] == 1;
+      posttime = json['posttime'];
+      likecount = json['likecount'];
+      commentcount = json['commentcount'];
+      if (json['filedetails'] != null) {
+        filedetails = [];
+        json['filedetails'].forEach((v) {
+          filedetails!.add(Filedetails.fromJson(v));
+        });
+      }
+      likestatus = json['likestatus'] == 1;
+      if (json['commentdata'] != null) {
+        commentdata = [];
+        json['commentdata'].forEach((v) {
+          commentdata.add(v.toString());
+        });
+      }
+      if (json['commenttime'] != null) {
+        commenttime = [];
+        json['commenttime'].forEach((v) {
+          commenttime.add(v.toString());
+        });
+      }
+      if (json['commentedby'] != null) {
+        commentedby = [];
+        json['commentedby'].forEach((v) {
+          commentedby.add(v.toString());
+        });
+      }
+      commentstatus = json['commentstatus'];
+      if (json['dp'] != null) {
+        dp = [];
+        json['dp'].forEach((v) {
+          dp.add(v.toString());
+        });
+      }
+      delete = json['delete'];
+    } catch (e) {
+      print('PostError: ' + e.toString());
     }
-    likestatus = json['likestatus'] == 1;
-    if (json['commentdata'] != null) {
-      commentdata = [];
-      json['commentdata'].forEach((v) {
-        commentdata.add(v.toString());
-      });
-    }
-    if (json['commenttime'] != null) {
-      commenttime = [];
-      json['commenttime'].forEach((v) {
-        commenttime.add(v.toString());
-      });
-    }
-    if (json['commentedby'] != null) {
-      commentedby = [];
-      json['commentedby'].forEach((v) {
-        commentedby.add(v.toString());
-      });
-    }
-    commentstatus = json['commentstatus'];
-    if (json['dp'] != null) {
-      dp = [];
-      json['dp'].forEach((v) {
-        dp.add(v.toString());
-      });
-    }
-    delete = json['delete'];
   }
 }

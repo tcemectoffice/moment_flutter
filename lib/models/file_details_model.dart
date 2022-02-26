@@ -9,8 +9,12 @@ class Filedetails {
       required this.fileextension});
 
   Filedetails.fromJson(Map<String, dynamic> json) {
-    fileurl = json['fileurl'];
-    filesize = json['filesize'];
-    fileextension = json['fileextension'];
+    try {
+      fileurl = json['fileurl'];
+      filesize = json['filesize'];
+      fileextension = json['fileextension'];
+    } catch (e) {
+      print('FileDetailsError: ' + e.toString());
+    }
   }
 }

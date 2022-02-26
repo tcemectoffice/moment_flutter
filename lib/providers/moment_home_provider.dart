@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moment/utils/prefs.dart' as prefs;
 import 'package:moment/models/home_init_content_model.dart';
 import 'package:moment/models/home_lazy_content_model.dart';
 
@@ -17,6 +18,20 @@ class MomentHomeNotifier extends ChangeNotifier {
 
   toggleLike(int postIndex) {
     momentHomeData!.post[postIndex].likestatus =
-        momentHomeData!.post[postIndex].likestatus;
+        !(momentHomeData!.post[postIndex].likestatus);
+    momentHomeData!.post[postIndex].likestatus
+        ? momentHomeData!.post[postIndex].likecount++
+        : momentHomeData!.post[postIndex].likecount--;
+    notifyListeners();
+  }
+
+  addComment(int postIndex, String comment) async {
+    String userName = await prefs.getString('user-name');
+    String userDp = await prefs.getString('user-dp');
+    momentHomeData!.post[postIndex].commentdata.insert(0, comment);
+    momentHomeData!.post[postIndex].commentedby.insert(0, userName);
+    momentHomeData!.post[postIndex].dp.insert(0, userDp);
+    momentHomeData!.post[postIndex].commentcount++;
+    notifyListeners();
   }
 }
