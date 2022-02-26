@@ -44,8 +44,8 @@ class _AddPostState extends State<AddPost> {
     setState(() {
       isLoading = true;
     });
-    userName = await prefs.getString('userName');
-    userDp = await prefs.getString('userDp');
+    userName = await prefs.getString('user-name');
+    userDp = await prefs.getString('user-dp');
     setState(() {
       isLoading = false;
     });

@@ -16,7 +16,7 @@ class MomentHome extends StatefulWidget {
 }
 
 class _MomentHomeState extends State<MomentHome> {
-  bool isLoading = true, moreLoading = true;
+  bool isLoading = true, moreLoading = false;
   int currentPostIndex = 0;
   ScrollController scrollController = ScrollController();
 
@@ -122,7 +122,7 @@ class _MomentHomeState extends State<MomentHome> {
                                     child: CircularProgressIndicator(),
                                   ))
                                 : const SizedBox(
-                                    height: 30,
+                                    height: 160,
                                   );
                           }
                           return Padding(

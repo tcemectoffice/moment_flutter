@@ -6,11 +6,13 @@ class CommentInput extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode node;
   final bool autoFocus;
+  final void Function() onNewComment;
   const CommentInput(
       {required this.dpUrl,
       required this.controller,
       required this.node,
       required this.autoFocus,
+      required this.onNewComment,
       Key? key})
       : super(key: key);
 
@@ -45,7 +47,7 @@ class CommentInput extends StatelessWidget {
                   label: const Text('Add comment...'),
                   floatingLabelBehavior: FloatingLabelBehavior.never,
                   suffixIcon: IconButton(
-                    onPressed: () {},
+                    onPressed: onNewComment,
                     icon: const Icon(
                       Icons.send_outlined,
                       size: 18,

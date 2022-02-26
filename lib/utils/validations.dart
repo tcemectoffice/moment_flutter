@@ -23,7 +23,7 @@ String? validateTceEmail(value) {
 }
 
 String? validateEmail(value) {
-  String pattern = r'^[a-z0-9]+@[a-z]*\.+[a-z]*$';
+  String pattern = r'^[a-z0-9]+@[a-z\.]*\.+[a-z]*$';
   RegExp regex = RegExp(pattern);
   if (!regex.hasMatch(value)) {
     return 'Invalid Mail ID';

@@ -21,33 +21,37 @@ class HomeContentModel {
       required this.length});
 
   HomeContentModel.fromJson(Map<String, dynamic> json) {
-    if (json['post'] != null) {
-      post = [];
-      json['post'].forEach((v) {
-        post.add(Post.fromJson(v));
-      });
+    try {
+      if (json['post'] != null) {
+        post = [];
+        json['post'].forEach((v) {
+          post.add(Post.fromJson(v));
+        });
+      }
+      if (json['user'] != null) {
+        user = [];
+        json['user'].forEach((v) {
+          user.add(User.fromJson(v));
+        });
+      }
+      if (json['staffdetails'] != null) {
+        staffdetails = [];
+        json['staffdetails'].forEach((v) {
+          staffdetails.add(User.fromJson(v));
+        });
+      }
+      if (json['group'] != null) {
+        group = [];
+        json['group'].forEach((v) {
+          group.add(Group.fromJson(v));
+        });
+      }
+      userdp = json['userdp'];
+      username = json['username'];
+      length = json['length'];
+    } catch (e) {
+      print('HomeContentError:' + e.toString());
     }
-    if (json['user'] != null) {
-      user = [];
-      json['user'].forEach((v) {
-        user.add(User.fromJson(v));
-      });
-    }
-    if (json['staffdetails'] != null) {
-      staffdetails = [];
-      json['staffdetails'].forEach((v) {
-        staffdetails.add(User.fromJson(v));
-      });
-    }
-    if (json['group'] != null) {
-      group = [];
-      json['group'].forEach((v) {
-        group.add(Group.fromJson(v));
-      });
-    }
-    userdp = json['userdp'];
-    username = json['username'];
-    length = json['length'];
   }
 }
 

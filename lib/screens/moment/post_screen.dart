@@ -5,6 +5,8 @@ import 'package:moment/components/moment/comment_tile.dart';
 import 'package:moment/components/moment/post_card.dart';
 import 'package:moment/providers/moment_home_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:moment/services.dart' as services;
+import 'package:moment/utils/util_functions.dart' as utils;
 
 class PostScreen extends StatefulWidget {
   final int postIndex;
@@ -41,6 +43,19 @@ class PostScreenState extends State<PostScreen> {
         ),
         body: Consumer<MomentHomeNotifier>(builder: (BuildContext context,
             MomentHomeNotifier postState, Widget? child) {
+          onNewComment() async {
+            bool likePost = await services.postComment(
+                postState.momentHomeData!.post[index].postid,
+                commentController.text);
+            if (likePost) {
+              postState.addComment(index, commentController.text);
+              commentController.clear();
+            } else {
+              utils.showSnackMessage(
+                  context, 'Something went wrong! Try again!');
+            }
+          }
+
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
             child: CustomScrollConfig(
@@ -77,6 +92,9 @@ class PostScreenState extends State<PostScreen> {
                         child: ListView.builder(
                           shrinkWrap: true,
                           primary: false,
+                          itemCount: postState
+                                  .momentHomeData!.post[index].commentcount +
+                              1,
                           itemBuilder:
                               (BuildContext context, int commentIndex) {
                             if (commentIndex == 0) {
@@ -87,6 +105,7 @@ class PostScreenState extends State<PostScreen> {
                                     node: commentNode,
                                     dpUrl: postState.momentHomeData!.userdp,
                                     autoFocus: widget.source == 'comment',
+                                    onNewComment: onNewComment,
                                   ),
                                   if (commentIndex !=
                                       postState.momentHomeData!.post[index]
@@ -128,9 +147,6 @@ class PostScreenState extends State<PostScreen> {
                               ],
                             );
                           },
-                          itemCount: postState
-                                  .momentHomeData!.post[index].commentcount +
-                              1,
                         ),
                       ),
                     ),
