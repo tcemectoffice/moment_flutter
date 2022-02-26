@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:moment/components/common/custom_popup.dart';
 import 'package:moment/models/constants.dart' as constants;
-import 'package:moment/screens/moment/groups_screen.dart';
+import 'package:moment/models/user_model.dart';
+import 'package:moment/providers/moment_home_provider.dart';
+import 'package:moment/screens/moment/profile_screen.dart';
 import 'package:moment/screens/moment/show_all_groups.dart';
 import 'package:moment/utils/util_functions.dart' as utils;
 import 'package:moment/providers/theme_provider.dart';
@@ -24,7 +24,7 @@ class _OptionsCardState extends State<OptionsCard> {
         borderRadius: BorderRadius.circular(21),
       ),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
         child: Column(
           children: [
             Consumer<ThemeNotifier>(
@@ -73,7 +73,8 @@ class _OptionsCardState extends State<OptionsCard> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ShowAllGroups()),
+                  MaterialPageRoute(
+                      builder: (context) => const ShowAllGroups()),
                 );
               },
               child: Container(
@@ -108,54 +109,91 @@ class _OptionsCardState extends State<OptionsCard> {
               ),
             ),
             const Divider(),
-            MaterialButton(
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SelectTutorScreen()),
-                );
-                // showDialog(
-                //   context: context,
-                //   builder: (context) => CustomPopup(
-                //     child: Center(
-                //       child: CircularProgressIndicator(),
-                //     ),
-                //   ),
-                // );
-              },
-              child: Container(
-                padding: const EdgeInsets.all(14.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Icon(Icons.person_add)),
-                      ),
-                      flex: 4,
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Add Tutor',
-                            style: constants.settingsOptionStyle,
-                          ),
+            Consumer<MomentHomeNotifier>(
+                builder: (BuildContext context, tutorState, Widget? child) {
+              return tutorState.momentHomeData!.tutor == null
+                  ? MaterialButton(
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const AddTutorScreen()),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(14.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: const [
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 15.0),
+                                child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Icon(Icons.person_add)),
+                              ),
+                              flex: 4,
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 15.0),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Add Tutor',
+                                    style: constants.settingsOptionStyle,
+                                  ),
+                                ),
+                              ),
+                              flex: 7,
+                            ),
+                          ],
                         ),
                       ),
-                      flex: 7,
-                    ),
-                  ],
-                ),
-              ),
-            ),
+                    )
+                  : MaterialButton(
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Profile()),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(14.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: const [
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 15.0),
+                                child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Icon(Icons.person)),
+                              ),
+                              flex: 4,
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 15.0),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Tutor Info',
+                                    style: constants.settingsOptionStyle,
+                                  ),
+                                ),
+                              ),
+                              flex: 7,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+            }),
             const Divider(),
             MaterialButton(
               splashColor: Colors.transparent,

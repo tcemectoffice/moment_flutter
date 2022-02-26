@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -13,6 +14,7 @@ String masterURL = '';
 String stagingURL = 'https://mectmoment.pythonanywhere.com';
 bool isStaging = true;
 String baseURL = isStaging ? stagingURL : masterURL;
+List<String> imageExtensions = [];
 
 String nullAlt = 'NaN--:)';
 
@@ -182,7 +184,7 @@ Future<NetworkResponseModel> getHomeLazyContent(int startIndex) async {
 
 Future<bool> postLike(int postId, bool likeStatus) async {
   var request =
-      http.MultipartRequest('POST', Uri.parse(baseURL + '/like_save'));
+      http.MultipartRequest('POST', Uri.parse(baseURL + '/like-save'));
   request.fields.addAll({
     'postid': postId.toString(),
     'likestatus': likeStatus ? '1' : '0',
@@ -206,7 +208,7 @@ Future<bool> postLike(int postId, bool likeStatus) async {
 
 Future<bool> postComment(int postId, String comment) async {
   var request =
-      http.MultipartRequest('POST', Uri.parse(baseURL + '/comment_save'));
+      http.MultipartRequest('POST', Uri.parse(baseURL + '/comment-save'));
   request.fields.addAll({
     'postid': postId.toString(),
     'commentdata': comment,
@@ -220,6 +222,65 @@ Future<bool> postComment(int postId, String comment) async {
       return resStr == '1';
     } else {
       print('commentPost: ' + response.reasonPhrase.toString());
+      return false;
+    }
+  } catch (error) {
+    utils.validateError(error);
+    return false;
+  }
+}
+
+Future<bool> tutorSave(int tutorId) async {
+  var request =
+      http.MultipartRequest('POST', Uri.parse(baseURL + '/tutor-save'));
+  request.fields.addAll({
+    'tutorid': tutorId.toString(),
+  });
+  request.headers.addAll(headers!);
+  try {
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode.toString().startsWith('2')) {
+      String resStr = await response.stream.bytesToString();
+      print('AddTutor: ' + resStr);
+      return resStr == '1';
+    } else {
+      print('AddTutor: ' + response.reasonPhrase.toString());
+      return false;
+    }
+  } catch (error) {
+    utils.validateError(error);
+    return false;
+  }
+}
+
+Future<bool> addPost(int grpId, String postData, bool isPrivate,
+    List<int> selectedStaff, File? attachedFile) async {
+  var request = http.MultipartRequest('POST', Uri.parse(baseURL + '/add-post'));
+  String extension = attachedFile?.path.split('.').last ?? '';
+  bool isImg = imageExtensions.contains(extension);
+  request.headers.addAll(headers!);
+  request.fields.addAll({
+    'groupid': grpId.toString(),
+    'posttext': postData,
+    'postprivacy': isPrivate ? '1' : '0',
+    'selectedstaff': selectedStaff.join(','),
+    'fileattached': attachedFile == null ? '0' : '1',
+    'isimg': isImg ? '1' : '0',
+    'extension': extension,
+  });
+  if (attachedFile != null) {
+    http.MultipartFile postAttachment =
+        await http.MultipartFile.fromPath('file', attachedFile.path);
+    request.files.add(postAttachment);
+  }
+  try {
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode.toString().startsWith('2')) {
+      String resStr = await response.stream.bytesToString();
+      print('AddPost: ' + resStr);
+      return resStr == '1';
+    } else {
+      print('AddPost: ' + response.reasonPhrase.toString());
       return false;
     }
   } catch (error) {

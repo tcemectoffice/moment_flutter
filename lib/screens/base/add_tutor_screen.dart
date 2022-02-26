@@ -1,76 +1,135 @@
 import 'package:flutter/material.dart';
-import 'package:moment/components/moment/private_staff_selection_popup.dart';
+import 'package:moment/services.dart' as services;
+import 'package:moment/utils/util_functions.dart' as utils;
+import 'package:moment/components/moment/staff_row_tile.dart';
+import 'package:moment/models/user_model.dart';
+import 'package:moment/providers/moment_home_provider.dart';
+import 'package:provider/provider.dart';
 
-class SelectTutorScreen extends StatelessWidget {
-  const SelectTutorScreen({Key? key}) : super(key: key);
+class AddTutorScreen extends StatefulWidget {
+  const AddTutorScreen({Key? key}) : super(key: key);
+
+  @override
+  State<AddTutorScreen> createState() => _AddTutorScreenState();
+}
+
+class _AddTutorScreenState extends State<AddTutorScreen> {
+  late List<User> staffList;
+  int? selectedStaffId;
+
+  confirmTutor() async {
+    if (selectedStaffId != null) {
+      bool addTutor = await services.tutorSave(selectedStaffId!);
+      if (addTutor) {
+        Provider.of<MomentHomeNotifier>(context, listen: false)
+            .setTutor(selectedStaffId!);
+        Navigator.of(context).pop();
+      } else {
+        utils.showSnackMessage(context, 'Something went wrong! Try again!');
+      }
+    } else {
+      utils.showSnackMessage(context, 'Select your tutor');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    staffList = Provider.of<MomentHomeNotifier>(context, listen: false)
+        .momentHomeData!
+        .staffdetails;
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: const Color(0xFFDAEDFB),
-        body: CustomScrollView(
-          slivers: <Widget>[
-            SliverToBoxAdapter(
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 30, top: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: const [
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Icon(
-                            IconData(0xf572,
-                                fontFamily: 'MaterialIcons',
-                                matchTextDirection: true),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6.0),
+          child: CustomScrollView(
+            slivers: <Widget>[
+              SliverToBoxAdapter(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 2),
+                                child: IconButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  icon: const Icon(
+                                    Icons.arrow_back,
+                                  ),
+                                ),
+                              ),
+                              const Text(
+                                "Add a Tutor",
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.w600),
+                              ),
+                            ],
                           ),
-                        ),
-                        Text(
-                          "Add a Tutor",
-                          style: TextStyle(
-                              fontSize: 25, fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: const Text(
-                        "Done",
-                        style: TextStyle(fontSize: 20, color: Colors.blue),
+                        ],
                       ),
-                    ),
-                  ],
+                      TextButton(
+                        onPressed: confirmTutor,
+                        child: const Text(
+                          "Done",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadiusDirectional.circular(10)),
-                      elevation: 8,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 10),
-                        // child: StaffRowTile(
-                        //   staffName: "Mr.S.Partha Sarathi",
-                        //   staffTitle: "Assistant Professor",
-                        //   isPopUp: false,
-                        // ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    if (index == staffList.length) {
+                      return const SizedBox(
+                        height: 21,
+                      );
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5, vertical: 4),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadiusDirectional.circular(10)),
+                        elevation: 3,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 10),
+                          child: StaffRowTile(
+                            staffDetails: staffList[index],
+                            trailing: Radio<int>(
+                                value: staffList[index].userid!,
+                                groupValue: selectedStaffId,
+                                onChanged: (int? value) {
+                                  setState(() {
+                                    selectedStaffId = value;
+                                  });
+                                }),
+                          ),
+                        ),
                       ),
-                    ),
-                  );
-                },
-                childCount: 4,
+                    );
+                  },
+                  childCount: staffList.length + 1,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

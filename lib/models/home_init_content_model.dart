@@ -7,8 +7,10 @@ class HomeContentModel {
   late List<User> user;
   late List<User> staffdetails;
   late List<Group> group;
+  late List<Group> postgroup;
   late String userdp;
   late String username;
+  User? tutor;
   late int length;
 
   HomeContentModel(
@@ -16,8 +18,10 @@ class HomeContentModel {
       required this.user,
       required this.staffdetails,
       required this.group,
+      required this.postgroup,
       required this.userdp,
       required this.username,
+      required this.tutor,
       required this.length});
 
   HomeContentModel.fromJson(Map<String, dynamic> json) {
@@ -46,9 +50,16 @@ class HomeContentModel {
           group.add(Group.fromJson(v));
         });
       }
+      if (json['postgroup'] != null) {
+        postgroup = [];
+        json['postgroup'].forEach((v) {
+          postgroup.add(Group.fromJson(v));
+        });
+      }
       userdp = json['userdp'];
       username = json['username'];
       length = json['length'];
+      if (json['tutor'] != null) tutor = User.fromJson(json['tutor']);
     } catch (e) {
       print('HomeContentError:' + e.toString());
     }

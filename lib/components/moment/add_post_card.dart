@@ -3,8 +3,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:moment/components/common/custom_popup.dart';
 import 'package:moment/components/common/server_image.dart';
+import 'package:moment/components/moment/group_selection_popup.dart';
 import 'package:moment/components/moment/private_staff_selection_popup.dart';
+import 'package:moment/models/group_model.dart';
+import 'package:moment/models/user_model.dart';
+import 'package:moment/providers/moment_home_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:moment/utils/util_functions.dart' as utils;
+import 'package:moment/services.dart' as services;
 
 class AddPostCard extends StatefulWidget {
   final String userName;
@@ -18,12 +26,12 @@ class AddPostCard extends StatefulWidget {
 }
 
 class _AddPostCardState extends State<AddPostCard> {
-  IconData iconSelected = Icons.circle_sharp;
-  IconData iconNotSelected = Icons.circle_outlined;
-  bool privateListVisibility = false, firstAttempt = true;
-  int postPrivacy = 0;
+  bool postPrivacy = false, firstAttempt = true;
   List<int> selectedStaff = [];
+  int selectedGrpId = 1;
+  String selectedGrpName = 'MECT-General';
   File? postAttachment, oldAttachment;
+  final TextEditingController postDataController = TextEditingController();
 
   void pickFiles() async {
     oldAttachment = postAttachment;
@@ -34,6 +42,55 @@ class _AddPostCardState extends State<AddPostCard> {
       });
       print(postAttachment!.path);
     }
+  }
+
+  void setPrivate() async {
+    if (selectedGrpId != 3) {
+      var staffIds = await showStaffs(context, selectedStaff);
+      if (staffIds != null && selectedStaff.isNotEmpty) {
+        setState(() {
+          selectedStaff = staffIds;
+          postPrivacy = true;
+        });
+      } else {
+        setState(() {
+          postPrivacy = false;
+        });
+      }
+    } else {
+      User tutor = Provider.of<MomentHomeNotifier>(context, listen: false)
+          .momentHomeData!
+          .tutor!;
+      selectedStaff = [tutor.userid!];
+    }
+  }
+
+  void addPost() async {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => const CustomPopup(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
+    );
+    bool addPost = await services.addPost(selectedGrpId,
+        postDataController.text, postPrivacy, selectedStaff, postAttachment);
+    if (addPost) {
+      postDataController.clear();
+      postPrivacy = false;
+      firstAttempt = true;
+      selectedStaff = [];
+      selectedGrpId = 1;
+      selectedGrpName = 'MECT-General';
+      postAttachment = null;
+      oldAttachment = null;
+      Navigator.of(context).pop();
+    } else {
+      utils.showSnackMessage(context, 'Something went wrong! Try again!');
+    }
+    Navigator.of(context).pop();
   }
 
   @override
@@ -53,6 +110,7 @@ class _AddPostCardState extends State<AddPostCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CircleAvatar(
                         radius: 24,
@@ -68,15 +126,54 @@ class _AddPostCardState extends State<AddPostCard> {
                               style: const TextStyle(
                                   fontWeight: FontWeight.w500, fontSize: 16),
                             ),
-                            const Text("Select a Group"),
+                            TextButton(
+                              style: ButtonStyle(
+                                padding: MaterialStateProperty.all<EdgeInsets>(
+                                    EdgeInsets.zero),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              onPressed: () async {
+                                Group? selectedGrp =
+                                    await showGroups(context, selectedGrpId);
+                                if (selectedGrp != null) {
+                                  if (selectedGrp.groupid == 3) {
+                                    User? tutor =
+                                        Provider.of<MomentHomeNotifier>(context,
+                                                listen: false)
+                                            .momentHomeData!
+                                            .tutor;
+                                    if (tutor == null) {
+                                      utils.showSnackMessage(context,
+                                          'Add Tutor to post in Tutor Ward group');
+                                      return;
+                                    }
+                                  }
+                                  setState(() {
+                                    selectedGrpId = selectedGrp.groupid;
+                                    selectedGrpName = selectedGrp.groupname;
+                                    postPrivacy = false;
+                                    selectedStaff = [];
+                                  });
+                                }
+                              },
+                              child: Text(selectedGrpName),
+                            ),
                           ],
                         ),
                       ),
                     ],
                   ),
-                  const Text(
-                    "Post",
-                    style: TextStyle(color: Colors.blue, fontSize: 15),
+                  TextButton(
+                    style: ButtonStyle(
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      padding: MaterialStateProperty.all<EdgeInsets>(
+                          EdgeInsets.zero),
+                    ),
+                    onPressed: addPost,
+                    child: const Text(
+                      "Post",
+                      style: TextStyle(fontSize: 15),
+                    ),
                   ),
                 ],
               ),
@@ -93,6 +190,7 @@ class _AddPostCardState extends State<AddPostCard> {
                       child: SizedBox(
                         width: 230,
                         child: TextFormField(
+                          controller: postDataController,
                           style: const TextStyle(fontSize: 14),
                           minLines: 4,
                           maxLines: 100,
@@ -108,6 +206,7 @@ class _AddPostCardState extends State<AddPostCard> {
                       ),
                     ),
                     GestureDetector(
+                      // onTap: pickFiles,
                       onTap: pickFiles,
                       child: DottedBorder(
                         padding: const EdgeInsets.all(10),
@@ -173,23 +272,22 @@ class _AddPostCardState extends State<AddPostCard> {
                     child: GestureDetector(
                       onTap: () {
                         setState(() {
-                          privateListVisibility = false;
-                          postPrivacy = 0;
+                          postPrivacy = false;
                         });
                       },
                       child: Row(
                         children: [
-                          Radio(
+                          Radio<bool>(
                             materialTapTargetSize:
                                 MaterialTapTargetSize.shrinkWrap,
-                            value: 0,
+                            value: false,
                             groupValue: postPrivacy,
-                            onChanged: (int? value) {
+                            onChanged: (bool? value) {
                               setState(
                                 () {
-                                  privateListVisibility = false;
-                                  postPrivacy = 0;
+                                  postPrivacy = false;
                                   selectedStaff = [];
+                                  firstAttempt = true;
                                 },
                               );
                             },
@@ -200,72 +298,59 @@ class _AddPostCardState extends State<AddPostCard> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        privateListVisibility = true;
-                        postPrivacy = 1;
-                      });
-                    },
+                    onTap: setPrivate,
                     child: Row(
                       children: [
-                        Radio(
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
-                          value: 1,
-                          groupValue: postPrivacy,
-                          onChanged: (int? value) async {
-                            if (firstAttempt) {
-                              var staffIds =
-                                  await showStaffs(context, selectedStaff);
-                              if (staffIds != null &&
-                                  selectedStaff.isNotEmpty) {
-                                setState(() {
-                                  selectedStaff = staffIds;
-                                });
-                              } else {
-                                return;
-                              }
-                            }
-                            setState(
-                              () {
-                                firstAttempt = false;
-                                privateListVisibility = true;
-                                postPrivacy = 1;
-                              },
-                            );
-                          },
-                        ),
+                        Radio<bool>(
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                            value: true,
+                            groupValue: postPrivacy,
+                            onChanged: (bool? value) async {
+                              setPrivate();
+                            }),
                         const Text("Private"),
                       ],
                     ),
                   ),
                 ],
               ),
-              if (privateListVisibility)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Visible to ${selectedStaff.length} people'),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: TextButton(
-                          onPressed: () async {
-                            var staffIds =
-                                await showStaffs(context, selectedStaff);
-                            if (staffIds != null && selectedStaff.isNotEmpty) {
-                              setState(() {
-                                selectedStaff = staffIds;
-                              });
-                            } else {
-                              setState(() {
-                                privateListVisibility = false;
-                                postPrivacy = 0;
-                              });
-                            }
-                          },
-                          child: const Text('Add People')),
-                    )
-                  ],
+              if (postPrivacy)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      selectedGrpId != 3
+                          ? Text('Visible to ${selectedStaff.length} people')
+                          : const Text('Visible only to your Tutor'),
+                      if (selectedGrpId != 3)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: TextButton(
+                              style: ButtonStyle(
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                padding: MaterialStateProperty.all<EdgeInsets>(
+                                    EdgeInsets.zero),
+                              ),
+                              onPressed: () async {
+                                var staffIds =
+                                    await showStaffs(context, selectedStaff);
+                                if (staffIds != null &&
+                                    selectedStaff.isNotEmpty) {
+                                  setState(() {
+                                    selectedStaff = staffIds;
+                                  });
+                                } else {
+                                  setState(() {
+                                    postPrivacy = false;
+                                  });
+                                }
+                              },
+                              child: const Text('Add People')),
+                        ),
+                    ],
+                  ),
                 ),
             ],
           ),

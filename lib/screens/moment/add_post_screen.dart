@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-// import 'package:moment/models/constants.dart' as constants;
-import 'package:moment/utils/prefs.dart' as prefs;
+import 'package:moment/providers/moment_home_provider.dart';
 import 'package:moment/components/moment/add_post_card.dart';
+import 'package:provider/provider.dart';
 
 class AddPost extends StatefulWidget {
   const AddPost({Key? key}) : super(key: key);
@@ -44,8 +44,12 @@ class _AddPostState extends State<AddPost> {
     setState(() {
       isLoading = true;
     });
-    userName = await prefs.getString('user-name');
-    userDp = await prefs.getString('user-dp');
+    userName = Provider.of<MomentHomeNotifier>(context, listen: false)
+        .momentHomeData!
+        .username;
+    userDp = Provider.of<MomentHomeNotifier>(context, listen: false)
+        .momentHomeData!
+        .userdp;
     setState(() {
       isLoading = false;
     });
@@ -62,6 +66,7 @@ class _AddPostState extends State<AddPost> {
     return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           leadingWidth: 27,
           title: const Text(
@@ -71,7 +76,7 @@ class _AddPostState extends State<AddPost> {
         ),
         body: isLoading
             ? const Center(
-                child: CircularProgressIndicator(),
+                child: SizedBox(width: 120, child: LinearProgressIndicator()),
               )
             : AddPostCard(
                 userName: userName,
@@ -81,52 +86,3 @@ class _AddPostState extends State<AddPost> {
     );
   }
 }
-
-/*CustomScrollConfig(
-                child: CustomScrollView(
-                  slivers: <Widget>[
-                    SliverToBoxAdapter(
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 30, top: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: const [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 8),
-                                  child: Icon(
-                                    IconData(0xf572,
-                                        fontFamily: 'MaterialIcons',
-                                        matchTextDirection: true),
-                                  ),
-                                ),
-                                Text(
-                                  "Add a Post",
-                                  style: TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                          return const AddPostCard(
-                            userName: "19F022 - Kishore L",
-                            dpUrl:
-                                "https://media.istockphoto.com/photos/colored-powder-explosion-on-black-background-picture-id1057506940?k=20&m=1057506940&s=612x612&w=0&h=3j5EA6YFVg3q-laNqTGtLxfCKVR3_o6gcVZZseNaWGk=",
-                          );
-                        },
-                        childCount: 1,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              */

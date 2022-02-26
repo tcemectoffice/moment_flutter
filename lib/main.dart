@@ -4,7 +4,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:moment/models/constants.dart' as constants;
 import 'package:moment/providers/home_page_provider.dart';
 import 'package:moment/providers/moment_home_provider.dart';
-import 'package:moment/providers/staff_provider.dart';
 import 'package:moment/providers/theme_provider.dart';
 import 'package:moment/screens/base/home_screen.dart';
 import 'package:moment/screens/base/login_screen.dart';
@@ -45,7 +44,6 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeNotifier()),
         ChangeNotifierProvider(create: (context) => HomePageNotifier()),
-        ChangeNotifierProvider(create: (context) => StaffNotifier()),
         ChangeNotifierProvider(create: (context) => MomentHomeNotifier()),
       ],
       child: const Moment(),

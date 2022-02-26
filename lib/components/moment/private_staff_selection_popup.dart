@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:moment/components/common/custom_scroll_settings.dart';
-import 'package:moment/components/common/server_image.dart';
+import 'package:moment/components/moment/staff_row_tile.dart';
 import 'package:moment/models/user_model.dart';
-import 'package:moment/providers/staff_provider.dart';
+import 'package:moment/providers/moment_home_provider.dart';
 import 'package:provider/provider.dart';
 
 showStaffs(BuildContext context, List<int> selectedStaff) {
@@ -11,13 +11,16 @@ showStaffs(BuildContext context, List<int> selectedStaff) {
     builder: (context) {
       List<int> selectedIds = selectedStaff;
       List<User> staffDetails =
-          Provider.of<StaffNotifier>(context, listen: false).staffDetails!;
+          Provider.of<MomentHomeNotifier>(context, listen: false)
+              .momentHomeData!
+              .staffdetails;
       return StatefulBuilder(builder: (context, setState) {
         return AlertDialog(
           insetPadding:
               const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
           titlePadding: const EdgeInsets.fromLTRB(18, 16, 16, 5),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 2.5),
+          contentPadding:
+              const EdgeInsets.only(left: 2.5, right: 2.5, bottom: 15),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           title: Row(
@@ -63,33 +66,4 @@ showStaffs(BuildContext context, List<int> selectedStaff) {
       });
     },
   );
-}
-
-class StaffRowTile extends StatefulWidget {
-  final User staffDetails;
-  final Widget trailing;
-  // final bool isPopUp;
-
-  const StaffRowTile({
-    Key? key,
-    required this.staffDetails,
-    required this.trailing,
-    // required this.isPopUp,
-  }) : super(key: key);
-
-  @override
-  _StaffRowTileState createState() => _StaffRowTileState();
-}
-
-class _StaffRowTileState extends State<StaffRowTile> {
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: CircleAvatar(
-          backgroundImage: serverImage(widget.staffDetails.profilepic)),
-      title: Text(widget.staffDetails.name),
-      subtitle: Text(widget.staffDetails.designation!),
-      trailing: widget.trailing,
-    );
-  }
 }

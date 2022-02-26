@@ -3,7 +3,6 @@ import 'package:moment/components/common/custom_scroll_settings.dart';
 import 'package:moment/components/moment/post_card.dart';
 import 'package:moment/models/network_response_model.dart';
 import 'package:moment/providers/moment_home_provider.dart';
-import 'package:moment/providers/staff_provider.dart';
 import 'package:moment/services.dart' as services;
 import 'package:moment/utils/util_functions.dart' as utils;
 import 'package:provider/provider.dart';
@@ -29,8 +28,6 @@ class _MomentHomeState extends State<MomentHome> {
       case 1:
         Provider.of<MomentHomeNotifier>(context, listen: false)
             .setHomeData(responseData.data);
-        Provider.of<StaffNotifier>(context, listen: false)
-            .setStaffDetails(responseData.data.staffdetails);
         currentPostIndex = 10;
         break;
       case 999:
@@ -102,7 +99,8 @@ class _MomentHomeState extends State<MomentHome> {
   @override
   Widget build(BuildContext context) {
     return isLoading
-        ? const Center(child: CircularProgressIndicator())
+        ? const Center(
+            child: SizedBox(width: 120, child: LinearProgressIndicator()))
         : RefreshIndicator(
             onRefresh: getContent,
             child: Consumer<MomentHomeNotifier>(builder: (BuildContext context,
@@ -119,7 +117,9 @@ class _MomentHomeState extends State<MomentHome> {
                                 ? const Center(
                                     child: Padding(
                                     padding: EdgeInsets.all(15.0),
-                                    child: CircularProgressIndicator(),
+                                    child: SizedBox(
+                                        width: 120,
+                                        child: LinearProgressIndicator()),
                                   ))
                                 : const SizedBox(
                                     height: 160,
@@ -127,18 +127,18 @@ class _MomentHomeState extends State<MomentHome> {
                           }
                           return Padding(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0, vertical: 15.0),
+                                horizontal: 8.0, vertical: 5.0),
                             child: PostCard(
                               postInfo:
                                   momentHomeState.momentHomeData!.post[index],
                               postedByInfo:
                                   momentHomeState.momentHomeData!.user[index],
-                              postedGroupInfo:
-                                  momentHomeState.momentHomeData!.group[index],
+                              postedGroupInfo: momentHomeState
+                                  .momentHomeData!.postgroup[index],
                               postIndex: index,
                               likeStatus: momentHomeState
                                   .momentHomeData!.post[index].likestatus,
-                              elevation: 8,
+                              elevation: 3,
                             ),
                           );
                         },
