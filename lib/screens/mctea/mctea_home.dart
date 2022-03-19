@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:moment/models/constants.dart';
+import 'package:moment/screens/mctea/mctea_event_details_page.dart';
 
 class McteaHome extends StatefulWidget {
   const McteaHome({Key? key}) : super(key: key);
@@ -178,17 +179,53 @@ class _McteaHomeState extends State<McteaHome> {
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 14, horizontal: 7),
-                                    child: AssociationCard(),
+                                    child: AssociationCard(
+                                        eventName: "CAD",
+                                        onTap: () {
+                                          setState(() {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EventDetails(),
+                                              ),
+                                            );
+                                          });
+                                        }),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 14, horizontal: 7),
-                                    child: AssociationCard(),
+                                    child: AssociationCard(
+                                        eventName: "Machine Learning",
+                                        onTap: () {
+                                          setState(() {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EventDetails(),
+                                              ),
+                                            );
+                                          });
+                                        }),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 14, horizontal: 7),
-                                    child: AssociationCard(),
+                                    child: AssociationCard(
+                                        eventName: "AI for Everyone",
+                                        onTap: () {
+                                          setState(() {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EventDetails(),
+                                              ),
+                                            );
+                                          });
+                                        }),
                                   ),
                                 ],
                               ),
@@ -211,17 +248,53 @@ class _McteaHomeState extends State<McteaHome> {
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 14, horizontal: 7),
-                                    child: AssociationCard(),
+                                    child: AssociationCard(
+                                        eventName: "Machine Learning",
+                                        onTap: () {
+                                          setState(() {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EventDetails(),
+                                              ),
+                                            );
+                                          });
+                                        }),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 14, horizontal: 7),
-                                    child: AssociationCard(),
+                                    child: AssociationCard(
+                                        eventName: "Machine Learning",
+                                        onTap: () {
+                                          setState(() {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EventDetails(),
+                                              ),
+                                            );
+                                          });
+                                        }),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 14, horizontal: 7),
-                                    child: AssociationCard(),
+                                    child: AssociationCard(
+                                        eventName: "Machine Learning",
+                                        onTap: () {
+                                          setState(() {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EventDetails(),
+                                              ),
+                                            );
+                                          });
+                                        }),
                                   ),
                                 ],
                               ),
@@ -244,17 +317,53 @@ class _McteaHomeState extends State<McteaHome> {
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 14, horizontal: 7),
-                                    child: AssociationCard(),
+                                    child: AssociationCard(
+                                        eventName: "Machine Learning",
+                                        onTap: () {
+                                          setState(() {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EventDetails(),
+                                              ),
+                                            );
+                                          });
+                                        }),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 14, horizontal: 7),
-                                    child: AssociationCard(),
+                                    child: AssociationCard(
+                                        eventName: "Machine Learning",
+                                        onTap: () {
+                                          setState(() {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EventDetails(),
+                                              ),
+                                            );
+                                          });
+                                        }),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 14, horizontal: 7),
-                                    child: AssociationCard(),
+                                    child: AssociationCard(
+                                        eventName: "Machine Learning",
+                                        onTap: () {
+                                          setState(() {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EventDetails(),
+                                              ),
+                                            );
+                                          });
+                                        }),
                                   ),
                                 ],
                               ),
@@ -275,7 +384,13 @@ class _McteaHomeState extends State<McteaHome> {
 }
 
 class AssociationCard extends StatefulWidget {
-  const AssociationCard({Key? key}) : super(key: key);
+  final onTap;
+  final String eventName;
+  const AssociationCard({
+    Key? key,
+    required this.onTap,
+    required this.eventName,
+  }) : super(key: key);
 
   @override
   _AssociationCardState createState() => _AssociationCardState();
@@ -284,35 +399,38 @@ class AssociationCard extends StatefulWidget {
 class _AssociationCardState extends State<AssociationCard> {
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          width: 200,
-          height: 140,
-          decoration: BoxDecoration(
-            border: Border.all(),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Image(
-            image: AssetImage(appLogoAssetURL),
-          ),
-        ),
-        Positioned(
-          bottom: 0,
-          child: Container(
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: Stack(
+        children: [
+          Container(
             width: 200,
-            height: 30,
+            height: 140,
             decoration: BoxDecoration(
-              color: Colors.white,
               border: Border.all(),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Center(
-              child: Text("Machine Learning"),
+            child: Image(
+              image: AssetImage(appLogoAssetURL),
             ),
           ),
-        ),
-      ],
+          Positioned(
+            bottom: 0,
+            child: Container(
+              width: 200,
+              height: 30,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Center(
+                child: Text(widget.eventName),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
