@@ -21,7 +21,7 @@ class _StaffRowTileState extends State<StaffRowTile> {
   Widget build(BuildContext context) {
     return ListTile(
       leading: CircleAvatar(
-          backgroundImage: serverImage(widget.staffDetails.profilepic)),
+          backgroundImage: serverImageProvider(widget.staffDetails.profilepic)),
       title: Text(widget.staffDetails.name),
       subtitle: widget.staffDetails.designation != null
           ? Text(widget.staffDetails.designation!)

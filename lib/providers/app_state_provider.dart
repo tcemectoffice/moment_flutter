@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-class ThemeNotifier extends ChangeNotifier {
+class AppNotifier extends ChangeNotifier {
   ThemeMode? currentTheme;
   bool? isDark;
 
-  ThemeNotifier();
+  AppNotifier();
 
   setIsDark(bool isDark) {
     currentTheme = isDark ? ThemeMode.dark : ThemeMode.light;

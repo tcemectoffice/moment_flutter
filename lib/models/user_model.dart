@@ -5,14 +5,21 @@ class User {
   String? designation;
   late String profilepic;
   String? altemail;
+  String? useremail;
+  String? tutorname;
+  String? usermobile;
 
-  User(
-      {required this.name,
-      this.userid,
-      this.regNo,
-      this.designation,
-      required this.profilepic,
-      this.altemail});
+  User({
+    required this.name,
+    this.userid,
+    this.regNo,
+    this.designation,
+    required this.profilepic,
+    this.altemail,
+    this.useremail,
+    this.tutorname,
+    this.usermobile,
+  });
 
   User.fromJson(Map<String, dynamic> json) {
     try {
@@ -22,6 +29,9 @@ class User {
       profilepic = json['profilepic'];
       designation = json['designation'];
       altemail = json['altemail'];
+      useremail = json['useremail'];
+      tutorname = json['tutorname'];
+      usermobile = json['usermobile'];
     } catch (e) {
       print('UserError: ' + e.toString());
     }

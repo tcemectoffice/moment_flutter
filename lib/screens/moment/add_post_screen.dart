@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:moment/providers/moment_home_provider.dart';
 import 'package:moment/components/moment/add_post_card.dart';
-import 'package:provider/provider.dart';
+import 'package:moment/utils/util_functions.dart' as utils;
 
 class AddPost extends StatefulWidget {
   const AddPost({Key? key}) : super(key: key);
@@ -68,20 +69,25 @@ class _AddPostState extends State<AddPost> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          elevation: 2,
           leadingWidth: 27,
           title: const Text(
             'Add Post',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
           ),
         ),
-        body: isLoading
-            ? const Center(
-                child: SizedBox(width: 120, child: LinearProgressIndicator()),
-              )
-            : AddPostCard(
-                userName: userName,
-                dpUrl: userDp,
-              ),
+        body: Container(
+          margin: utils.getScreenMargins(context),
+          child: isLoading
+              ? const Center(
+                  child: SizedBox(width: 120, child: LinearProgressIndicator()),
+                )
+              : AddPostCard(
+                  userName: userName,
+                  dpUrl: userDp,
+                  primary: true,
+                ),
+        ),
       ),
     );
   }

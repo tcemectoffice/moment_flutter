@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moment/components/common/custom_scroll_settings.dart';
 import 'package:moment/components/moment/settings_options.dart';
 import 'package:moment/components/moment/settings_profile.dart';
-import 'package:moment/models/constants.dart';
+import 'package:moment/utils/prefs.dart' as prefs;
 
 class Settings extends StatefulWidget {
   const Settings({Key? key}) : super(key: key);
@@ -12,26 +12,59 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  late final int userId;
+  late final String userName;
+  late final String userDp;
+  bool isLoading = true;
+
+  initialize() async {
+    setState(() {
+      isLoading = true;
+    });
+    userId = int.parse((await prefs.getStringList('headers'))[0] ?? '0');
+    userName = await prefs.getString('userName') ?? '';
+    userDp = await prefs.getString('userDp') ?? '';
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initialize();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 24),
-      child: CustomScrollConfig(
-        child: SingleChildScrollView(
-          child: Column(
-            children: const [
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: ProfileCard(),
+    return isLoading
+        ? const Center(
+            child: SizedBox(
+              width: 120,
+              child: LinearProgressIndicator(),
+            ),
+          )
+        : Container(
+            padding: const EdgeInsets.symmetric(vertical: 24),
+            child: CustomScrollConfig(
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ProfileCard(
+                      userName: userName,
+                      userDp: userDp,
+                      userId: userId,
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: OptionsCard(),
+                  ),
+                ],
               ),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: OptionsCard(),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          );
   }
 }

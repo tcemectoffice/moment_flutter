@@ -17,12 +17,17 @@ validateError(Object e) {
   }
 }
 
-bool handleNetworkResponse(int code) {
-  if (code == 1) {
-    return true;
-  } else {
-    return false;
+getScreenMargins(BuildContext context, {double extra = 0}) {
+  double width = MediaQuery.of(context).size.width;
+  double horizontalPadding = extra;
+  if (width > 450) {
+    if (width > 600) {
+      horizontalPadding = (width - 600) / 2 + extra;
+    } else {
+      horizontalPadding = (width - 450) / 2 + extra;
+    }
   }
+  return EdgeInsets.symmetric(horizontal: horizontalPadding);
 }
 
 showSnackMessage(BuildContext context, String message) {
@@ -42,7 +47,7 @@ logout(BuildContext context) async {
   );
   if (await services.logout()) {
     Navigator.of(context).pushNamed('/login');
-    Provider.of<HomePageNotifier>(context, listen: false).setIndex(0);
+    Provider.of<HomePageNotifier>(context, listen: false).setIndex(0, context);
   } else {
     showSnackMessage(context, 'Please try again later!');
   }

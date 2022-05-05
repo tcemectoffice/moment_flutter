@@ -3,10 +3,12 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:moment/models/file_details_model.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:moment/main.dart';
 import 'package:moment/models/network_response_model.dart';
 import 'package:moment/utils/util_functions.dart' as utils;
-import 'utils/prefs.dart' as prefs;
+import 'package:moment/utils/prefs.dart' as prefs;
 
 import 'package:moment/models/login_model.dart';
 
@@ -15,8 +17,6 @@ String stagingURL = 'https://mectmoment.pythonanywhere.com';
 bool isStaging = true;
 String baseURL = isStaging ? stagingURL : masterURL;
 List<String> imageExtensions = [];
-
-String nullAlt = 'NaN--:)';
 
 Map<String, String>? headers;
 
@@ -45,10 +45,13 @@ Future<NetworkResponseModel> login(
         case 1:
           String userToken = response.headers['x-token']!;
           print(userToken);
-          String userId = loginData.userid!.toString();
+          String userId = loginData.userid.toString();
           prefs.setStringList(
               'headers', [userId, userToken]); // 0 -> userId; 1 -> userToken
           setHeaders(userId, userToken);
+          prefs.setString('userName', loginData.username ?? '');
+          prefs.setString('userEmail', loginData.useremail ?? '');
+          prefs.setString('userDp', loginData.userdp ?? '');
           return NetworkResponseModel(status: 1);
         case 2:
           return NetworkResponseModel(status: 0);
@@ -77,7 +80,7 @@ Future<bool> initApp() async {
   setHeaders(headerInfo[0], headerInfo[1]);
   var request = http.MultipartRequest('POST', Uri.parse(baseURL + '/init-app'));
   request.fields.addAll({'request': '1'});
-  request.headers.addAll(headers!);
+  request.headers.addAll(headers ?? {});
   try {
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
@@ -110,7 +113,7 @@ Future<bool> logout() async {
     'logout': '1',
     'isweb': kIsWeb ? '1' : '0',
   });
-  request.headers.addAll(headers!);
+  request.headers.addAll(headers ?? {});
   http.StreamedResponse response = await request.send();
   try {
     if (response.statusCode == 200) {
@@ -141,7 +144,7 @@ Future<bool> logout() async {
 
 Future<NetworkResponseModel> getHomeInitContent() async {
   var request = http.Request('GET', Uri.parse(baseURL + '/home-content'));
-  request.headers.addAll(headers!);
+  request.headers.addAll(headers ?? {});
   try {
     http.StreamedResponse response = await request.send();
     if (response.statusCode.toString().startsWith('2')) {
@@ -149,8 +152,6 @@ Future<NetworkResponseModel> getHomeInitContent() async {
       print('homeInit: ' + resStr);
       NetworkResponseModel homeInitData =
           NetworkResponseModel.fromJson(jsonDecode(resStr));
-      prefs.setString('user-name', homeInitData.data.username);
-      prefs.setString('user-dp', homeInitData.data.userdp);
       return homeInitData;
     } else {
       print('homeInit: ' + response.reasonPhrase.toString());
@@ -163,8 +164,11 @@ Future<NetworkResponseModel> getHomeInitContent() async {
 
 Future<NetworkResponseModel> getHomeLazyContent(int startIndex) async {
   var request = http.Request(
-      'GET', Uri.parse(baseURL + '/home-lazy-content?startpost=$startIndex'));
-  request.headers.addAll(headers!);
+    'GET',
+    Uri.parse(baseURL + '/home-lazy-content')
+        .replace(queryParameters: {'startpost': startIndex.toString()}),
+  );
+  request.headers.addAll(headers ?? {});
   try {
     http.StreamedResponse response = await request.send();
     if (response.statusCode.toString().startsWith('2')) {
@@ -189,7 +193,7 @@ Future<bool> postLike(int postId, bool likeStatus) async {
     'postid': postId.toString(),
     'likestatus': likeStatus ? '1' : '0',
   });
-  request.headers.addAll(headers!);
+  request.headers.addAll(headers ?? {});
   try {
     http.StreamedResponse response = await request.send();
     if (response.statusCode.toString().startsWith('2')) {
@@ -213,7 +217,7 @@ Future<bool> postComment(int postId, String comment) async {
     'postid': postId.toString(),
     'commentdata': comment,
   });
-  request.headers.addAll(headers!);
+  request.headers.addAll(headers ?? {});
   try {
     http.StreamedResponse response = await request.send();
     if (response.statusCode.toString().startsWith('2')) {
@@ -236,7 +240,7 @@ Future<bool> tutorSave(int tutorId) async {
   request.fields.addAll({
     'tutorid': tutorId.toString(),
   });
-  request.headers.addAll(headers!);
+  request.headers.addAll(headers ?? {});
   try {
     http.StreamedResponse response = await request.send();
     if (response.statusCode.toString().startsWith('2')) {
@@ -258,7 +262,7 @@ Future<bool> addPost(int grpId, String postData, bool isPrivate,
   var request = http.MultipartRequest('POST', Uri.parse(baseURL + '/add-post'));
   String extension = attachedFile?.path.split('.').last ?? '';
   bool isImg = imageExtensions.contains(extension);
-  request.headers.addAll(headers!);
+  request.headers.addAll(headers ?? {});
   request.fields.addAll({
     'groupid': grpId.toString(),
     'posttext': postData,
@@ -285,6 +289,179 @@ Future<bool> addPost(int grpId, String postData, bool isPrivate,
     }
   } catch (error) {
     utils.validateError(error);
+    return false;
+  }
+}
+
+downloadFile(Filedetails file, String filePath) async {
+  var storageStatus = await Permission.storage.status;
+  if (!storageStatus.isGranted) {
+    await Permission.storage.request();
+  }
+  try {
+    var httpClient = HttpClient();
+    var request =
+        await httpClient.getUrl(Uri.parse(baseURL + '/' + file.fileurl));
+    var response = await request.close();
+    var bytes = await consolidateHttpClientResponseBytes(response);
+    await File(filePath).create(recursive: true).then((newFile) {
+      newFile.writeAsBytes(bytes);
+    });
+    print('file stored in $filePath');
+    return true;
+  } catch (e) {
+    print('File Download Error: ${e.toString()}');
+    return false;
+  }
+}
+
+Future<NetworkResponseModel> getGroupsInitContent(int gid1) async {
+  var request = http.Request(
+    'GET',
+    Uri.parse(baseURL + '/group-post-filter')
+        .replace(queryParameters: {'gid1': gid1.toString()}),
+  );
+  request.headers.addAll(headers ?? {});
+  try {
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode.toString().startsWith('2')) {
+      String resStr = await response.stream.bytesToString();
+      print('groupsInit: ' + resStr);
+      NetworkResponseModel groupsInitData =
+          NetworkResponseModel.fromJson(jsonDecode(resStr));
+      return groupsInitData;
+    } else {
+      print('groupsInit: ' + response.reasonPhrase.toString());
+      return NetworkResponseModel(status: 999);
+    }
+  } catch (error) {
+    return utils.validateError(error);
+  }
+}
+
+Future<NetworkResponseModel> getGroupsLazyContent(int startIndex) async {
+  var request = http.Request(
+    'GET',
+    Uri.parse(baseURL + '/iterate-group-post-filter')
+        .replace(queryParameters: {'startpost': startIndex.toString()}),
+  );
+  request.headers.addAll(headers ?? {});
+  try {
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode.toString().startsWith('2')) {
+      String resStr = await response.stream.bytesToString();
+      print('groupsLazyInit: ' + resStr);
+      NetworkResponseModel groupsLazyData =
+          NetworkResponseModel.fromJson(jsonDecode(resStr));
+      return groupsLazyData;
+    } else {
+      print('groupsLazyInit: ' + response.reasonPhrase.toString());
+      return NetworkResponseModel(status: 999);
+    }
+  } catch (error) {
+    return utils.validateError(error);
+  }
+}
+
+Future<NetworkResponseModel> searchEntities(String searchPhrase) async {
+  var request = http.Request(
+    'GET',
+    Uri.parse(baseURL + '/search-list')
+        .replace(queryParameters: {'name': searchPhrase}),
+  );
+  request.headers.addAll(headers ?? {});
+  try {
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode.toString().startsWith('2')) {
+      String resStr = await response.stream.bytesToString();
+      print('searchList: ' + resStr);
+      NetworkResponseModel searchResult =
+          NetworkResponseModel.fromJson(jsonDecode(resStr));
+      return searchResult;
+    } else {
+      print('searchList: ' + response.reasonPhrase.toString());
+      return NetworkResponseModel(status: 999);
+    }
+  } catch (error) {
+    return utils.validateError(error);
+  }
+}
+
+Future<NetworkResponseModel> userProfile(int userid) async {
+  var request = http.Request(
+    'GET',
+    Uri.parse(baseURL + '/profileinfo')
+        .replace(queryParameters: {'userid': userid.toString()}),
+  );
+  request.headers.addAll(headers ?? {});
+  try {
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode.toString().startsWith('2')) {
+      String resStr = await response.stream.bytesToString();
+      print('profileInfo: ' + resStr);
+      NetworkResponseModel profileInfo =
+          NetworkResponseModel.fromJson(jsonDecode(resStr));
+      return profileInfo;
+    } else {
+      print('profileInfo: ' + response.reasonPhrase.toString());
+      return NetworkResponseModel(status: 999);
+    }
+  } catch (error) {
+    return utils.validateError(error);
+  }
+}
+
+Future<bool> editProfile(String? name, String? regNum, String? email,
+    String? phone, File? dp) async {
+  var request =
+      http.MultipartRequest('POST', Uri.parse(baseURL + '/editprofdetails'));
+  String? extension = dp?.path.split('.').last;
+  print(extension);
+  if (name != null) {
+    request.fields['name'] = name;
+  }
+
+  if (regNum != null) {
+    request.fields['regnum'] = regNum;
+  }
+
+  if (email != null) {
+    request.fields['email'] = email;
+  }
+
+  if (phone != null) {
+    request.fields['phone'] = phone;
+  }
+
+  if (extension != null) {
+    request.fields['extension'] = extension;
+  }
+
+  if (dp != null) {
+    http.MultipartFile postAttachment =
+        await http.MultipartFile.fromPath('file', dp.path);
+    request.files.add(postAttachment);
+  }
+
+  request.headers.addAll(headers ?? {});
+
+  try {
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode.toString().startsWith('2')) {
+      String resStr = await response.stream.bytesToString();
+      print('editProfile: ' + resStr);
+      if (resStr == '1') {
+        return true;
+      } else {
+        print('editProfile: error ' + resStr);
+        return false;
+      }
+    } else {
+      print('editProfile: ' + response.reasonPhrase.toString());
+      return false;
+    }
+  } catch (error) {
+    print('editProfile: ' + error.toString());
     return false;
   }
 }

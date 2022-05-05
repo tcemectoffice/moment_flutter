@@ -8,7 +8,6 @@ class Post {
   late String posttime;
   late int likecount;
   late int commentcount;
-  late bool isimage;
   late List<Filedetails>? filedetails;
   late bool likestatus;
   late List<String> commentdata;
@@ -23,7 +22,6 @@ class Post {
       required this.userid,
       required this.groupid,
       required this.postdata,
-      required this.isimage,
       required this.posttime,
       required this.likecount,
       required this.filedetails,
@@ -41,7 +39,6 @@ class Post {
       userid = json['userid'];
       groupid = json['groupid'];
       postdata = json['postdata'];
-      isimage = json['isimage'] == 1;
       posttime = json['posttime'];
       likecount = json['likecount'];
       commentcount = json['commentcount'];

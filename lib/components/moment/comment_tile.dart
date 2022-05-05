@@ -98,7 +98,7 @@ class CommentTile extends StatelessWidget {
             padding: const EdgeInsets.only(right: 10),
             child: CircleAvatar(
               radius: 18,
-              backgroundImage: serverImage(dpUrl),
+              backgroundImage: serverImageProvider(dpUrl),
             ),
           ),
           Expanded(

@@ -2,15 +2,15 @@ import 'package:moment/models/group_model.dart';
 import 'package:moment/models/post_model.dart';
 import 'package:moment/models/user_model.dart';
 
-class HomeLazyContentModel {
+class LazyContentModel {
   late List<Post> post;
   late List<User> user;
   late List<Group> group;
 
-  HomeLazyContentModel(
+  LazyContentModel(
       {required this.post, required this.user, required this.group});
 
-  HomeLazyContentModel.fromJson(Map<String, dynamic> json) {
+  LazyContentModel.fromJson(Map<String, dynamic> json) {
     try {
       if (json['post'] != null) {
         post = [];

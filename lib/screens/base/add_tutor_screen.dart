@@ -45,7 +45,8 @@ class _AddTutorScreenState extends State<AddTutorScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: const Color(0xFFDAEDFB),
-        body: Padding(
+        body: Container(
+          margin: utils.getScreenMargins(context),
           padding: const EdgeInsets.symmetric(horizontal: 6.0),
           child: CustomScrollView(
             slivers: <Widget>[

@@ -1,19 +1,20 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:moment/providers/group_screen_provider.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:moment/models/constants.dart' as constants;
+import 'package:moment/utils/prefs.dart' as prefs;
 import 'package:moment/providers/home_page_provider.dart';
 import 'package:moment/providers/moment_home_provider.dart';
-import 'package:moment/providers/theme_provider.dart';
+import 'package:moment/providers/app_state_provider.dart';
 import 'package:moment/screens/base/home_screen.dart';
 import 'package:moment/screens/base/login_screen.dart';
 import 'package:moment/screens/base/notifications_screen.dart';
 import 'package:moment/screens/base/splash_screen.dart';
-import 'package:moment/screens/moment/add_post_screen.dart';
-import 'package:moment/screens/moment/profile_screen.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>();
 
@@ -42,9 +43,10 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => ThemeNotifier()),
+        ChangeNotifierProvider(create: (context) => AppNotifier()),
         ChangeNotifierProvider(create: (context) => HomePageNotifier()),
         ChangeNotifierProvider(create: (context) => MomentHomeNotifier()),
+        ChangeNotifierProvider(create: (context) => GroupScreenNotifier()),
       ],
       child: const Moment(),
     ),
@@ -69,26 +71,40 @@ class MomentState extends State<Moment> {
   }
 
   void _handleMessage(RemoteMessage message) {
-    Navigator.pushNamed(navKey.currentState!.context, '/notifications');
+    Navigator.push(
+      navKey.currentState!.context,
+      MaterialPageRoute(
+        builder: ((context) => const Notifications()),
+      ),
+    );
+  }
+
+  setupLocalDocDir() async {
+    var dir = await getTemporaryDirectory();
+    prefs.setString('localDocPath', dir.path);
   }
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      Provider.of<ThemeNotifier>(context, listen: false).getCurrentTheme();
-    });
+    //TODO: Uncomment the following block when Dark Theme is completed
+    // for system theme integration
+
+    // WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    //   Provider.of<AppNotifier>(context, listen: false).getCurrentTheme();
+    // });
     setupFCM();
-    FirebaseMessaging.instance.subscribeToTopic('test');
+    setupLocalDocDir();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeNotifier>(builder: (context, appState, child) {
+    return Consumer<AppNotifier>(builder: (context, appState, child) {
       return MaterialApp(
         navigatorKey: navKey,
+        locale: const Locale('en', 'IN'),
         title: 'Moment',
-        color: Colors.blueGrey,
+        color: const Color.fromARGB(255, 99, 192, 255),
         debugShowCheckedModeBanner: false,
         routes: {
           '/splash': (context) {
@@ -100,19 +116,10 @@ class MomentState extends State<Moment> {
           '/home': (context) {
             return const HomeScreen();
           },
-          '/add-post': (context) {
-            return const AddPost();
-          },
-          '/profile': (context) {
-            return Profile();
-          },
-          '/notifications': (context) {
-            return const Notifications();
-          },
         },
         theme: constants.lightTheme,
         darkTheme: constants.darkTheme,
-        themeMode: appState.currentTheme,
+        themeMode: ThemeMode.light,
         initialRoute: '/splash',
         // initialRoute: '/login',
         // initialRoute: '/home',

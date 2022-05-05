@@ -84,7 +84,7 @@ class _GroupRowTileState extends State<GroupRowTile> {
   Widget build(BuildContext context) {
     return ListTile(
       leading: CircleAvatar(
-          backgroundImage: serverImage(widget.groupDetails.groupdp)),
+          backgroundImage: serverImageProvider(widget.groupDetails.groupdp)),
       title: Text(widget.groupDetails.groupname),
       trailing: widget.trailing,
     );

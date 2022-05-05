@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:moment/components/common/bottom_navbar.dart';
 import 'package:moment/components/common/custom_popup.dart';
 import 'package:moment/components/common/logged_in_drawer.dart';
-import 'package:moment/models/constants.dart' as constants;
+import 'package:moment/components/common/moment_appbar.dart';
+import 'package:moment/screens/moment/add_post_screen.dart';
+import 'package:moment/screens/moment/my_groups_screen.dart';
 import 'package:moment/services.dart' as services;
 import 'package:moment/utils/util_functions.dart' as utils;
 import 'package:moment/providers/home_page_provider.dart';
-// import 'package:moment/screens/mctea/mctea_home_screen.dart';
-import 'package:moment/screens/mctea/mctea_home.dart';
 import 'package:moment/screens/moment/moment_home_screen.dart';
 import 'package:moment/screens/moment/search_screen.dart';
 import 'package:moment/screens/moment/settings_screen.dart';
@@ -25,7 +25,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List screens = const [
     MomentHome(),
-    McteaHome(),
+    MyGroups(),
     Search(),
     Settings(),
   ];
@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                   if (await services.logout()) {
                     Provider.of<HomePageNotifier>(context, listen: false)
-                        .setIndex(0);
+                        .setIndex(0, context);
                     Navigator.of(context).pop(false);
                     Navigator.of(context).pushNamed('/login');
                   } else {
@@ -78,25 +78,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Consumer<HomePageNotifier>(
       builder: (BuildContext context, homePageState, child) {
         return Scaffold(
-          appBar: AppBar(
-            elevation: 2,
-            centerTitle: true,
-            title: const Text('MOMENT'),
-            actions: [
-              IconButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/notifications');
-                  },
-                  icon: const Icon(
-                    Icons.notifications,
-                  ))
-            ],
-          ),
+          appBar: const MomentAppBar(),
           drawer: const LoggedInDrawer(),
-          bottomNavigationBar: BottomNavBar(
-            index: homePageState.index,
-            onTap: homePageState.setIndex,
-          ),
+          bottomNavigationBar: const BottomNavBar(),
           floatingActionButton: homePageState.index < 1
               ? FloatingActionButton(
                   child: Icon(
@@ -104,21 +88,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Theme.of(context).iconTheme.color,
                   ),
                   onPressed: () {
-                    switch (homePageState.index) {
-                      case 0:
-                        {
-                          Navigator.pushNamed(context, '/add-post');
-                          return;
-                        }
-                      case 1:
-                        {
-                          Navigator.pushNamed(context, '/add-event');
-                          return;
-                        }
-                      default:
-                        {
-                          return;
-                        }
+                    if (homePageState.index == 0) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: ((context) => const AddPost()),
+                        ),
+                      );
+                      return;
                     }
                   },
                 )
@@ -126,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
           body: WillPopScope(
             onWillPop: onWillPop,
             child: Container(
-              margin: constants.getScreenMargin(context),
+              margin: utils.getScreenMargins(context),
               child: screens[homePageState.index],
             ),
           ),

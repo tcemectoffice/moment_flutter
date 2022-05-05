@@ -22,11 +22,23 @@ class NotificationCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadiusDirectional.circular(10),
       ),
-      elevation: 4,
+      elevation: 3,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+        padding: EdgeInsets.fromLTRB(isNew ? 10 : 12, 12, 12, 12),
         child: Row(
           children: [
+            if (isNew)
+              Container(
+                margin: const EdgeInsets.only(right: 8),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Container(
+                    height: 6,
+                    width: 6,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+              ),
             Padding(
               padding: const EdgeInsets.only(right: 15.0),
               child: CircleAvatar(

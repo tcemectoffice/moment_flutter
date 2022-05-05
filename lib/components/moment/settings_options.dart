@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:moment/models/constants.dart' as constants;
-import 'package:moment/models/user_model.dart';
+import 'package:moment/providers/home_page_provider.dart';
 import 'package:moment/providers/moment_home_provider.dart';
 import 'package:moment/screens/moment/profile_screen.dart';
-import 'package:moment/screens/moment/show_all_groups.dart';
+import 'package:moment/screens/moment/my_groups_screen.dart';
 import 'package:moment/utils/util_functions.dart' as utils;
-import 'package:moment/providers/theme_provider.dart';
+import 'package:moment/providers/app_state_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:moment/screens/base/add_tutor_screen.dart';
 
@@ -27,88 +27,87 @@ class _OptionsCardState extends State<OptionsCard> {
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
         child: Column(
           children: [
-            Consumer<ThemeNotifier>(
-                builder: (BuildContext context, appState, child) {
-              return MaterialButton(
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                onPressed: () {
-                  appState.toggleTheme();
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(14.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const Expanded(
-                        flex: 4,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15.0),
-                          child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Icon(Icons.wb_sunny)),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                                appState.isDark! ? 'Light Mode' : 'Dark Mode',
-                                style: constants.settingsOptionStyle),
-                          ),
-                        ),
-                        flex: 7,
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }),
-            const Divider(),
-            MaterialButton(
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ShowAllGroups()),
-                );
-              },
-              child: Container(
-                padding: const EdgeInsets.all(14.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: const [
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Icon(Icons.group)),
-                      ),
-                      flex: 4,
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'My Groups',
-                            style: constants.settingsOptionStyle,
-                          ),
-                        ),
-                      ),
-                      flex: 7,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const Divider(),
+            // Consumer<ThemeNotifier>(
+            //     builder: (BuildContext context, appState, child) {
+            //   return MaterialButton(
+            //     splashColor: Colors.transparent,
+            //     highlightColor: Colors.transparent,
+            //     onPressed: () {
+            //       appState.toggleTheme();
+            //     },
+            //     child: Container(
+            //       padding: const EdgeInsets.all(14.0),
+            //       child: Row(
+            //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //         children: const [
+            //           // Expanded(
+            //           //   flex: 4,
+            //           //   child: Padding(
+            //           //     padding: EdgeInsets.symmetric(horizontal: 15.0),
+            //           //     child: Align(
+            //           //         alignment: Alignment.centerRight,
+            //           //         child: Icon(Icons.wb_sunny)),
+            //           //   ),
+            //           // ),
+            //           // Expanded(
+            //           //   child: Padding(
+            //           //     padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            //           //     child: Align(
+            //           //       alignment: Alignment.centerLeft,
+            //           //       child: Text(
+            //           //           appState.isDark!
+            //           //               ? 'Light Mode'
+            //           //               : 'Dark Mode (beta)',
+            //           //           style: constants.settingsOptionStyle),
+            //           //     ),
+            //           //   ),
+            //           //   flex: 7,
+            //           // ),
+            //         ],
+            //       ),
+            //     ),
+            //   );
+            // }),
+            // const Divider(),
+            // MaterialButton(
+            //   splashColor: Colors.transparent,
+            //   highlightColor: Colors.transparent,
+            //   onPressed: () {
+            //     Provider.of<HomePageNotifier>(context, listen: false)
+            //         .setIndex(1, context);
+            //   },
+            //   child: Container(
+            //     padding: const EdgeInsets.all(14.0),
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //       children: const [
+            //         Expanded(
+            //           child: Padding(
+            //             padding: EdgeInsets.symmetric(horizontal: 15.0),
+            //             child: Align(
+            //                 alignment: Alignment.centerRight,
+            //                 child: Icon(Icons.group)),
+            //           ),
+            //           flex: 4,
+            //         ),
+            //         Expanded(
+            //           child: Padding(
+            //             padding: EdgeInsets.symmetric(horizontal: 15.0),
+            //             child: Align(
+            //               alignment: Alignment.centerLeft,
+            //               child: Text(
+            //                 'My Groups',
+            //                 style: constants.settingsOptionStyle,
+            //               ),
+            //             ),
+            //           ),
+            //           flex: 7,
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            // const Divider(),
             Consumer<MomentHomeNotifier>(
                 builder: (BuildContext context, tutorState, Widget? child) {
               return tutorState.momentHomeData!.tutor == null
@@ -159,7 +158,11 @@ class _OptionsCardState extends State<OptionsCard> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => Profile()),
+                          MaterialPageRoute(
+                              builder: (context) => Profile(
+                                    userId: tutorState
+                                        .momentHomeData!.tutor!.userid!,
+                                  )),
                         );
                       },
                       child: Container(
