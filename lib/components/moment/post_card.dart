@@ -2,10 +2,12 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:flutter_linkify/flutter_linkify.dart'
+    show SelectableLinkify, LinkifyOptions, LinkableElement;
 import 'package:moment/components/common/custom_popup.dart';
 import 'package:moment/models/phone_number_linker.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:moment/models/email_linker.dart';
+import 'package:moment/models/url_linker.dart';
 import 'package:open_file/open_file.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
@@ -201,6 +203,7 @@ class _PostCardState extends State<PostCard> {
                               EmailLinkifier(),
                               UrlLinkifier(),
                             ],
+                            options: const LinkifyOptions(looseUrl: true),
                             onOpen: onOpen,
                             text: widget.postInfo.postdata,
                             style: const TextStyle(fontSize: 16),
