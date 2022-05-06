@@ -14,7 +14,6 @@ class PhoneLinkifier extends Linkifier {
     for (LinkifyElement element in elements) {
       if (element is TextElement) {
         final match = _phoneRegex.firstMatch(element.text);
-        print('match ${match?.end}');
         if (match == null) {
           list.add(element);
         } else {

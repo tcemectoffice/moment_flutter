@@ -80,7 +80,7 @@ class _EditProfileState extends State<EditProfile> {
       print(email);
       print(dp);
       if (name == null &&
-          phone == null &&
+          regNum == null &&
           email == null &&
           phone == null &&
           dp == null) {

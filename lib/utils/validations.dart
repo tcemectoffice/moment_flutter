@@ -15,7 +15,7 @@ String? validatePassword(value) {
 }
 
 String? validateTceEmail(value) {
-  String pattern = r'^[a-z0-9]+@[a-z\.]*tce\.+edu$';
+  String pattern = r'^[a-z0-9][a-z0-9\_\.]+@(tce\.edu|student\.tce\.edu)$';
   RegExp regex = RegExp(pattern);
   if (!regex.hasMatch(value)) {
     return 'Invalid TCE Mail ID';
@@ -25,7 +25,7 @@ String? validateTceEmail(value) {
 
 String? validateEmail(value, {bool isOptional = false}) {
   if (isOptional && (value == null || value == '')) return null;
-  String pattern = r'^[a-z0-9]+@[a-z\.]*\.+[a-z]*$';
+  String pattern = r'^[a-z0-9][a-z0-9\_\.]+@[a-z\.]*\.+[a-z]*$';
   RegExp regex = RegExp(pattern);
   if (!regex.hasMatch(value)) {
     return 'Invalid Mail ID';

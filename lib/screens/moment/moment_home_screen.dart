@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moment/components/common/custom_scroll_settings.dart';
 import 'package:moment/components/moment/post_card.dart';
 import 'package:moment/models/network_response_model.dart';
+import 'package:moment/providers/home_page_provider.dart';
 import 'package:moment/providers/moment_home_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:moment/services.dart' as services;
@@ -31,6 +32,7 @@ class _MomentHomeState extends State<MomentHome> {
       case 1:
         Provider.of<MomentHomeNotifier>(context, listen: false)
             .setHomeData(responseData.data);
+        Provider.of<HomePageNotifier>(context, listen: false).contentLoaded();
         currentPostIndex = 10;
         break;
       case 999:

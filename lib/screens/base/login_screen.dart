@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:moment/components/common/custom_popup.dart';
 import 'package:moment/components/common/custom_scroll_settings.dart';
 import 'package:moment/models/constants.dart' as constants;
@@ -36,7 +35,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: const Text('No'),
               ),
               MaterialButton(
-                onPressed: () => exit(0),
+                onPressed: () =>
+                    SystemChannels.platform.invokeMethod('SystemNavigator.pop'),
                 child: const Padding(
                   padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
                   child: Text('Yes'),

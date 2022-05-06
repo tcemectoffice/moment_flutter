@@ -1,6 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:moment/components/common/bottom_navbar.dart';
 import 'package:moment/components/common/custom_popup.dart';
 import 'package:moment/components/common/logged_in_drawer.dart';
@@ -38,12 +37,13 @@ class _HomeScreenState extends State<HomeScreen> {
             content: const Text('Do you want to Exit the App?'),
             actions: <Widget>[
               MaterialButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('No'),
+                onPressed: () =>
+                    SystemChannels.platform.invokeMethod('SystemNavigator.pop'),
+                child: const Text('Yes'),
               ),
               MaterialButton(
-                onPressed: () => exit(0),
-                child: const Text('Yes'),
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('No'),
               ),
               MaterialButton(
                 onPressed: () async {
@@ -78,9 +78,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return Consumer<HomePageNotifier>(
       builder: (BuildContext context, homePageState, child) {
         return Scaffold(
-          appBar: const MomentAppBar(),
-          drawer: const LoggedInDrawer(),
-          bottomNavigationBar: const BottomNavBar(),
+          appBar: homePageState.isContentLoaded ? const MomentAppBar() : null,
+          drawer: homePageState.isContentLoaded ? const LoggedInDrawer() : null,
+          bottomNavigationBar:
+              homePageState.isContentLoaded ? const BottomNavBar() : null,
           floatingActionButton: homePageState.index < 1
               ? FloatingActionButton(
                   child: Icon(
