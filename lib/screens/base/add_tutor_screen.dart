@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:moment/services.dart' as services;
 import 'package:moment/utils/util_functions.dart' as utils;
 import 'package:moment/components/moment/staff_row_tile.dart';
 import 'package:moment/models/user_model.dart';
+import 'package:moment/components/common/custom_popup.dart';
 import 'package:moment/providers/moment_home_provider.dart';
-import 'package:provider/provider.dart';
 
 class AddTutorScreen extends StatefulWidget {
   const AddTutorScreen({Key? key}) : super(key: key);
@@ -18,6 +19,15 @@ class _AddTutorScreenState extends State<AddTutorScreen> {
   int? selectedStaffId;
 
   confirmTutor() async {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) => const CustomPopup(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
+    );
     if (selectedStaffId != null) {
       bool addTutor = await services.tutorSave(selectedStaffId!);
       if (addTutor) {
@@ -30,6 +40,7 @@ class _AddTutorScreenState extends State<AddTutorScreen> {
     } else {
       utils.showSnackMessage(context, 'Select your tutor');
     }
+    Navigator.of(context).pop();
   }
 
   @override

@@ -205,7 +205,7 @@ Future<bool> postLike(int postId, bool likeStatus) async {
       return false;
     }
   } catch (error) {
-    utils.validateError(error);
+    print('likePost: ' + error.toString());
     return false;
   }
 }
@@ -229,7 +229,7 @@ Future<bool> postComment(int postId, String comment) async {
       return false;
     }
   } catch (error) {
-    utils.validateError(error);
+    print('commentPost: ' + error.toString());
     return false;
   }
 }
@@ -252,7 +252,7 @@ Future<bool> tutorSave(int tutorId) async {
       return false;
     }
   } catch (error) {
-    utils.validateError(error);
+    print('AddTutor: ' + error.toString());
     return false;
   }
 }
@@ -288,7 +288,7 @@ Future<bool> addPost(int grpId, String postData, bool isPrivate,
       return false;
     }
   } catch (error) {
-    utils.validateError(error);
+    print('AddPost: ' + error.toString());
     return false;
   }
 }

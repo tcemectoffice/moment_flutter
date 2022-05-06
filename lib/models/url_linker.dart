@@ -33,12 +33,6 @@ class UrlLinkifier extends Linkifier {
         if (match == null) {
           list.add(element);
         } else {
-          print('url match ${match.end}');
-          print('url match group 0: ${match.group(0)}');
-          print('url match group 1: ${match.group(1)}');
-          print('url match group 2: ${match.group(2)}');
-          print('url match group 3: ${match.group(3)}');
-          print('url match group 4: ${match.group(4)}');
           final text = element.text.replaceFirst(match.group(0)!, '');
           if (match.group(1)?.isNotEmpty == true) {
             list.add(TextElement(match.group(1)!));
