@@ -126,90 +126,67 @@ class PostScreenState extends State<PostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-        ),
-        body: isLoading
-            ? const Center(
-                child: SizedBox(
-                  width: 120,
-                  child: LinearProgressIndicator(),
-                ),
-              )
-            : Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
-                child: CustomScrollConfig(
-                  child: CustomScrollView(
-                    slivers: [
-                      SliverToBoxAdapter(
-                        child: PostCard(
-                          postInfo: postData.post,
-                          postedByInfo: postData.user,
-                          postedGroupInfo: postData.group,
-                          postIndex: index,
-                          likeStatus: postData.post.likestatus,
-                          elevation: 0,
-                          localDocPath: localDocPath,
-                          commentAction: () {
-                            commentNode.requestFocus();
-                          },
-                          source: widget.source,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: isLoading
+          ? const Center(
+              child: SizedBox(
+                width: 120,
+                child: LinearProgressIndicator(),
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+              child: CustomScrollConfig(
+                child: CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(
+                      child: PostCard(
+                        postInfo: postData.post,
+                        postedByInfo: postData.user,
+                        postedGroupInfo: postData.group,
+                        postIndex: index,
+                        likeStatus: postData.post.likestatus,
+                        elevation: 0,
+                        localDocPath: localDocPath,
+                        commentAction: () {
+                          commentNode.requestFocus();
+                        },
+                        source: widget.source,
+                      ),
+                    ),
+                    const SliverToBoxAdapter(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(8, 15, 8, 8),
+                        child: Text(
+                          "Comments",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w600),
                         ),
                       ),
-                      const SliverToBoxAdapter(
+                    ),
+                    SliverToBoxAdapter(
+                      child: Card(
                         child: Padding(
-                          padding: EdgeInsets.fromLTRB(8, 15, 8, 8),
-                          child: Text(
-                            "Comments",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                      ),
-                      SliverToBoxAdapter(
-                        child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 20.0),
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              primary: false,
-                              itemCount: postData.post.commentcount + 1,
-                              itemBuilder:
-                                  (BuildContext context, int commentIndex) {
-                                if (commentIndex == 0) {
-                                  return Column(
-                                    children: [
-                                      CommentInput(
-                                        controller: commentController,
-                                        node: commentNode,
-                                        dpUrl: userDp,
-                                        autoFocus: widget.action == 'comment',
-                                        onNewComment: onNewComment,
-                                      ),
-                                      if (commentIndex !=
-                                          postData.post.commentcount)
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 20, vertical: 5),
-                                          child: Divider(
-                                            thickness: 1,
-                                          ),
-                                        ),
-                                    ],
-                                  );
-                                }
+                          padding: const EdgeInsets.symmetric(vertical: 20.0),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            primary: false,
+                            itemCount: postData.post.commentcount + 1,
+                            itemBuilder:
+                                (BuildContext context, int commentIndex) {
+                              if (commentIndex == 0) {
                                 return Column(
                                   children: [
-                                    CommentTile(
-                                      dpUrl: postData.post.dp[commentIndex - 1],
-                                      commentMsg: postData
-                                          .post.commentdata[commentIndex - 1],
-                                      userName: postData
-                                          .post.commentedby[commentIndex - 1],
+                                    CommentInput(
+                                      controller: commentController,
+                                      node: commentNode,
+                                      dpUrl: userDp,
+                                      autoFocus: widget.action == 'comment',
+                                      onNewComment: onNewComment,
                                     ),
                                     if (commentIndex !=
                                         postData.post.commentcount)
@@ -222,16 +199,36 @@ class PostScreenState extends State<PostScreen> {
                                       ),
                                   ],
                                 );
-                              },
-                            ),
+                              }
+                              return Column(
+                                children: [
+                                  CommentTile(
+                                    dpUrl: postData.post.dp[commentIndex - 1],
+                                    commentMsg: postData
+                                        .post.commentdata[commentIndex - 1],
+                                    userName: postData
+                                        .post.commentedby[commentIndex - 1],
+                                  ),
+                                  if (commentIndex !=
+                                      postData.post.commentcount)
+                                    const Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 5),
+                                      child: Divider(
+                                        thickness: 1,
+                                      ),
+                                    ),
+                                ],
+                              );
+                            },
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-      ),
+            ),
     );
   }
 }

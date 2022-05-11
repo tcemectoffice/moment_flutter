@@ -18,7 +18,7 @@ class _NotificationsState extends State<Notifications> {
   late List<NotificationModel> notificationData = [];
   bool isLoading = true;
 
-  loadContent() async {
+  Future<void> loadContent() async {
     setState(() {
       isLoading = true;
     });
@@ -54,21 +54,20 @@ class _NotificationsState extends State<Notifications> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 2,
-          title: const Text("Notifications"),
-        ),
-        backgroundColor: const Color(0xFFDAEDFB),
-        body: isLoading
-            ? const Center(
-                child: SizedBox(width: 120, child: LinearProgressIndicator()),
-              )
-            : Container(
-                margin: getScreenMargins(context),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 2,
+        title: const Text("Notifications"),
+      ),
+      body: isLoading
+          ? const Center(
+              child: SizedBox(width: 120, child: LinearProgressIndicator()),
+            )
+          : Container(
+              margin: getScreenMargins(context),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+              child: RefreshIndicator(
+                onRefresh: loadContent,
                 child: CustomScrollConfig(
                   child: CustomScrollView(
                     slivers: <Widget>[
@@ -96,7 +95,7 @@ class _NotificationsState extends State<Notifications> {
                   ),
                 ),
               ),
-      ),
+            ),
     );
   }
 }

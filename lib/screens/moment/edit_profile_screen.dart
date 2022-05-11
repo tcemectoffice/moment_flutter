@@ -140,188 +140,184 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 2,
-          actions: [
-            TextButton(
-              onPressed: editProfile,
-              focusNode: submitNode,
-              child: const Text('Save'),
-            )
-          ],
-          title: const Text('Edit Profile'),
-        ),
-        resizeToAvoidBottomInset: true,
-        body: Container(
-          margin: utils.getScreenMargins(context, extra: 20),
-          padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: CustomScrollConfig(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(
-                    height: 65,
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 2,
+        actions: [
+          TextButton(
+            onPressed: editProfile,
+            focusNode: submitNode,
+            child: const Text('Save'),
+          )
+        ],
+        title: const Text('Edit Profile'),
+      ),
+      resizeToAvoidBottomInset: true,
+      body: Container(
+        margin: utils.getScreenMargins(context, extra: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 30),
+        child: CustomScrollConfig(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 65,
+                ),
+                GestureDetector(
+                  onTap: pickFiles,
+                  child: CircleAvatar(
+                    radius: MediaQuery.of(context).size.width > 400 ? 100 : 75,
+                    backgroundImage: dp == null
+                        ? serverImageProvider(widget.dp)
+                        : FileImage(dp!) as ImageProvider,
                   ),
-                  GestureDetector(
-                    onTap: pickFiles,
-                    child: CircleAvatar(
-                      radius:
-                          MediaQuery.of(context).size.width > 400 ? 100 : 75,
-                      backgroundImage: dp == null
-                          ? serverImageProvider(widget.dp)
-                          : FileImage(dp!) as ImageProvider,
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 27.0,
+                  ),
+                  child: Form(
+                    key: _editProfileFormKey,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          width: 450,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(bottom: 4.0, top: 20),
+                                child: Text('Name:'),
+                              ),
+                              SizedBox(
+                                height: 60,
+                                child: TextFormField(
+                                  focusNode: nameNode,
+                                  keyboardType: TextInputType.name,
+                                  onTap: () {
+                                    nameNode.requestFocus();
+                                  },
+                                  style: const TextStyle(fontSize: 14.0),
+                                  controller: nameController,
+                                  textInputAction: TextInputAction.next,
+                                  validator: (value) {
+                                    return validateName(value,
+                                        isOptional: true);
+                                  },
+                                  decoration: const InputDecoration(
+                                    contentPadding: EdgeInsets.all(12),
+                                    isDense: true,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: 450,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(bottom: 4.0),
+                                child: Text('Register Number:'),
+                              ),
+                              SizedBox(
+                                height: 60,
+                                child: TextFormField(
+                                  focusNode: regNumNode,
+                                  keyboardType: TextInputType.text,
+                                  onTap: () {
+                                    regNumNode.requestFocus();
+                                  },
+                                  style: const TextStyle(fontSize: 14.0),
+                                  controller: regNumController,
+                                  textInputAction: TextInputAction.next,
+                                  validator: (value) {
+                                    return validateRegNum(value,
+                                        isOptional: true);
+                                  },
+                                  decoration: const InputDecoration(
+                                    contentPadding: EdgeInsets.all(12),
+                                    isDense: true,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: 450,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(bottom: 4.0),
+                                child: Text('Phone Number:'),
+                              ),
+                              SizedBox(
+                                height: 60,
+                                child: TextFormField(
+                                  focusNode: phoneNode,
+                                  keyboardType: TextInputType.number,
+                                  onTap: () {
+                                    phoneNode.requestFocus();
+                                  },
+                                  style: const TextStyle(fontSize: 14.0),
+                                  controller: phoneController,
+                                  textInputAction: TextInputAction.next,
+                                  validator: (value) {
+                                    return validatePhone(value,
+                                        isOptional: true);
+                                  },
+                                  decoration: const InputDecoration(
+                                    contentPadding: EdgeInsets.all(12),
+                                    isDense: true,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: 450,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(bottom: 4.0),
+                                child: Text('Alternate Email:'),
+                              ),
+                              SizedBox(
+                                height: 60,
+                                child: TextFormField(
+                                  focusNode: emailNode,
+                                  keyboardType: TextInputType.emailAddress,
+                                  onTap: () {
+                                    emailNode.requestFocus();
+                                  },
+                                  style: const TextStyle(fontSize: 14.0),
+                                  controller: emailController,
+                                  textInputAction: TextInputAction.next,
+                                  validator: (value) {
+                                    return validateEmail(value,
+                                        isOptional: true);
+                                  },
+                                  decoration: const InputDecoration(
+                                    contentPadding: EdgeInsets.all(12),
+                                    isDense: true,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 27.0,
-                    ),
-                    child: Form(
-                      key: _editProfileFormKey,
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            width: 450,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding:
-                                      EdgeInsets.only(bottom: 4.0, top: 20),
-                                  child: Text('Name:'),
-                                ),
-                                SizedBox(
-                                  height: 60,
-                                  child: TextFormField(
-                                    focusNode: nameNode,
-                                    keyboardType: TextInputType.name,
-                                    onTap: () {
-                                      nameNode.requestFocus();
-                                    },
-                                    style: const TextStyle(fontSize: 14.0),
-                                    controller: nameController,
-                                    textInputAction: TextInputAction.next,
-                                    validator: (value) {
-                                      return validateName(value,
-                                          isOptional: true);
-                                    },
-                                    decoration: const InputDecoration(
-                                      contentPadding: EdgeInsets.all(12),
-                                      isDense: true,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: 450,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(bottom: 4.0),
-                                  child: Text('Register Number:'),
-                                ),
-                                SizedBox(
-                                  height: 60,
-                                  child: TextFormField(
-                                    focusNode: regNumNode,
-                                    keyboardType: TextInputType.text,
-                                    onTap: () {
-                                      regNumNode.requestFocus();
-                                    },
-                                    style: const TextStyle(fontSize: 14.0),
-                                    controller: regNumController,
-                                    textInputAction: TextInputAction.next,
-                                    validator: (value) {
-                                      return validateRegNum(value,
-                                          isOptional: true);
-                                    },
-                                    decoration: const InputDecoration(
-                                      contentPadding: EdgeInsets.all(12),
-                                      isDense: true,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: 450,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(bottom: 4.0),
-                                  child: Text('Phone Number:'),
-                                ),
-                                SizedBox(
-                                  height: 60,
-                                  child: TextFormField(
-                                    focusNode: phoneNode,
-                                    keyboardType: TextInputType.number,
-                                    onTap: () {
-                                      phoneNode.requestFocus();
-                                    },
-                                    style: const TextStyle(fontSize: 14.0),
-                                    controller: phoneController,
-                                    textInputAction: TextInputAction.next,
-                                    validator: (value) {
-                                      return validatePhone(value,
-                                          isOptional: true);
-                                    },
-                                    decoration: const InputDecoration(
-                                      contentPadding: EdgeInsets.all(12),
-                                      isDense: true,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: 450,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(bottom: 4.0),
-                                  child: Text('Alternate Email:'),
-                                ),
-                                SizedBox(
-                                  height: 60,
-                                  child: TextFormField(
-                                    focusNode: emailNode,
-                                    keyboardType: TextInputType.emailAddress,
-                                    onTap: () {
-                                      emailNode.requestFocus();
-                                    },
-                                    style: const TextStyle(fontSize: 14.0),
-                                    controller: emailController,
-                                    textInputAction: TextInputAction.next,
-                                    validator: (value) {
-                                      return validateEmail(value,
-                                          isOptional: true);
-                                    },
-                                    decoration: const InputDecoration(
-                                      contentPadding: EdgeInsets.all(12),
-                                      isDense: true,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
