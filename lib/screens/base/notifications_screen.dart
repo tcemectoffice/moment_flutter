@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:moment/components/common/notification_card.dart';
 import 'package:moment/components/common/custom_scroll_settings.dart';
+import 'package:moment/models/network_response_model.dart';
+import 'package:moment/models/notification_model.dart';
 import 'package:moment/utils/util_functions.dart';
+import 'package:moment/utils/util_functions.dart' as utils;
+import 'package:moment/services.dart' as services;
 
 class Notifications extends StatefulWidget {
   const Notifications({Key? key}) : super(key: key);
@@ -11,6 +15,43 @@ class Notifications extends StatefulWidget {
 }
 
 class _NotificationsState extends State<Notifications> {
+  late List<NotificationModel> notificationData = [];
+  bool isLoading = true;
+
+  loadContent() async {
+    setState(() {
+      isLoading = true;
+    });
+    NetworkResponseModel responseData = await services.getNotificationsList();
+    switch (responseData.status) {
+      case 6:
+        setState(() {
+          notificationData = responseData.data.content;
+        });
+        break;
+      case 999:
+        utils.showSnackMessage(
+            context, 'Unknown error occured! Try again later!');
+        break;
+      case 1000:
+        utils.showSnackMessage(context, 'No Internet! Try again later!');
+        break;
+      default:
+        utils.showSnackMessage(
+            context, 'Unknown error occured! Try again later!');
+    }
+    setState(() {
+      isLoading = false;
+    });
+    print(notificationData.length);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadContent();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -18,57 +59,43 @@ class _NotificationsState extends State<Notifications> {
         appBar: AppBar(
           elevation: 2,
           title: const Text("Notifications"),
-          actions: [
-            TextButton(
-              onPressed: () {},
-              child: const Text(
-                "Mark all as read",
-                style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.blue,
-                    fontWeight: FontWeight.w600),
-              ),
-            ),
-          ],
         ),
         backgroundColor: const Color(0xFFDAEDFB),
-        body: Container(
-          margin: getScreenMargins(context),
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-          child: CustomScrollConfig(
-            child: CustomScrollView(
-              slivers: <Widget>[
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                      return Container(
-                        padding: const EdgeInsets.fromLTRB(6, 8, 6, 0),
-                        child: index - 1 < 1
-                            ? const NotificationCard(
-                                imageUrl:
-                                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUK1LaBaummJfuW6GIM_kt3R9egIlpqVpEKw&usqp=CAU",
-                                dpUrl:
-                                    "https://media.istockphoto.com/photos/colored-powder-explosion-on-black-background-picture-id1057506940?k=20&m=1057506940&s=612x612&w=0&h=3j5EA6YFVg3q-laNqTGtLxfCKVR3_o6gcVZZseNaWGk=",
-                                notificationMsg: "has commented on your post.",
-                                userName: "Kishore L",
-                                isNew: true,
-                              )
-                            : const NotificationCard(
-                                dpUrl:
-                                    "https://media.istockphoto.com/photos/colored-powder-explosion-on-black-background-picture-id1057506940?k=20&m=1057506940&s=612x612&w=0&h=3j5EA6YFVg3q-laNqTGtLxfCKVR3_o6gcVZZseNaWGk=",
-                                notificationMsg: "has commented on your post.",
-                                userName: "Kishore L",
-                                isNew: false,
+        body: isLoading
+            ? const Center(
+                child: SizedBox(width: 120, child: LinearProgressIndicator()),
+              )
+            : Container(
+                margin: getScreenMargins(context),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                child: CustomScrollConfig(
+                  child: CustomScrollView(
+                    slivers: <Widget>[
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (BuildContext context, int index) {
+                            return Container(
+                              padding: const EdgeInsets.fromLTRB(6, 8, 6, 0),
+                              child: NotificationCard(
+                                postId: notificationData[index].postid,
+                                dpUrl: notificationData[index].dp,
+                                userName: notificationData[index].name,
+                                notificationMsg:
+                                    notificationData[index].notificationContent,
+                                groupName: notificationData[index].gname,
+                                imageUrl: notificationData[index].fileurl,
+                                isNew: notificationData[index].isnew,
                               ),
-                      );
-                    },
-                    childCount: 6,
+                            );
+                          },
+                          childCount: notificationData.length,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
+              ),
       ),
     );
   }

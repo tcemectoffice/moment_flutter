@@ -7,7 +7,9 @@ import 'package:flutter_linkify/flutter_linkify.dart'
 import 'package:moment/components/common/custom_popup.dart';
 import 'package:moment/models/phone_number_linker.dart';
 import 'package:moment/models/email_linker.dart';
+import 'package:moment/models/single_post_data_model.dart';
 import 'package:moment/models/url_linker.dart';
+import 'package:moment/providers/home_page_provider.dart';
 import 'package:open_file/open_file.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +33,7 @@ class PostCard extends StatefulWidget {
   final bool likeStatus;
   final double elevation;
   final String localDocPath;
-  final bool isHome;
+  final String source;
   final Function? commentAction;
 
   const PostCard({
@@ -43,7 +45,7 @@ class PostCard extends StatefulWidget {
     required this.likeStatus,
     required this.elevation,
     required this.localDocPath,
-    required this.isHome,
+    required this.source,
     this.commentAction,
   }) : super(key: key);
 
@@ -52,10 +54,10 @@ class PostCard extends StatefulWidget {
 }
 
 class _PostCardState extends State<PostCard> {
-  late bool likeStatus, isHome;
-  late int likeCount;
+  late bool likeStatus;
+  late int likeCount, index;
   late List<Filedetails> fileDetails;
-  late String localDocPath;
+  late String localDocPath, source;
   bool isLoading = true;
 
   initialize() async {
@@ -63,7 +65,8 @@ class _PostCardState extends State<PostCard> {
       isLoading = true;
     });
     likeStatus = widget.likeStatus;
-    isHome = widget.isHome;
+    index = widget.postIndex;
+    source = widget.source;
     likeCount = widget.postInfo.likecount;
     fileDetails = widget.postInfo.filedetails ?? [];
     localDocPath = widget.localDocPath;
@@ -90,10 +93,10 @@ class _PostCardState extends State<PostCard> {
     bool likePost =
         await services.postLike(widget.postInfo.postid, !likeStatus);
     if (likePost) {
-      if (isHome) {
+      if (source == 'home') {
         Provider.of<MomentHomeNotifier>(context, listen: false)
             .toggleLike(widget.postIndex);
-      } else {
+      } else if (source == 'groups') {
         Provider.of<GroupScreenNotifier>(context, listen: false)
             .toggleLike(widget.postIndex);
       }
@@ -119,13 +122,18 @@ class _PostCardState extends State<PostCard> {
     String filePath = localDocPath + '/' + targetFile.filename;
     bool res = await services.downloadFile(targetFile, filePath);
     if (res) {
-      if (isHome) {
+      if (source == 'home') {
         Provider.of<MomentHomeNotifier>(context, listen: false)
             .toggleFileStatus(widget.postInfo.postid, targetFile.filename);
-      } else {
+      } else if (source == 'groups') {
         Provider.of<GroupScreenNotifier>(context, listen: false)
             .toggleFileStatus(widget.postInfo.postid, targetFile.filename);
       }
+      setState(() {
+        fileDetails
+            .firstWhere((file) => file.filename == targetFile.filename)
+            .fileDownloaded = true;
+      });
     } else {
       utils.showSnackMessage(context, 'Download failed! Try Again...');
     }
@@ -141,13 +149,19 @@ class _PostCardState extends State<PostCard> {
     if (!file.fileDownloaded) {
       var res = File(localDocPath + '/' + file.filename).existsSync();
       if (res) {
-        if (isHome) {
+        if (source == 'home') {
           Provider.of<MomentHomeNotifier>(context, listen: false)
               .toggleFileStatus(widget.postInfo.postid, file.filename);
-        } else {
+        } else if (source == 'groups') {
           Provider.of<GroupScreenNotifier>(context, listen: false)
               .toggleFileStatus(widget.postInfo.postid, file.filename);
         }
+        setState(() {
+          fileDetails
+              .firstWhere(
+                  (fileFromList) => fileFromList.filename == file.filename)
+              .fileDownloaded = true;
+        });
       }
     }
   }
@@ -338,16 +352,67 @@ class _PostCardState extends State<PostCard> {
                                   onTap: onLikePressed,
                                   child: Row(
                                     children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 8.0),
-                                        child: Icon(likeStatus
-                                            ? Icons.thumb_up
-                                            : Icons.thumb_up_outlined),
-                                      ),
-                                      Text(
-                                        likeCount.toString(),
-                                      ),
+                                      if (widget.source == 'home')
+                                        Consumer<MomentHomeNotifier>(builder:
+                                            ((context, homeState, child) {
+                                          return Row(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 8.0),
+                                                child: Icon(homeState
+                                                        .momentHomeData!
+                                                        .post[index]
+                                                        .likestatus
+                                                    ? Icons.thumb_up
+                                                    : Icons.thumb_up_outlined),
+                                              ),
+                                              Text(
+                                                homeState.momentHomeData!
+                                                    .post[index].likecount
+                                                    .toString(),
+                                              ),
+                                            ],
+                                          );
+                                        })),
+                                      if (widget.source == 'groups')
+                                        Consumer<GroupScreenNotifier>(builder:
+                                            ((context, groupState, child) {
+                                          return Row(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 8.0),
+                                                child: Icon(groupState
+                                                        .groupScreenData!
+                                                        .post[index]
+                                                        .likestatus
+                                                    ? Icons.thumb_up
+                                                    : Icons.thumb_up_outlined),
+                                              ),
+                                              Text(
+                                                groupState.groupScreenData!
+                                                    .post[index].likecount
+                                                    .toString(),
+                                              ),
+                                            ],
+                                          );
+                                        })),
+                                      if (widget.source == 'notifications')
+                                        Row(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 8.0),
+                                              child: Icon(likeStatus
+                                                  ? Icons.thumb_up
+                                                  : Icons.thumb_up_outlined),
+                                            ),
+                                            Text(
+                                              likeCount.toString(),
+                                            ),
+                                          ],
+                                        )
                                     ],
                                   ),
                                 ),
@@ -361,8 +426,14 @@ class _PostCardState extends State<PostCard> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => PostScreen(
+                                            post: SinglePostDataModel(
+                                              post: widget.postInfo,
+                                              user: widget.postedByInfo,
+                                              group: widget.postedGroupInfo,
+                                            ),
+                                            source: widget.source,
                                             postIndex: widget.postIndex,
-                                            source: 'comment',
+                                            action: 'comment',
                                           ),
                                         ),
                                       );

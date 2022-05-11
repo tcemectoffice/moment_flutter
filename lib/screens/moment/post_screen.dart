@@ -3,6 +3,9 @@ import 'package:moment/components/common/custom_scroll_settings.dart';
 import 'package:moment/components/moment/comment_input.dart';
 import 'package:moment/components/moment/comment_tile.dart';
 import 'package:moment/components/moment/post_card.dart';
+import 'package:moment/models/network_response_model.dart';
+import 'package:moment/models/single_post_data_model.dart';
+import 'package:moment/providers/group_screen_provider.dart';
 import 'package:moment/providers/moment_home_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:moment/services.dart' as services;
@@ -10,13 +13,19 @@ import 'package:moment/utils/util_functions.dart' as utils;
 import 'package:moment/utils/prefs.dart' as prefs;
 
 class PostScreen extends StatefulWidget {
+  final int? postId;
   final int? postIndex;
+  final SinglePostDataModel? post;
+  final String? action;
   final String source;
 
   const PostScreen({
     Key? key,
-    required this.postIndex,
     required this.source,
+    this.action,
+    this.postId,
+    this.postIndex,
+    this.post,
   }) : super(key: key);
 
   @override
@@ -24,19 +33,80 @@ class PostScreen extends StatefulWidget {
 }
 
 class PostScreenState extends State<PostScreen> {
-  late int? index;
+  late int index;
+  late String userName, userDp, localDocPath;
+  late SinglePostDataModel postData;
   bool isLoading = true;
-  String localDocPath = '';
   final TextEditingController commentController = TextEditingController();
   final FocusNode commentNode = FocusNode();
+
+  onNewComment() async {
+    if (commentController.text.isNotEmpty) {
+      bool postComment = await services.postComment(
+          index == -1 ? widget.postId! : postData.post.postid,
+          commentController.text);
+      if (postComment) {
+        if (widget.source == 'home') {
+          Provider.of<MomentHomeNotifier>(context, listen: false)
+              .addComment(index, commentController.text);
+        } else if (widget.source == 'groups') {
+          Provider.of<GroupScreenNotifier>(context, listen: false)
+              .addComment(index, commentController.text);
+        } else {
+          setState(() {
+            postData.post.commentdata.insert(0, commentController.text);
+            postData.post.commentedby.insert(0, userName);
+            postData.post.dp.insert(0, userDp);
+            postData.post.commentcount++;
+          });
+        }
+        setState(() {
+          commentController.clear();
+        });
+      } else {
+        utils.showSnackMessage(context, 'Something went wrong! Try again!');
+      }
+    } else {
+      utils.showSnackMessage(context, "Comments can't be empty!");
+    }
+  }
 
   initialize() async {
     setState(() {
       isLoading = true;
     });
-    index = widget.postIndex;
-    localDocPath = await prefs.getString('localDocPath');
+    int tempIndex = widget.postIndex ?? -1;
+    String templocalDocPath = await prefs.getString('localDocPath');
+    String tempUserDp = await prefs.getString('userDp');
+    String tempUserName = await prefs.getString('userName');
+    dynamic tempPostData;
+    if (tempIndex == -1) {
+      NetworkResponseModel responseData =
+          await services.getPostSingle(widget.postId!);
+      switch (responseData.status) {
+        case 7:
+          tempPostData = responseData.data;
+          break;
+        case 999:
+          utils.showSnackMessage(
+              context, 'Unknown error occured! Try again later!');
+          break;
+        case 1000:
+          utils.showSnackMessage(context, 'No Internet! Try again later!');
+          break;
+        default:
+          utils.showSnackMessage(
+              context, 'Unknown error occured! Try again later!');
+      }
+    } else {
+      tempPostData = widget.post;
+    }
     setState(() {
+      postData = tempPostData;
+      index = tempIndex;
+      localDocPath = templocalDocPath;
+      userDp = tempUserDp;
+      userName = tempUserName;
       isLoading = false;
     });
   }
@@ -69,113 +139,59 @@ class PostScreenState extends State<PostScreen> {
                   child: LinearProgressIndicator(),
                 ),
               )
-            : Consumer<MomentHomeNotifier>(builder: (BuildContext context,
-                MomentHomeNotifier postState, Widget? child) {
-                onNewComment() async {
-                  if (commentController.text.isNotEmpty) {
-                    bool postComment = await services.postComment(
-                        postState.momentHomeData!.post[index!].postid,
-                        commentController.text);
-                    if (postComment) {
-                      postState.addComment(index!, commentController.text);
-                      commentController.clear();
-                    } else {
-                      utils.showSnackMessage(
-                          context, 'Something went wrong! Try again!');
-                    }
-                  } else {
-                    utils.showSnackMessage(context, "Comments can't be empty!");
-                  }
-                }
-
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
-                  child: CustomScrollConfig(
-                    child: CustomScrollView(
-                      slivers: [
-                        SliverToBoxAdapter(
-                          child: PostCard(
-                            postInfo: postState.momentHomeData!.post[index!],
-                            postedByInfo:
-                                postState.momentHomeData!.user[index!],
-                            postedGroupInfo:
-                                postState.momentHomeData!.postgroup[index!],
-                            postIndex: index!,
-                            likeStatus: postState
-                                .momentHomeData!.post[index!].likestatus,
-                            elevation: 0,
-                            localDocPath: localDocPath,
-                            commentAction: () {
-                              commentNode.requestFocus();
-                            },
-                            isHome: true,
+            : Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+                child: CustomScrollConfig(
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: PostCard(
+                          postInfo: postData.post,
+                          postedByInfo: postData.user,
+                          postedGroupInfo: postData.group,
+                          postIndex: index,
+                          likeStatus: postData.post.likestatus,
+                          elevation: 0,
+                          localDocPath: localDocPath,
+                          commentAction: () {
+                            commentNode.requestFocus();
+                          },
+                          source: widget.source,
+                        ),
+                      ),
+                      const SliverToBoxAdapter(
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(8, 15, 8, 8),
+                          child: Text(
+                            "Comments",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w600),
                           ),
                         ),
-                        const SliverToBoxAdapter(
+                      ),
+                      SliverToBoxAdapter(
+                        child: Card(
                           child: Padding(
-                            padding: EdgeInsets.fromLTRB(8, 15, 8, 8),
-                            child: Text(
-                              "Comments",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ),
-                        SliverToBoxAdapter(
-                          child: Card(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 20.0),
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                primary: false,
-                                itemCount: postState.momentHomeData!
-                                        .post[index!].commentcount +
-                                    1,
-                                itemBuilder:
-                                    (BuildContext context, int commentIndex) {
-                                  if (commentIndex == 0) {
-                                    return Column(
-                                      children: [
-                                        CommentInput(
-                                          controller: commentController,
-                                          node: commentNode,
-                                          dpUrl:
-                                              postState.momentHomeData!.userdp,
-                                          autoFocus: widget.source == 'comment',
-                                          onNewComment: onNewComment,
-                                        ),
-                                        if (commentIndex !=
-                                            postState.momentHomeData!
-                                                .post[index!].commentcount)
-                                          const Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 20, vertical: 5),
-                                            child: Divider(
-                                              thickness: 1,
-                                            ),
-                                          ),
-                                      ],
-                                    );
-                                  }
+                            padding: const EdgeInsets.symmetric(vertical: 20.0),
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              primary: false,
+                              itemCount: postData.post.commentcount + 1,
+                              itemBuilder:
+                                  (BuildContext context, int commentIndex) {
+                                if (commentIndex == 0) {
                                   return Column(
                                     children: [
-                                      CommentTile(
-                                        dpUrl: postState.momentHomeData!
-                                            .post[index!].dp[commentIndex - 1],
-                                        commentMsg: postState
-                                            .momentHomeData!
-                                            .post[index!]
-                                            .commentdata[commentIndex - 1],
-                                        userName: postState
-                                            .momentHomeData!
-                                            .post[index!]
-                                            .commentedby[commentIndex - 1],
+                                      CommentInput(
+                                        controller: commentController,
+                                        node: commentNode,
+                                        dpUrl: userDp,
+                                        autoFocus: widget.action == 'comment',
+                                        onNewComment: onNewComment,
                                       ),
                                       if (commentIndex !=
-                                          postState.momentHomeData!.post[index!]
-                                              .commentcount)
+                                          postData.post.commentcount)
                                         const Padding(
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 20, vertical: 5),
@@ -185,16 +201,36 @@ class PostScreenState extends State<PostScreen> {
                                         ),
                                     ],
                                   );
-                                },
-                              ),
+                                }
+                                return Column(
+                                  children: [
+                                    CommentTile(
+                                      dpUrl: postData.post.dp[commentIndex - 1],
+                                      commentMsg: postData
+                                          .post.commentdata[commentIndex - 1],
+                                      userName: postData
+                                          .post.commentedby[commentIndex - 1],
+                                    ),
+                                    if (commentIndex !=
+                                        postData.post.commentcount)
+                                      const Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 5),
+                                        child: Divider(
+                                          thickness: 1,
+                                        ),
+                                      ),
+                                  ],
+                                );
+                              },
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                );
-              }),
+                ),
+              ),
       ),
     );
   }

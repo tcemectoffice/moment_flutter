@@ -178,19 +178,18 @@ class _MomentHomeState extends State<MomentHome> {
                             return Padding(
                               padding: const EdgeInsets.fromLTRB(8, 16, 8, 0),
                               child: PostCard(
-                                postInfo:
-                                    momentHomeState.momentHomeData!.post[index],
-                                postedByInfo:
-                                    momentHomeState.momentHomeData!.user[index],
-                                postedGroupInfo: momentHomeState
-                                    .momentHomeData!.postgroup[index],
-                                postIndex: index,
-                                likeStatus: momentHomeState
-                                    .momentHomeData!.post[index].likestatus,
-                                localDocPath: localDocPath,
-                                elevation: 3,
-                                isHome: true,
-                              ),
+                                  postInfo: momentHomeState
+                                      .momentHomeData!.post[index],
+                                  postedByInfo: momentHomeState
+                                      .momentHomeData!.user[index],
+                                  postedGroupInfo: momentHomeState
+                                      .momentHomeData!.postgroup[index],
+                                  postIndex: index,
+                                  likeStatus: momentHomeState
+                                      .momentHomeData!.post[index].likestatus,
+                                  localDocPath: localDocPath,
+                                  elevation: 3,
+                                  source: 'home'),
                             );
                           },
                           childCount:

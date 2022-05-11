@@ -335,6 +335,7 @@ Future<NetworkResponseModel> getGroupsInitContent(int gid1) async {
       return NetworkResponseModel(status: 999);
     }
   } catch (error) {
+    print('groupsInit: ' + error.toString());
     return utils.validateError(error);
   }
 }
@@ -359,6 +360,7 @@ Future<NetworkResponseModel> getGroupsLazyContent(int startIndex) async {
       return NetworkResponseModel(status: 999);
     }
   } catch (error) {
+    print('groupsLazyInit: ' + error.toString());
     return utils.validateError(error);
   }
 }
@@ -383,6 +385,7 @@ Future<NetworkResponseModel> searchEntities(String searchPhrase) async {
       return NetworkResponseModel(status: 999);
     }
   } catch (error) {
+    print('searchList: ' + error.toString());
     return utils.validateError(error);
   }
 }
@@ -407,6 +410,7 @@ Future<NetworkResponseModel> userProfile(int userid) async {
       return NetworkResponseModel(status: 999);
     }
   } catch (error) {
+    print('profileInfo: ' + error.toString());
     return utils.validateError(error);
   }
 }
@@ -463,5 +467,55 @@ Future<bool> editProfile(String? name, String? regNum, String? email,
   } catch (error) {
     print('editProfile: ' + error.toString());
     return false;
+  }
+}
+
+Future<NetworkResponseModel> getNotificationsList() async {
+  var request = http.Request(
+    'GET',
+    Uri.parse(baseURL + '/init-notification')
+        .replace(queryParameters: {'notificationtime': '1'}),
+  );
+  request.headers.addAll(headers ?? {});
+  try {
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode.toString().startsWith('2')) {
+      String resStr = await response.stream.bytesToString();
+      print('init-notification: ' + resStr);
+      NetworkResponseModel profileInfo =
+          NetworkResponseModel.fromJson(jsonDecode(resStr));
+      return profileInfo;
+    } else {
+      print('init-notification: ' + response.reasonPhrase.toString());
+      return NetworkResponseModel(status: 999);
+    }
+  } catch (error) {
+    print('init-notification: ' + error.toString());
+    return utils.validateError(error);
+  }
+}
+
+Future<NetworkResponseModel> getPostSingle(int postId) async {
+  var request = http.Request(
+    'GET',
+    Uri.parse(baseURL + '/get-single-post')
+        .replace(queryParameters: {'postid': postId.toString()}),
+  );
+  request.headers.addAll(headers ?? {});
+  try {
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode.toString().startsWith('2')) {
+      String resStr = await response.stream.bytesToString();
+      print('get-single-post: ' + resStr);
+      NetworkResponseModel profileInfo =
+          NetworkResponseModel.fromJson(jsonDecode(resStr));
+      return profileInfo;
+    } else {
+      print('get-single-post: ' + response.reasonPhrase.toString());
+      return NetworkResponseModel(status: 999);
+    }
+  } catch (error) {
+    print('get-single-post: ' + error.toString());
+    return utils.validateError(error);
   }
 }

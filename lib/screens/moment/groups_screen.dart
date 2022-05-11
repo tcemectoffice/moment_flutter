@@ -262,7 +262,7 @@ class _GroupsState extends State<Groups> {
                                           .likestatus,
                                       localDocPath: localDocPath,
                                       elevation: 3,
-                                      isHome: false,
+                                      source: 'groups',
                                     ),
                                   );
                                 },
