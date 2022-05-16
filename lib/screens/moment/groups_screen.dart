@@ -121,158 +121,163 @@ class _GroupsState extends State<Groups> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const MomentAppBar(),
-      bottomNavigationBar: const BottomNavBar(
-        index: 1,
-      ),
-      body: Container(
-        margin: utils.getScreenMargins(context),
-        child: isLoading
-            ? const Center(
-                child: SizedBox(width: 120, child: LinearProgressIndicator()))
-            : RefreshIndicator(
-                onRefresh: getContent,
-                child: CustomScrollConfig(
-                  child: CustomScrollView(
-                    controller: scrollController,
-                    slivers: <Widget>[
-                      SliverToBoxAdapter(
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 8.0),
-                              child: GroupInfoCard(group: group),
-                            ),
-                            AddPostCard(
-                              userName: userName,
-                              dpUrl: userDp,
-                              groupId: group.groupid,
-                              groupName: group.groupname,
-                              primary: false,
-                            ),
-                          ],
+    return SafeArea(
+      child: Scaffold(
+        appBar: const MomentAppBar(),
+        bottomNavigationBar: const BottomNavBar(
+          index: 1,
+        ),
+        body: Container(
+          margin: utils.getScreenMargins(context),
+          child: isLoading
+              ? const Center(
+                  child: SizedBox(width: 120, child: LinearProgressIndicator()))
+              : RefreshIndicator(
+                  onRefresh: getContent,
+                  child: CustomScrollConfig(
+                    child: CustomScrollView(
+                      controller: scrollController,
+                      slivers: <Widget>[
+                        SliverToBoxAdapter(
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: GroupInfoCard(group: group),
+                              ),
+                              AddPostCard(
+                                userName: userName,
+                                dpUrl: userDp,
+                                groupId: group.groupid,
+                                groupName: group.groupname,
+                                primary: false,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Consumer<GroupScreenNotifier>(builder:
-                          (BuildContext context,
-                              GroupScreenNotifier groupScreenState,
-                              Widget? child) {
-                        if (groupScreenState.groupScreenData == null) {
-                          return SliverToBoxAdapter(
-                            child: SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.15,
-                              child: Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
-                                    Padding(
-                                      padding: EdgeInsets.all(4.0),
-                                      child: Icon(
-                                        Icons.warning_amber_outlined,
-                                        size: 32,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.all(4.0),
-                                      child: Text(
-                                        'Unable to fetch data!',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
+                        Consumer<GroupScreenNotifier>(builder:
+                            (BuildContext context,
+                                GroupScreenNotifier groupScreenState,
+                                Widget? child) {
+                          if (groupScreenState.groupScreenData == null) {
+                            return SliverToBoxAdapter(
+                              child: SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.15,
+                                child: Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const [
+                                      Padding(
+                                        padding: EdgeInsets.all(4.0),
+                                        child: Icon(
+                                          Icons.warning_amber_outlined,
+                                          size: 32,
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        } else if (groupScreenState.groupScreenData?.length ==
-                            0) {
-                          return SliverToBoxAdapter(
-                            child: SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.15,
-                              child: Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: const [
-                                    Padding(
-                                      padding: EdgeInsets.all(4.0),
-                                      child: Icon(
-                                        Icons.warning_amber_outlined,
-                                        size: 32,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.all(4.0),
-                                      child: Text(
-                                        'No data!',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        } else {
-                          return SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                              (BuildContext context, int index) {
-                                if (index ==
-                                    groupScreenState
-                                        .groupScreenData?.post.length) {
-                                  return moreLoading
-                                      ? const Center(
-                                          child: Padding(
-                                            padding: EdgeInsets.all(15.0),
-                                            child: SizedBox(
-                                              width: 120,
-                                              child: LinearProgressIndicator(),
-                                            ),
+                                      Padding(
+                                        padding: EdgeInsets.all(4.0),
+                                        child: Text(
+                                          'Unable to fetch data!',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
                                           ),
-                                        )
-                                      : const SizedBox(
-                                          height: 160,
-                                        );
-                                }
-                                return Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(8, 16, 8, 0),
-                                  child: PostCard(
-                                    postInfo: groupScreenState
-                                        .groupScreenData!.post[index],
-                                    postedByInfo: groupScreenState
-                                        .groupScreenData!.user[index],
-                                    postedGroupInfo: groupScreenState
-                                        .groupScreenData!.group[index],
-                                    postIndex: index,
-                                    likeStatus: groupScreenState
-                                        .groupScreenData!
-                                        .post[index]
-                                        .likestatus,
-                                    localDocPath: localDocPath,
-                                    elevation: 3,
-                                    source: 'groups',
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                );
-                              },
-                              childCount: groupScreenState
-                                      .groupScreenData!.post.length +
-                                  1,
-                            ),
-                          );
-                        }
-                      }),
-                    ],
+                                ),
+                              ),
+                            );
+                          } else if (groupScreenState.groupScreenData?.length ==
+                              0) {
+                            return SliverToBoxAdapter(
+                              child: SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.15,
+                                child: Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const [
+                                      Padding(
+                                        padding: EdgeInsets.all(4.0),
+                                        child: Icon(
+                                          Icons.warning_amber_outlined,
+                                          size: 32,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.all(4.0),
+                                        child: Text(
+                                          'No data!',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          } else {
+                            return SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                (BuildContext context, int index) {
+                                  if (index ==
+                                      groupScreenState
+                                          .groupScreenData?.post.length) {
+                                    return moreLoading
+                                        ? const Center(
+                                            child: Padding(
+                                              padding: EdgeInsets.all(15.0),
+                                              child: SizedBox(
+                                                width: 120,
+                                                child:
+                                                    LinearProgressIndicator(),
+                                              ),
+                                            ),
+                                          )
+                                        : const SizedBox(
+                                            height: 160,
+                                          );
+                                  }
+                                  return Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(8, 16, 8, 0),
+                                    child: PostCard(
+                                      postInfo: groupScreenState
+                                          .groupScreenData!.post[index],
+                                      postedByInfo: groupScreenState
+                                          .groupScreenData!.user[index],
+                                      postedGroupInfo: groupScreenState
+                                          .groupScreenData!.group[index],
+                                      postIndex: index,
+                                      likeStatus: groupScreenState
+                                          .groupScreenData!
+                                          .post[index]
+                                          .likestatus,
+                                      localDocPath: localDocPath,
+                                      elevation: 3,
+                                      source: 'groups',
+                                    ),
+                                  );
+                                },
+                                childCount: groupScreenState
+                                        .groupScreenData!.post.length +
+                                    1,
+                              ),
+                            );
+                          }
+                        }),
+                      ],
+                    ),
                   ),
                 ),
-              ),
+        ),
       ),
     );
   }

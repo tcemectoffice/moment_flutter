@@ -77,37 +77,40 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Consumer<HomePageNotifier>(
       builder: (BuildContext context, homePageState, child) {
-        return Scaffold(
-          appBar: homePageState.isContentLoaded ? const MomentAppBar() : null,
-          drawer: homePageState.isContentLoaded ? const LoggedInDrawer() : null,
-          bottomNavigationBar:
-              homePageState.isContentLoaded ? const BottomNavBar() : null,
-          floatingActionButton: homePageState.isContentLoaded
-              ? homePageState.index < 1
-                  ? FloatingActionButton(
-                      child: Icon(
-                        Icons.add,
-                        color: Theme.of(context).iconTheme.color,
-                      ),
-                      onPressed: () {
-                        if (homePageState.index == 0) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: ((context) => const AddPost()),
-                            ),
-                          );
-                          return;
-                        }
-                      },
-                    )
-                  : null
-              : null,
-          body: WillPopScope(
-            onWillPop: onWillPop,
-            child: Container(
-              margin: utils.getScreenMargins(context),
-              child: screens[homePageState.index],
+        return SafeArea(
+          child: Scaffold(
+            appBar: homePageState.isContentLoaded ? const MomentAppBar() : null,
+            drawer:
+                homePageState.isContentLoaded ? const LoggedInDrawer() : null,
+            bottomNavigationBar:
+                homePageState.isContentLoaded ? const BottomNavBar() : null,
+            floatingActionButton: homePageState.isContentLoaded
+                ? homePageState.index < 1
+                    ? FloatingActionButton(
+                        child: Icon(
+                          Icons.add,
+                          color: Theme.of(context).iconTheme.color,
+                        ),
+                        onPressed: () {
+                          if (homePageState.index == 0) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: ((context) => const AddPost()),
+                              ),
+                            );
+                            return;
+                          }
+                        },
+                      )
+                    : null
+                : null,
+            body: WillPopScope(
+              onWillPop: onWillPop,
+              child: Container(
+                margin: utils.getScreenMargins(context),
+                child: screens[homePageState.index],
+              ),
             ),
           ),
         );

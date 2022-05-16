@@ -1,3 +1,4 @@
+import 'package:moment/components/common/custom_scroll_settings.dart';
 import 'package:moment/components/common/server_image.dart';
 import 'package:moment/utils/util_functions.dart' as utils;
 import 'package:flutter/material.dart';
@@ -39,9 +40,7 @@ class LoggedInDrawerState extends State<LoggedInDrawer> {
     return isLoading
         ? const Drawer()
         : Drawer(
-            child: ScrollConfiguration(
-              behavior:
-                  ScrollConfiguration.of(context).copyWith(scrollbars: false),
+            child: CustomScrollConfig(
               child: CustomScrollView(
                 slivers: [
                   SliverFillRemaining(

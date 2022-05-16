@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moment/components/common/custom_scroll_settings.dart';
 import 'package:provider/provider.dart';
 import 'package:moment/services.dart' as services;
 import 'package:moment/utils/util_functions.dart' as utils;
@@ -70,45 +71,47 @@ class _AddTutorScreenState extends State<AddTutorScreen> {
       body: Container(
         margin: utils.getScreenMargins(context),
         padding: const EdgeInsets.symmetric(horizontal: 6.0),
-        child: CustomScrollView(
-          slivers: <Widget>[
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  if (index == staffList.length) {
-                    return const SizedBox(
-                      height: 21,
-                    );
-                  }
-                  return Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadiusDirectional.circular(10)),
-                      elevation: 3,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 10),
-                        child: StaffRowTile(
-                          staffDetails: staffList[index],
-                          trailing: Radio<int>(
-                              value: staffList[index].userid!,
-                              groupValue: selectedStaffId,
-                              onChanged: (int? value) {
-                                setState(() {
-                                  selectedStaffId = value;
-                                });
-                              }),
+        child: CustomScrollConfig(
+          child: CustomScrollView(
+            slivers: <Widget>[
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    if (index == staffList.length) {
+                      return const SizedBox(
+                        height: 21,
+                      );
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5, vertical: 4),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadiusDirectional.circular(10)),
+                        elevation: 3,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 10),
+                          child: StaffRowTile(
+                            staffDetails: staffList[index],
+                            trailing: Radio<int>(
+                                value: staffList[index].userid!,
+                                groupValue: selectedStaffId,
+                                onChanged: (int? value) {
+                                  setState(() {
+                                    selectedStaffId = value;
+                                  });
+                                }),
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-                childCount: staffList.length + 1,
+                    );
+                  },
+                  childCount: staffList.length + 1,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
