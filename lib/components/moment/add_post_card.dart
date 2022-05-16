@@ -72,7 +72,10 @@ class _AddPostCardState extends State<AddPostCard> {
       User tutor = Provider.of<MomentHomeNotifier>(context, listen: false)
           .momentHomeData!
           .tutor!;
-      selectedStaff = [tutor.userid!];
+      setState(() {
+        selectedStaff = [tutor.userid!];
+        postPrivacy = true;
+      });
     }
   }
 
@@ -388,7 +391,7 @@ class _AddPostCardState extends State<AddPostCard> {
                     ),
                     if (postPrivacy)
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

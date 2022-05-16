@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:moment/models/constants.dart' as constants;
-import 'package:moment/providers/home_page_provider.dart';
+// import 'package:moment/providers/home_page_provider.dart';
 import 'package:moment/providers/moment_home_provider.dart';
+import 'package:moment/screens/base/change_password_screen.dart';
 import 'package:moment/screens/moment/profile_screen.dart';
-import 'package:moment/screens/moment/my_groups_screen.dart';
+import 'package:moment/screens/moment/ward_list_screen.dart';
+// import 'package:moment/screens/moment/my_groups_screen.dart';
 import 'package:moment/utils/util_functions.dart' as utils;
-import 'package:moment/providers/app_state_provider.dart';
+// import 'package:moment/providers/app_state_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:moment/screens/base/add_tutor_screen.dart';
 
 class OptionsCard extends StatefulWidget {
-  const OptionsCard({Key? key}) : super(key: key);
+  final int userType;
+  const OptionsCard({Key? key, required this.userType}) : super(key: key);
 
   @override
   _OptionsCardState createState() => _OptionsCardState();
@@ -108,95 +111,184 @@ class _OptionsCardState extends State<OptionsCard> {
             //   ),
             // ),
             // const Divider(),
-            Consumer<MomentHomeNotifier>(
-                builder: (BuildContext context, tutorState, Widget? child) {
-              return tutorState.momentHomeData!.tutor == null
-                  ? MaterialButton(
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const AddTutorScreen()),
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(14.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: const [
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 15.0),
-                                child: Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Icon(Icons.person_add)),
-                              ),
-                              flex: 4,
+            if (widget.userType == 1 || widget.userType == 2)
+              MaterialButton(
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const WardListScreen()),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(14.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: const [
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15.0),
+                          child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Icon(Icons.person_pin_outlined)),
+                        ),
+                        flex: 4,
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15.0),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Ward List',
+                              style: constants.settingsOptionStyle,
                             ),
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 15.0),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Add Tutor',
-                                    style: constants.settingsOptionStyle,
+                          ),
+                        ),
+                        flex: 7,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            if (widget.userType != 1 && widget.userType != 2)
+              Consumer<MomentHomeNotifier>(
+                  builder: (BuildContext context, tutorState, Widget? child) {
+                return tutorState.momentHomeData!.tutor == null
+                    ? MaterialButton(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const AddTutorScreen()),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(14.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: const [
+                              Expanded(
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 15.0),
+                                  child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Icon(Icons.person_add)),
+                                ),
+                                flex: 4,
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 15.0),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Add Tutor',
+                                      style: constants.settingsOptionStyle,
+                                    ),
                                   ),
                                 ),
+                                flex: 7,
                               ),
-                              flex: 7,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    )
-                  : MaterialButton(
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Profile(
-                                    userId: tutorState
-                                        .momentHomeData!.tutor!.userid!,
-                                  )),
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(14.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: const [
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 15.0),
-                                child: Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Icon(Icons.person)),
+                      )
+                    : MaterialButton(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Profile(
+                                      userId: tutorState
+                                          .momentHomeData!.tutor!.userid!,
+                                    )),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(14.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: const [
+                              Expanded(
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 15.0),
+                                  child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Icon(Icons.person)),
+                                ),
+                                flex: 4,
                               ),
-                              flex: 4,
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 15.0),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    'Tutor Info',
-                                    style: constants.settingsOptionStyle,
+                              Expanded(
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 15.0),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Tutor Info',
+                                      style: constants.settingsOptionStyle,
+                                    ),
                                   ),
                                 ),
+                                flex: 7,
                               ),
-                              flex: 7,
-                            ),
-                          ],
+                            ],
+                          ),
+                        ),
+                      );
+              }),
+            const Divider(),
+            MaterialButton(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ChangePassword()),
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.all(14.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: const [
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15.0),
+                        child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Icon(Icons.lock_outline)),
+                      ),
+                      flex: 4,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15.0),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Change Password',
+                            style: constants.settingsOptionStyle,
+                          ),
                         ),
                       ),
-                    );
-            }),
+                      flex: 7,
+                    ),
+                  ],
+                ),
+              ),
+            ),
             const Divider(),
             MaterialButton(
               splashColor: Colors.transparent,

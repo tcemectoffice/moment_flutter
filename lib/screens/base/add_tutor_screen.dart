@@ -53,92 +53,94 @@ class _AddTutorScreenState extends State<AddTutorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        margin: utils.getScreenMargins(context),
-        padding: const EdgeInsets.symmetric(horizontal: 6.0),
-        child: CustomScrollView(
-          slivers: <Widget>[
-            SliverToBoxAdapter(
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 2),
-                              child: IconButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                icon: const Icon(
-                                  Icons.arrow_back,
+    return SafeArea(
+      child: Scaffold(
+        body: Container(
+          margin: utils.getScreenMargins(context),
+          padding: const EdgeInsets.symmetric(horizontal: 6.0),
+          child: CustomScrollView(
+            slivers: <Widget>[
+              SliverToBoxAdapter(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 2),
+                                child: IconButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  icon: const Icon(
+                                    Icons.arrow_back,
+                                  ),
                                 ),
                               ),
-                            ),
-                            const Text(
-                              "Add a Tutor",
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w600),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    TextButton(
-                      onPressed: confirmTutor,
-                      child: const Text(
-                        "Done",
-                        style: TextStyle(fontSize: 18),
+                              const Text(
+                                "Add a Tutor",
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                      TextButton(
+                        onPressed: confirmTutor,
+                        child: const Text(
+                          "Done",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  if (index == staffList.length) {
-                    return const SizedBox(
-                      height: 21,
-                    );
-                  }
-                  return Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadiusDirectional.circular(10)),
-                      elevation: 3,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 10),
-                        child: StaffRowTile(
-                          staffDetails: staffList[index],
-                          trailing: Radio<int>(
-                              value: staffList[index].userid!,
-                              groupValue: selectedStaffId,
-                              onChanged: (int? value) {
-                                setState(() {
-                                  selectedStaffId = value;
-                                });
-                              }),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    if (index == staffList.length) {
+                      return const SizedBox(
+                        height: 21,
+                      );
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5, vertical: 4),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadiusDirectional.circular(10)),
+                        elevation: 3,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 10),
+                          child: StaffRowTile(
+                            staffDetails: staffList[index],
+                            trailing: Radio<int>(
+                                value: staffList[index].userid!,
+                                groupValue: selectedStaffId,
+                                onChanged: (int? value) {
+                                  setState(() {
+                                    selectedStaffId = value;
+                                  });
+                                }),
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-                childCount: staffList.length + 1,
+                    );
+                  },
+                  childCount: staffList.length + 1,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

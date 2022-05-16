@@ -115,6 +115,7 @@ class _SearchState extends State<Search> {
                             padding: const EdgeInsets.all(8.0),
                             child: SearchEntityCard(
                               name: data[index].name,
+                              regNo: data[index].regNo,
                               dp: data[index].profilepic,
                               onpressed: () {
                                 Navigator.push(

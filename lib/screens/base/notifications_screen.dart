@@ -54,48 +54,51 @@ class _NotificationsState extends State<Notifications> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 2,
-        title: const Text("Notifications"),
-      ),
-      body: isLoading
-          ? const Center(
-              child: SizedBox(width: 120, child: LinearProgressIndicator()),
-            )
-          : Container(
-              margin: getScreenMargins(context),
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-              child: RefreshIndicator(
-                onRefresh: loadContent,
-                child: CustomScrollConfig(
-                  child: CustomScrollView(
-                    slivers: <Widget>[
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (BuildContext context, int index) {
-                            return Container(
-                              padding: const EdgeInsets.fromLTRB(6, 8, 6, 0),
-                              child: NotificationCard(
-                                postId: notificationData[index].postid,
-                                dpUrl: notificationData[index].dp,
-                                userName: notificationData[index].name,
-                                notificationMsg:
-                                    notificationData[index].notificationContent,
-                                groupName: notificationData[index].gname,
-                                imageUrl: notificationData[index].fileurl,
-                                isNew: notificationData[index].isnew,
-                              ),
-                            );
-                          },
-                          childCount: notificationData.length,
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 2,
+          title: const Text("Notifications"),
+        ),
+        body: isLoading
+            ? const Center(
+                child: SizedBox(width: 120, child: LinearProgressIndicator()),
+              )
+            : Container(
+                margin: getScreenMargins(context),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                child: RefreshIndicator(
+                  onRefresh: loadContent,
+                  child: CustomScrollConfig(
+                    child: CustomScrollView(
+                      slivers: <Widget>[
+                        SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                              return Container(
+                                padding: const EdgeInsets.fromLTRB(6, 8, 6, 0),
+                                child: NotificationCard(
+                                  postId: notificationData[index].postid,
+                                  dpUrl: notificationData[index].dp,
+                                  userName: notificationData[index].name,
+                                  notificationMsg: notificationData[index]
+                                      .notificationContent,
+                                  groupName: notificationData[index].gname,
+                                  imageUrl: notificationData[index].fileurl,
+                                  isNew: notificationData[index].isnew,
+                                ),
+                              );
+                            },
+                            childCount: notificationData.length,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
+      ),
     );
   }
 }

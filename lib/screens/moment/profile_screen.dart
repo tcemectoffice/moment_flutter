@@ -67,119 +67,124 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: profileScaffold,
-      appBar: const MomentAppBar(),
-      bottomNavigationBar: const BottomNavBar(index: 1),
-      drawer: const LoggedInDrawer(),
-      body: Center(
-        child: RefreshIndicator(
-          onRefresh: initialize,
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 12),
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(21),
-              ),
-              child: Container(
-                padding: const EdgeInsets.only(
-                    left: 15, top: 35, right: 12, bottom: 20),
-                child: CustomScrollConfig(
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: isLoading
-                        ? const [
-                            SizedBox(
-                              height: 300,
-                              child: Center(
-                                child: SizedBox(
-                                  width: 120,
-                                  child: LinearProgressIndicator(),
+    return SafeArea(
+      child: Scaffold(
+        key: profileScaffold,
+        appBar: const MomentAppBar(),
+        bottomNavigationBar: const BottomNavBar(index: 1),
+        drawer: const LoggedInDrawer(),
+        body: Center(
+          child: RefreshIndicator(
+            onRefresh: initialize,
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 12),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(21),
+                ),
+                child: Container(
+                  padding: const EdgeInsets.only(
+                      left: 15, top: 35, right: 12, bottom: 20),
+                  child: CustomScrollConfig(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: isLoading
+                          ? const [
+                              SizedBox(
+                                height: 300,
+                                child: Center(
+                                  child: SizedBox(
+                                    width: 120,
+                                    child: LinearProgressIndicator(),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ]
-                        : [
-                            Container(
-                              alignment: Alignment.center,
-                              child: CircleAvatar(
-                                radius: 75,
-                                backgroundColor: Colors.transparent,
-                                backgroundImage:
-                                    serverImageProvider(user.profilepic),
+                            ]
+                          : [
+                              Container(
+                                alignment: Alignment.center,
+                                child: CircleAvatar(
+                                  radius: 75,
+                                  backgroundColor: Colors.transparent,
+                                  backgroundImage:
+                                      serverImageProvider(user.profilepic),
+                                ),
                               ),
-                            ),
-                            Container(
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.only(top: 20),
-                              child: Text(
-                                user.name,
-                                style: const TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.w700),
+                              Container(
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.only(top: 20),
+                                child: Text(
+                                  user.name,
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700),
+                                ),
                               ),
-                            ),
-                            isEditable
-                                ? Container(
-                                    alignment: Alignment.center,
-                                    child: TextButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: ((context) => EditProfile(
-                                                  name: user.name,
-                                                  email: user.altemail ?? '',
-                                                  regNum: user.regNo ?? '',
-                                                  phone: user.usermobile ?? '',
-                                                  dp: user.profilepic,
-                                                )),
-                                          ),
-                                        );
-                                      },
-                                      child: const Text('Edit Profile'),
+                              isEditable
+                                  ? Container(
+                                      alignment: Alignment.center,
+                                      child: TextButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: ((context) =>
+                                                  EditProfile(
+                                                    name: user.name,
+                                                    email: user.altemail ?? '',
+                                                    regNum: user.regNo ?? '',
+                                                    phone:
+                                                        user.usermobile ?? '',
+                                                    dp: user.profilepic,
+                                                  )),
+                                            ),
+                                          );
+                                        },
+                                        child: const Text('Edit Profile'),
+                                      ),
+                                    )
+                                  : const SizedBox(
+                                      height: 15,
                                     ),
-                                  )
-                                : const SizedBox(
-                                    height: 15,
-                                  ),
-                            Container(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 12),
-                              child: const Divider(
-                                thickness: 2,
+                              Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 12),
+                                child: const Divider(
+                                  thickness: 2,
+                                ),
                               ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Text('Email: ${user.useremail}'),
-                                  ),
-                                  if (user.tutorname != 'Not updated')
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
                                     Container(
                                       padding: const EdgeInsets.all(10),
-                                      child: Text('Tutor: ${user.tutorname}'),
+                                      child: Text('Email: ${user.useremail}'),
                                     ),
-                                ],
+                                    if (user.tutorname != 'Not updated')
+                                      Container(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Text('Tutor: ${user.tutorname}'),
+                                      ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            if (!isEditable && user.usermobile != null)
-                              if (user.usermobile!.isNotEmpty)
-                                Center(
-                                  child: Container(
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        launchUrlString(
-                                            'tel:${user.usermobile}');
-                                      },
-                                      child: const Text('Call'),
+                              if (!isEditable && user.usermobile != null)
+                                if (user.usermobile!.isNotEmpty)
+                                  Center(
+                                    child: Container(
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          launchUrlString(
+                                              'tel:${user.usermobile}');
+                                        },
+                                        child: const Text('Call'),
+                                      ),
                                     ),
-                                  ),
-                                )
-                          ],
+                                  )
+                            ],
+                    ),
                   ),
                 ),
               ),

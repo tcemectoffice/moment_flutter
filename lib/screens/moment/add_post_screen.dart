@@ -66,27 +66,30 @@ class _AddPostState extends State<AddPost> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: onWillPop,
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          elevation: 2,
-          leadingWidth: 27,
-          title: const Text(
-            'Add Post',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+      child: SafeArea(
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: AppBar(
+            elevation: 2,
+            leadingWidth: 27,
+            title: const Text(
+              'Add Post',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+            ),
           ),
-        ),
-        body: Container(
-          margin: utils.getScreenMargins(context),
-          child: isLoading
-              ? const Center(
-                  child: SizedBox(width: 120, child: LinearProgressIndicator()),
-                )
-              : AddPostCard(
-                  userName: userName,
-                  dpUrl: userDp,
-                  primary: true,
-                ),
+          body: Container(
+            margin: utils.getScreenMargins(context),
+            child: isLoading
+                ? const Center(
+                    child:
+                        SizedBox(width: 120, child: LinearProgressIndicator()),
+                  )
+                : AddPostCard(
+                    userName: userName,
+                    dpUrl: userDp,
+                    primary: true,
+                  ),
+          ),
         ),
       ),
     );

@@ -2,6 +2,7 @@ class SearchEntityModel {
   int? userid;
   int? groupid;
   String? name;
+  String? regNo;
   String? groupname;
   String? groupdp;
   String? profilepic;
@@ -11,6 +12,7 @@ class SearchEntityModel {
     this.name,
     this.groupname,
     this.userid,
+    this.regNo,
     this.groupid,
     this.groupdp,
     this.profilepic,
@@ -22,6 +24,7 @@ class SearchEntityModel {
       name = json['name'];
       groupname = json['groupname'];
       userid = json['userid'];
+      regNo = json['reg_no'];
       groupid = json['groupid'];
       profilepic = json['profilepic'];
       groupdp = json['groupdp'];

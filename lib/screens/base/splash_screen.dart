@@ -35,11 +35,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Image(
-          image: AssetImage(constants.tceLogoAssetURL),
-          height: 300,
+    return const SafeArea(
+      child: Scaffold(
+        body: Center(
+          child: Image(
+            image: AssetImage(constants.tceLogoAssetURL),
+            height: 300,
+          ),
         ),
       ),
     );

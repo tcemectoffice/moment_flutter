@@ -12,7 +12,7 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  late final int userId;
+  late final int userId, userType;
   late final String userName;
   late final String userDp;
   bool isLoading = true;
@@ -24,6 +24,7 @@ class _SettingsState extends State<Settings> {
     userId = int.parse((await prefs.getStringList('headers'))[0] ?? '0');
     userName = await prefs.getString('userName') ?? '';
     userDp = await prefs.getString('userDp') ?? '';
+    userType = await prefs.getInt('userType') ?? 5;
     setState(() {
       isLoading = false;
     });
@@ -58,9 +59,9 @@ class _SettingsState extends State<Settings> {
                       userId: userId,
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: OptionsCard(),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: OptionsCard(userType: userType),
                   ),
                 ],
               ),

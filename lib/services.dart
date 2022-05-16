@@ -52,6 +52,7 @@ Future<NetworkResponseModel> login(
           prefs.setString('userName', loginData.username ?? '');
           prefs.setString('userEmail', loginData.useremail ?? '');
           prefs.setString('userDp', loginData.userdp ?? '');
+          prefs.setInt('userType', loginData.usertype ?? 5);
           return NetworkResponseModel(status: 1);
         case 2:
           return NetworkResponseModel(status: 0);
@@ -517,5 +518,53 @@ Future<NetworkResponseModel> getPostSingle(int postId) async {
   } catch (error) {
     print('get-single-post: ' + error.toString());
     return utils.validateError(error);
+  }
+}
+
+Future<NetworkResponseModel> getWardList() async {
+  var request = http.Request(
+    'GET',
+    Uri.parse(baseURL + '/wardinfo'),
+  );
+  request.headers.addAll(headers ?? {});
+  try {
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode.toString().startsWith('2')) {
+      String resStr = await response.stream.bytesToString();
+      print('wardList: ' + resStr);
+      NetworkResponseModel searchResult =
+          NetworkResponseModel.fromJson(jsonDecode(resStr));
+      return searchResult;
+    } else {
+      print('wardList: ' + response.reasonPhrase.toString());
+      return NetworkResponseModel(status: 999);
+    }
+  } catch (error) {
+    print('wardList: ' + error.toString());
+    return utils.validateError(error);
+  }
+}
+
+Future<bool> changePassword(String password, String newPassword) async {
+  var request =
+      http.MultipartRequest('POST', Uri.parse(baseURL + '/changepassword'));
+  request.fields.addAll({
+    'currentpassword': password,
+    'newpassword': newPassword,
+  });
+  request.headers.addAll(headers ?? {});
+  try {
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode.toString().startsWith('2')) {
+      String resStr = await response.stream.bytesToString();
+      print('changePassword: ' + resStr);
+      return resStr == '1';
+    } else {
+      print('changePassword: ' + response.reasonPhrase.toString());
+      return false;
+    }
+  } catch (error) {
+    print('changePassword: ' + error.toString());
+    return false;
   }
 }
