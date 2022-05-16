@@ -54,54 +54,24 @@ class _AddTutorScreenState extends State<AddTutorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 2,
+        title: const Text("Add Tutor"),
+        actions: [
+          TextButton(
+            onPressed: confirmTutor,
+            child: const Text(
+              "Done",
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+        ],
+      ),
       body: Container(
         margin: utils.getScreenMargins(context),
         padding: const EdgeInsets.symmetric(horizontal: 6.0),
         child: CustomScrollView(
           slivers: <Widget>[
-            SliverToBoxAdapter(
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 2),
-                              child: IconButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                icon: const Icon(
-                                  Icons.arrow_back,
-                                ),
-                              ),
-                            ),
-                            const Text(
-                              "Add a Tutor",
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w600),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    TextButton(
-                      onPressed: confirmTutor,
-                      child: const Text(
-                        "Done",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (BuildContext context, int index) {

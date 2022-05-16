@@ -153,7 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Padding(
-                                  padding: EdgeInsets.only(bottom: 4.0),
+                                  padding: EdgeInsets.only(bottom: 7.0),
                                   child: Text('Email:'),
                                 ),
                                 SizedBox(
@@ -185,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Padding(
-                                  padding: EdgeInsets.only(bottom: 4.0),
+                                  padding: EdgeInsets.only(bottom: 7.0),
                                   child: Text('Password:'),
                                 ),
                                 SizedBox(
