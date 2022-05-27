@@ -1,9 +1,12 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:moment/components/common/custom_scroll_settings.dart';
 import 'package:moment/components/moment/post_card.dart';
 import 'package:moment/models/network_response_model.dart';
 import 'package:moment/providers/home_page_provider.dart';
 import 'package:moment/providers/moment_home_provider.dart';
+import 'package:moment/screens/base/notifications_screen.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:moment/services.dart' as services;
 import 'package:moment/utils/util_functions.dart' as utils;
@@ -26,7 +29,11 @@ class _MomentHomeState extends State<MomentHome> {
     setState(() {
       isLoading = true;
     });
-    localDocPath = await prefs.getString('localDocPath');
+    localDocPath = await prefs.getString('localDocPath') ?? '';
+    if (localDocPath == '') {
+      var dir = await getTemporaryDirectory();
+      prefs.setString('localDocPath', dir.path);
+    }
     NetworkResponseModel responseData = await services.getHomeInitContent();
     switch (responseData.status) {
       case 1:

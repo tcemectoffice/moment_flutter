@@ -13,7 +13,6 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   bool? userLoggedIn;
-  String? fcmToken;
 
   Future<bool> initialize() async {
     return await services.initApp();

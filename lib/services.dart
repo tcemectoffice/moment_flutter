@@ -472,6 +472,10 @@ Future<bool> editProfile(String? name, String? regNum, String? email,
 }
 
 Future<NetworkResponseModel> getNotificationsList() async {
+  if (headers == null) {
+    List<String> headerInfo = await prefs.getStringList('headers');
+    setHeaders(headerInfo[0], headerInfo[1]);
+  }
   var request = http.Request(
     'GET',
     Uri.parse(baseURL + '/init-notification')

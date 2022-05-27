@@ -25,6 +25,7 @@ late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  FirebaseMessaging fcmMessaging = FirebaseMessaging.instance;
 
   if (!kIsWeb) {
     channel = const AndroidNotificationChannel(
@@ -40,6 +41,19 @@ Future<void> main() async {
             AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
   }
+
+  String? token = await fcmMessaging.getToken();
+  print('FCM TOKEN.....$token');
+  prefs.setString('fcmToken', token ?? '');
+  NotificationSettings settings = await fcmMessaging.getNotificationSettings();
+  while (settings.authorizationStatus != AuthorizationStatus.authorized) {
+    settings = await fcmMessaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+  }
+
   runApp(
     MultiProvider(
       providers: [
@@ -61,24 +75,6 @@ class Moment extends StatefulWidget {
 }
 
 class MomentState extends State<Moment> {
-  Future<void> setupFCM() async {
-    RemoteMessage? initialMessage =
-        await FirebaseMessaging.instance.getInitialMessage();
-    if (initialMessage != null) {
-      _handleMessage(initialMessage);
-    }
-    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
-  }
-
-  void _handleMessage(RemoteMessage message) {
-    Navigator.push(
-      navKey.currentState!.context,
-      MaterialPageRoute(
-        builder: ((context) => const Notifications()),
-      ),
-    );
-  }
-
   setupLocalDocDir() async {
     var dir = await getTemporaryDirectory();
     prefs.setString('localDocPath', dir.path);
@@ -93,7 +89,6 @@ class MomentState extends State<Moment> {
     // WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
     //   Provider.of<AppNotifier>(context, listen: false).getCurrentTheme();
     // });
-    setupFCM();
     setupLocalDocDir();
   }
 

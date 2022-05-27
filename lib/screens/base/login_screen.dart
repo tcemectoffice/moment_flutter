@@ -1,4 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:moment/components/common/custom_popup.dart';
@@ -8,6 +7,7 @@ import 'package:moment/models/network_response_model.dart';
 import 'package:moment/services.dart' as services;
 import 'package:moment/utils/util_functions.dart' as utils;
 import 'package:moment/utils/validations.dart';
+import 'package:moment/utils/prefs.dart' as prefs;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -59,8 +59,9 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       );
+      String fcmToken = await prefs.getString('fcmToken');
       NetworkResponseModel response = await services.login(
-          emailController.text, passwordController.text, fcmToken!);
+          emailController.text, passwordController.text, fcmToken);
       Navigator.of(context).pop(0);
       switch (response.status) {
         case 1:
@@ -90,10 +91,6 @@ class _LoginScreenState extends State<LoginScreen> {
     emailNode = FocusNode();
     passwordNode = FocusNode();
     loginNode = FocusNode();
-    FirebaseMessaging.instance.getToken().then((String? token) {
-      fcmToken = token;
-      print('fcm token:' + fcmToken!);
-    });
   }
 
   @override
