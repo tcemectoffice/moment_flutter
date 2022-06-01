@@ -5,15 +5,22 @@ import 'package:moment/models/user_model.dart';
 import 'package:moment/providers/moment_home_provider.dart';
 import 'package:provider/provider.dart';
 
-showStaffs(BuildContext context, List<int> selectedStaff) {
+showStaffs(BuildContext context, List<int> selectedStaff,
+    {bool isStaff = true}) {
   return showDialog(
     context: context,
     builder: (context) {
       List<int> selectedIds = selectedStaff;
-      List<User> staffDetails =
-          Provider.of<MomentHomeNotifier>(context, listen: false)
-              .momentHomeData!
-              .staffdetails;
+      List<User> staffDetails;
+      if (isStaff) {
+        staffDetails = Provider.of<MomentHomeNotifier>(context, listen: false)
+            .momentHomeData!
+            .warddetails;
+      } else {
+        staffDetails = Provider.of<MomentHomeNotifier>(context, listen: false)
+            .momentHomeData!
+            .staffdetails;
+      }
       return StatefulBuilder(builder: (context, setState) {
         return AlertDialog(
           insetPadding:

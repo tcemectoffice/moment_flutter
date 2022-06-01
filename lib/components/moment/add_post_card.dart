@@ -69,13 +69,30 @@ class _AddPostCardState extends State<AddPostCard> {
         });
       }
     } else {
-      User tutor = Provider.of<MomentHomeNotifier>(context, listen: false)
+      if (Provider.of<MomentHomeNotifier>(context, listen: false)
           .momentHomeData!
-          .tutor!;
-      setState(() {
-        selectedStaff = [tutor.userid!];
-        postPrivacy = true;
-      });
+          .warddetails
+          .isNotEmpty) {
+        var staffIds = await showStaffs(context, selectedStaff, isStaff: true);
+        if (staffIds != null && selectedStaff.isNotEmpty) {
+          setState(() {
+            selectedStaff = staffIds;
+            postPrivacy = true;
+          });
+        } else {
+          setState(() {
+            postPrivacy = false;
+          });
+        }
+      } else {
+        User tutor = Provider.of<MomentHomeNotifier>(context, listen: false)
+            .momentHomeData!
+            .tutor!;
+        setState(() {
+          selectedStaff = [tutor.userid!];
+          postPrivacy = true;
+        });
+      }
     }
   }
 
@@ -395,11 +412,21 @@ class _AddPostCardState extends State<AddPostCard> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            selectedGrpId != 3
-                                ? Text(
-                                    'Visible to ${selectedStaff.length} people')
-                                : const Text('Visible only to your Tutor'),
-                            if (selectedGrpId != 3)
+                            selectedGrpId == 3 &&
+                                    Provider.of<MomentHomeNotifier>(context,
+                                            listen: false)
+                                        .momentHomeData!
+                                        .warddetails
+                                        .isEmpty
+                                ? const Text('Visible only to your Tutor')
+                                : Text(
+                                    'Visible to ${selectedStaff.length} people'),
+                            if (!(selectedGrpId == 3 &&
+                                Provider.of<MomentHomeNotifier>(context,
+                                        listen: false)
+                                    .momentHomeData!
+                                    .warddetails
+                                    .isEmpty))
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 8.0),
@@ -413,7 +440,14 @@ class _AddPostCardState extends State<AddPostCard> {
                                     ),
                                     onPressed: () async {
                                       var staffIds = await showStaffs(
-                                          context, selectedStaff);
+                                          context, selectedStaff,
+                                          isStaff:
+                                              Provider.of<MomentHomeNotifier>(
+                                                      context,
+                                                      listen: false)
+                                                  .momentHomeData!
+                                                  .warddetails
+                                                  .isNotEmpty);
                                       if (staffIds != null &&
                                           selectedStaff.isNotEmpty) {
                                         setState(() {
