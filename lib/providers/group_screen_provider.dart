@@ -43,4 +43,11 @@ class GroupScreenNotifier extends ChangeNotifier {
         .fileDownloaded = true;
     notifyListeners();
   }
+
+  deletePost(int postIndex) {
+    groupScreenData!.post.removeAt(postIndex);
+    groupScreenData!.user.removeAt(postIndex);
+    groupScreenData!.group.removeAt(postIndex);
+    notifyListeners();
+  }
 }

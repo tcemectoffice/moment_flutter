@@ -6,7 +6,7 @@ import 'package:moment/providers/moment_home_provider.dart';
 import 'package:provider/provider.dart';
 
 showStaffs(BuildContext context, List<int> selectedStaff,
-    {bool isStaff = true}) {
+    {bool isStaff = false}) {
   return showDialog(
     context: context,
     builder: (context) {

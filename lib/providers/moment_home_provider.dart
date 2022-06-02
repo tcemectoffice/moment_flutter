@@ -51,4 +51,11 @@ class MomentHomeNotifier extends ChangeNotifier {
         .fileDownloaded = true;
     notifyListeners();
   }
+
+  deletePost(int postIndex) {
+    momentHomeData!.post.removeAt(postIndex);
+    momentHomeData!.user.removeAt(postIndex);
+    momentHomeData!.postgroup.removeAt(postIndex);
+    notifyListeners();
+  }
 }

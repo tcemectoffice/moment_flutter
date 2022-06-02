@@ -166,303 +166,368 @@ class _PostCardState extends State<PostCard> {
     }
   }
 
+  deletePost() async {
+    bool? delete = await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Are you sure to delete this post?'),
+        actions: <Widget>[
+          MaterialButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          MaterialButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (delete ?? false) {
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => const CustomPopup(
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      );
+      bool deleteRes = await services.deletePost(widget.postInfo.postid);
+      if (deleteRes) {
+        if (source == 'home') {
+          Provider.of<MomentHomeNotifier>(context, listen: false)
+              .deletePost(index);
+        } else if (source == 'groups') {
+          Provider.of<GroupScreenNotifier>(context, listen: false)
+              .deletePost(index);
+        }
+      }
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusDirectional.circular(10)),
-      elevation: widget.elevation,
-      child: isLoading
-          ? Container()
-          : Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 12),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                    radius: 27,
-                    backgroundColor: Colors.transparent,
-                    backgroundImage:
-                        serverImageProvider(widget.postedGroupInfo.groupdp),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 4.0),
-                            child: Text(
-                              widget.postedGroupInfo.groupname,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onLongPress: (widget.postInfo.delete == 1 && widget.commentAction == null)
+          ? deletePost
+          : null,
+      child: Card(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadiusDirectional.circular(10)),
+        elevation: widget.elevation,
+        child: isLoading
+            ? Container()
+            : Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 12),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      radius: 27,
+                      backgroundColor: Colors.transparent,
+                      backgroundImage:
+                          serverImageProvider(widget.postedGroupInfo.groupdp),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 4.0),
+                              child: Text(
+                                widget.postedGroupInfo.groupname,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ),
-                          ),
-                          Text(
-                            widget.postedByInfo.name,
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 4.0),
-                            child: Divider(
-                              thickness: 1,
-                              color: Colors.grey,
+                            Text(
+                              widget.postedByInfo.name,
                             ),
-                          ),
-                          SelectableLinkify(
-                            linkifiers: const [
-                              PhoneLinkifier(),
-                              EmailLinkifier(),
-                              UrlLinkifier(),
-                            ],
-                            options: const LinkifyOptions(looseUrl: true),
-                            onOpen: onOpen,
-                            text: widget.postInfo.postdata,
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                          if (fileDetails.isNotEmpty)
-                            Column(
-                                children: fileDetails.map<Widget>((file) {
-                              WidgetsBinding.instance
-                                  ?.addPostFrameCallback((_) {
-                                checkFileExists(file);
-                              });
-                              return file.isimage
-                                  ? GestureDetector(
-                                      onTap: () {
-                                        showDialog(
-                                            barrierDismissible: false,
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return BackdropFilter(
-                                                filter: ImageFilter.blur(
-                                                    sigmaX: 10, sigmaY: 10),
-                                                child: Dialog(
-                                                  elevation: 0,
-                                                  backgroundColor:
-                                                      Colors.transparent,
-                                                  child: PhotoView(
-                                                    backgroundDecoration:
-                                                        const BoxDecoration(
-                                                      color: Colors.transparent,
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 4.0),
+                              child: Divider(
+                                thickness: 1,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            SelectableLinkify(
+                              linkifiers: const [
+                                PhoneLinkifier(),
+                                EmailLinkifier(),
+                                UrlLinkifier(),
+                              ],
+                              options: const LinkifyOptions(looseUrl: true),
+                              onOpen: onOpen,
+                              text: widget.postInfo.postdata,
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                            if (widget.postInfo.filedetails != null &&
+                                widget.postInfo.filedetails!.isNotEmpty)
+                              Column(
+                                  children: fileDetails.map<Widget>((file) {
+                                WidgetsBinding.instance
+                                    ?.addPostFrameCallback((_) {
+                                  checkFileExists(file);
+                                });
+                                return file.isimage
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          showDialog(
+                                              barrierDismissible: false,
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return BackdropFilter(
+                                                  filter: ImageFilter.blur(
+                                                      sigmaX: 10, sigmaY: 10),
+                                                  child: Dialog(
+                                                    elevation: 0,
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                    child: PhotoView(
+                                                      backgroundDecoration:
+                                                          const BoxDecoration(
+                                                        color:
+                                                            Colors.transparent,
+                                                      ),
+                                                      imageProvider:
+                                                          serverImageProvider(
+                                                              file.fileurl),
                                                     ),
-                                                    imageProvider:
-                                                        serverImageProvider(
-                                                            file.fileurl),
                                                   ),
-                                                ),
-                                              );
-                                            });
-                                      },
-                                      child: Padding(
+                                                );
+                                              });
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 14, bottom: 8),
+                                          child: Center(
+                                            child: ConstrainedBox(
+                                              constraints: BoxConstraints(
+                                                maxHeight: 240,
+                                                maxWidth: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.67,
+                                              ),
+                                              child: Image(
+                                                fit: BoxFit.contain,
+                                                image: serverImageProvider(
+                                                    file.fileurl),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : Padding(
                                         padding: const EdgeInsets.only(
                                             top: 14, bottom: 8),
-                                        child: Center(
-                                          child: ConstrainedBox(
-                                            constraints: BoxConstraints(
-                                              maxHeight: 240,
-                                              maxWidth: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.67,
-                                            ),
-                                            child: Image(
-                                              fit: BoxFit.contain,
-                                              image: serverImageProvider(
-                                                  file.fileurl),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 14, bottom: 8),
-                                      child: GestureDetector(
-                                        onTap: file.fileDownloaded
-                                            ? () {
-                                                openFile(file);
-                                              }
-                                            : () async {
-                                                await downloadFile(
-                                                  file,
-                                                  widget.postInfo.postid,
-                                                );
-                                              },
-                                        child: Card(
-                                          color: const Color.fromARGB(
-                                              255, 216, 216, 216),
-                                          child: Container(
-                                            height: 60,
-                                            width: 250,
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      SizedBox(
-                                                        width: 135,
-                                                        child: Text(
-                                                          file.filename,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w700,
+                                        child: GestureDetector(
+                                          onTap: file.fileDownloaded
+                                              ? () {
+                                                  openFile(file);
+                                                }
+                                              : () async {
+                                                  await downloadFile(
+                                                    file,
+                                                    widget.postInfo.postid,
+                                                  );
+                                                },
+                                          child: Card(
+                                            color: const Color.fromARGB(
+                                                255, 216, 216, 216),
+                                            child: Container(
+                                              height: 60,
+                                              width: 250,
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 135,
+                                                          child: Text(
+                                                            file.filename,
+                                                            style:
+                                                                const TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                            ),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
                                                           ),
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
                                                         ),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 70,
-                                                        child: Text(
-                                                          '(${file.filesize})',
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
+                                                        SizedBox(
+                                                          width: 70,
+                                                          child: Text(
+                                                            '(${file.filesize})',
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  if (!file.fileDownloaded)
-                                                    const Icon(
-                                                      Icons.download_outlined,
+                                                      ],
                                                     ),
-                                                ]),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                            }).toList()),
-                          if (fileDetails.isEmpty)
-                            const SizedBox(
-                              height: 16,
-                            ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5.0),
-                            child: Row(
-                              children: [
-                                GestureDetector(
-                                  onTap: onLikePressed,
-                                  child: Row(
-                                    children: [
-                                      if (widget.source == 'home')
-                                        Consumer<MomentHomeNotifier>(builder:
-                                            ((context, homeState, child) {
-                                          return Row(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 8.0),
-                                                child: Icon(homeState
-                                                        .momentHomeData!
-                                                        .post[index]
-                                                        .likestatus
-                                                    ? Icons.thumb_up
-                                                    : Icons.thumb_up_outlined),
-                                              ),
-                                              Text(
-                                                homeState.momentHomeData!
-                                                    .post[index].likecount
-                                                    .toString(),
-                                              ),
-                                            ],
-                                          );
-                                        })),
-                                      if (widget.source == 'groups')
-                                        Consumer<GroupScreenNotifier>(builder:
-                                            ((context, groupState, child) {
-                                          return Row(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 8.0),
-                                                child: Icon(groupState
-                                                        .groupScreenData!
-                                                        .post[index]
-                                                        .likestatus
-                                                    ? Icons.thumb_up
-                                                    : Icons.thumb_up_outlined),
-                                              ),
-                                              Text(
-                                                groupState.groupScreenData!
-                                                    .post[index].likecount
-                                                    .toString(),
-                                              ),
-                                            ],
-                                          );
-                                        })),
-                                      if (widget.source == 'notifications')
-                                        Row(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 8.0),
-                                              child: Icon(likeStatus
-                                                  ? Icons.thumb_up
-                                                  : Icons.thumb_up_outlined),
+                                                    if (!file.fileDownloaded)
+                                                      const Icon(
+                                                        Icons.download_outlined,
+                                                      ),
+                                                  ]),
                                             ),
-                                            Text(
-                                              likeCount.toString(),
-                                            ),
-                                          ],
-                                        )
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 36,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    if (widget.commentAction == null) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => PostScreen(
-                                            post: SinglePostDataModel(
-                                              post: widget.postInfo,
-                                              user: widget.postedByInfo,
-                                              group: widget.postedGroupInfo,
-                                            ),
-                                            source: widget.source,
-                                            postIndex: widget.postIndex,
-                                            action: 'comment',
                                           ),
                                         ),
                                       );
-                                    } else {
-                                      widget.commentAction!();
-                                    }
-                                  },
-                                  child: Row(
-                                    children: [
-                                      const Padding(
-                                        padding: EdgeInsets.only(right: 8.0),
-                                        child: Icon(Icons.message_outlined),
-                                      ),
-                                      Text(
-                                        widget.postInfo.commentcount.toString(),
-                                      ),
-                                    ],
+                              }).toList()),
+                            if (widget.postInfo.filedetails != null &&
+                                widget.postInfo.filedetails!.isEmpty)
+                              const SizedBox(
+                                height: 16,
+                              ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 5.0),
+                              child: Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: onLikePressed,
+                                    child: Row(
+                                      children: [
+                                        if (widget.source == 'home')
+                                          Consumer<MomentHomeNotifier>(builder:
+                                              ((context, homeState, child) {
+                                            return Row(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 8.0),
+                                                  child: Icon(homeState
+                                                          .momentHomeData!
+                                                          .post[index]
+                                                          .likestatus
+                                                      ? Icons.thumb_up
+                                                      : Icons
+                                                          .thumb_up_outlined),
+                                                ),
+                                                Text(
+                                                  homeState.momentHomeData!
+                                                      .post[index].likecount
+                                                      .toString(),
+                                                ),
+                                              ],
+                                            );
+                                          })),
+                                        if (widget.source == 'groups')
+                                          Consumer<GroupScreenNotifier>(builder:
+                                              ((context, groupState, child) {
+                                            return Row(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 8.0),
+                                                  child: Icon(groupState
+                                                          .groupScreenData!
+                                                          .post[index]
+                                                          .likestatus
+                                                      ? Icons.thumb_up
+                                                      : Icons
+                                                          .thumb_up_outlined),
+                                                ),
+                                                Text(
+                                                  groupState.groupScreenData!
+                                                      .post[index].likecount
+                                                      .toString(),
+                                                ),
+                                              ],
+                                            );
+                                          })),
+                                        if (widget.source == 'notifications')
+                                          Row(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    right: 8.0),
+                                                child: Icon(likeStatus
+                                                    ? Icons.thumb_up
+                                                    : Icons.thumb_up_outlined),
+                                              ),
+                                              Text(
+                                                likeCount.toString(),
+                                              ),
+                                            ],
+                                          )
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
+                                  const SizedBox(
+                                    width: 36,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (widget.commentAction == null) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => PostScreen(
+                                              post: SinglePostDataModel(
+                                                post: widget.postInfo,
+                                                user: widget.postedByInfo,
+                                                group: widget.postedGroupInfo,
+                                              ),
+                                              source: widget.source,
+                                              postIndex: widget.postIndex,
+                                              action: 'comment',
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        widget.commentAction!();
+                                      }
+                                    },
+                                    child: Row(
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.only(right: 8.0),
+                                          child: Icon(Icons.message_outlined),
+                                        ),
+                                        Text(
+                                          widget.postInfo.commentcount
+                                              .toString(),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+      ),
     );
   }
 }

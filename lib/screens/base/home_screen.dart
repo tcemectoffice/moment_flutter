@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:moment/components/common/bottom_navbar.dart';
-import 'package:moment/components/common/custom_popup.dart';
 import 'package:moment/components/common/logged_in_drawer.dart';
 import 'package:moment/components/common/moment_appbar.dart';
 import 'package:moment/screens/moment/add_post_screen.dart';
 import 'package:moment/screens/moment/my_groups_screen.dart';
-import 'package:moment/services.dart' as services;
 import 'package:moment/utils/util_functions.dart' as utils;
 import 'package:moment/providers/home_page_provider.dart';
 import 'package:moment/screens/moment/moment_home_screen.dart';
@@ -28,49 +26,19 @@ class _HomeScreenState extends State<HomeScreen> {
     Search(),
     Settings(),
   ];
+  DateTime? currentBackPressTime;
 
   Future<bool> onWillPop() async {
-    return await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Are you sure?'),
-            content: const Text('Do you want to Exit the App?'),
-            actions: <Widget>[
-              MaterialButton(
-                onPressed: () =>
-                    SystemChannels.platform.invokeMethod('SystemNavigator.pop'),
-                child: const Text('Yes'),
-              ),
-              MaterialButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('No'),
-              ),
-              MaterialButton(
-                onPressed: () async {
-                  showDialog(
-                    barrierDismissible: false,
-                    context: context,
-                    builder: (context) => const CustomPopup(
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
-                  );
-                  if (await services.logout()) {
-                    Provider.of<HomePageNotifier>(context, listen: false)
-                        .setIndex(0, context);
-                    Navigator.of(context).pop(false);
-                    Navigator.of(context).pushNamed('/login');
-                  } else {
-                    utils.showSnackMessage(context, 'Please try again later!');
-                  }
-                },
-                child: const Text('Logout'),
-              ),
-            ],
-          ),
-        ) ??
-        false;
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime ?? now) >
+            const Duration(seconds: 2)) {
+      currentBackPressTime = now;
+      utils.showSnackMessage(context, 'Press Back button twice to exit!');
+      return Future.value(false);
+    }
+    SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+    return Future.value(true);
   }
 
   @override

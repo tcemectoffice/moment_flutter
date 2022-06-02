@@ -572,3 +572,27 @@ Future<bool> changePassword(String password, String newPassword) async {
     return false;
   }
 }
+
+Future<bool> deletePost(int postId) async {
+  var request =
+      http.MultipartRequest('POST', Uri.parse(baseURL + '/post-delete'));
+  request.fields.addAll({
+    'deletepost': '1',
+    'postid': postId.toString(),
+  });
+  request.headers.addAll(headers ?? {});
+  try {
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode.toString().startsWith('2')) {
+      String resStr = await response.stream.bytesToString();
+      print('deletePost: ' + resStr);
+      return resStr == '1';
+    } else {
+      print('deletePost: ' + response.reasonPhrase.toString());
+      return false;
+    }
+  } catch (error) {
+    print('deletePost: ' + error.toString());
+    return false;
+  }
+}

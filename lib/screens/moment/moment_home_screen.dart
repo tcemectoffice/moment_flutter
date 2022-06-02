@@ -178,9 +178,20 @@ class _MomentHomeState extends State<MomentHome> {
                                         ),
                                       ),
                                     )
-                                  : const SizedBox(
-                                      height: 160,
-                                    );
+                                  : momentHomeState
+                                              .momentHomeData!.post.length <
+                                          4
+                                      ? SizedBox(
+                                          height: (4 -
+                                                  (momentHomeState
+                                                      .momentHomeData!
+                                                      .post
+                                                      .length)) *
+                                              200.0,
+                                        )
+                                      : const SizedBox(
+                                          height: 60,
+                                        );
                             }
                             return Padding(
                               padding: const EdgeInsets.fromLTRB(8, 16, 8, 0),
