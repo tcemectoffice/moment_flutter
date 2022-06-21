@@ -12,9 +12,9 @@ import 'package:moment/utils/prefs.dart' as prefs;
 
 import 'package:moment/models/login_model.dart';
 
-String masterURL = '';
+String masterURL = 'http://moment.tce.edu';
 String stagingURL = 'https://mectmoment.pythonanywhere.com';
-bool isStaging = true;
+bool isStaging = false;
 String baseURL = isStaging ? stagingURL : masterURL;
 List<String> imageExtensions = [];
 
@@ -35,6 +35,7 @@ Future<NetworkResponseModel> login(
     'isweb': kIsWeb ? '1' : '0',
     'fcmtoken': fcmToken,
   });
+  print(request.url.toString());
   try {
     http.StreamedResponse response = await request.send();
     if (response.statusCode.toString().startsWith('2')) {
